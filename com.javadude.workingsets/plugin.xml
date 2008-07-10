@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="com.javadude.workingsets.DummyStartup">
+      </startup>
+   </extension>
+   <extension point="org.eclipse.ui.workingSets">
+      <workingSet
+            icon="icons/workset.gif"
+            id="com.hcrest.classpath.natureWorkingSet"
+            name="Nature Working Set"
+            pageClass="com.javadude.workingsets.NatureWorkingSetPage"
+            updaterClass="com.javadude.workingsets.NatureWorkingSetUpdater">
+      </workingSet>
+   </extension>
+   <extension point="org.eclipse.ui.workingSets">
+      <workingSet
+            icon="icons/workset.gif"
+            id="com.hcrest.classpath.regexWorkingSet"
+            name="Regular Expression Working Set"
+            pageClass="com.javadude.workingsets.RegExWorkingSetPage"
+            updaterClass="com.javadude.workingsets.RegExWorkingSetUpdater">
+      </workingSet>
+   </extension>
+</plugin>
