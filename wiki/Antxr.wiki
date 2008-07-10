@@ -20,13 +20,16 @@ purpose you would like, commercial or non-commercial, without license fee.
 There are three main download types:
 
 	* _Eclipse_: A set of eclipse plugins for editing and running ANTXR applications.
+	
 		* Use the Eclipse Update Manager (*Help->Software Updates->Find and Install...*) and add a new remote update site
+
 			* Name: !JavaDude Eclipse Plugins
 			* URL: [http://javadude.com/eclipse/update http://javadude.com/eclipse/update]
 		
 		* Select the ANTXR eclipse plugins
 	
 	* _Non-eclipse_: The basic ANTXR distribution can be obtained via [antxr.zip antxr.zip].
+
 		* Use the build.xml under ant-build to build antxr.
 		* To use in your own ant scripts, look at the antxr macro defined in this build.xml.
 	
