@@ -19,15 +19,15 @@ purpose you would like, commercial or non-commercial, without license fee.
 
 There are three main download types:
 
-	* _Eclipse_: A set of eclipse plugins for editing and running ANTXR applications.
-		* Use the Eclipse Update Manager (*Help->Software Updates->Find and Install...*) and add a new remote update site
-			* Name: !JavaDude Eclipse Plugins
-			* URL: [http://javadude.com/eclipse/update http://javadude.com/eclipse/update]
-		* Select the ANTXR eclipse plugins
-	* _Non-eclipse_: The basic ANTXR distribution can be obtained via [antxr.zip antxr.zip].
-		* Use the build.xml under ant-build to build antxr.
-		* To use in your own ant scripts, look at the antxr macro defined in this build.xml.
-	* _Samples_: [antxr-samples.zip antxr-samples.zip]
+    * _Eclipse_: A set of eclipse plugins for editing and running ANTXR applications.
+        * Use the Eclipse Update Manager (*Help->Software Updates->Find and Install...*) and add a new remote update site
+            * Name: !JavaDude Eclipse Plugins
+            * URL: [http://javadude.com/eclipse/update http://javadude.com/eclipse/update]
+        * Select the ANTXR eclipse plugins
+    * _Non-eclipse_: The basic ANTXR distribution can be obtained via [antxr.zip antxr.zip].
+        * Use the build.xml under ant-build to build antxr.
+        * To use in your own ant scripts, look at the antxr macro defined in this build.xml.
+    * _Samples_: [antxr-samples.zip antxr-samples.zip]
 
 For any problems, questions, comments, email [mailto:scott@javadude.com scott@javadude.com].
 
@@ -47,28 +47,28 @@ The ANTXR Eclipse plugin is based on the ANTLR-Eclipse plugin at
 to Torsten and the others who have contributed to the plugin.
 
 ==Contents==
-	* [#History History]
-		* [#Introduction_and_motivation Introduction and motivation]
-			* [#DOM DOM]
-			* [#SAX SAX]
-			* [#Digester Digester]
-			* [#Keeping_in_synch_with_the_XML_schema Keeping in synch with the XML schema]
+    * [#History History]
+        * [#Introduction_and_motivation Introduction and motivation]
+            * [#DOM DOM]
+            * [#SAX SAX]
+            * [#Digester Digester]
+            * [#Keeping_in_synch_with_the_XML_schema Keeping in synch with the XML schema]
 		
-		* [#Enter_ANTLR_XML_Parsing Enter ANTLR-Based XML Parsing]
-		* [#Poof_We_Have_ANTLR_Native_XML_Support Poof! We Have ANTLR Native XML Support!]
-		* [#Hacking_ANTLR_into_submission Hacking ANTLR into submission]
-		* [#Forking_from_ANTLR Forking from ANTLR]
+        * [#Enter_ANTLR_XML_Parsing Enter ANTLR-Based XML Parsing]
+        * [#Poof_We_Have_ANTLR_Native_XML_Support Poof! We Have ANTLR Native XML Support!]
+        * [#Hacking_ANTLR_into_submission Hacking ANTLR into submission]
+        * [#Forking_from_ANTLR Forking from ANTLR]
 	
-	* [#Writing_Your_XML_Parser Writing Your XML Parser]
-		* [#Scanning_XML Scanning_XML]
-		* [#A_skeletal_XML_grammar A skeletal XML grammar]
-		* [#The_Ground_Rules The Ground Rules]
-		* [#A_Simple_XML_Parser A Simple XML Parser]
-		* [#A_More_Complex_Parser A More Complex Parser]
-		* [#Any_Tags Any Tags]
+    * [#Writing_Your_XML_Parser Writing Your XML Parser]
+        * [#Scanning_XML Scanning_XML]
+        * [#A_skeletal_XML_grammar A skeletal XML grammar]
+        * [#The_Ground_Rules The Ground Rules]
+        * [#A_Simple_XML_Parser A Simple XML Parser]
+        * [#A_More_Complex_Parser A More Complex Parser]
+        * [#Any_Tags Any Tags]
 	
-	* [#Performance Performance]
-	* [#Future Future]
+    * [#Performance Performance]
+    * [#Future Future]
 
 =History=
 XML Parsing can be quite a pain the butt.
@@ -185,8 +185,8 @@ For starters, I looked at [http://xpa.sourceforge.net/ XPA],
 which is some pretty nice XML parser support for ANTLR. This came pretty darn 
 close to what I envisioned as an ideal XML parser, with a few exceptions:
 
-	* *It requires somewhat verbose specification*. You need to specify the start and end tags explicitly, making it easy to "typo" the matching end tag. You also had to jump through a few hoops and casts to access the attributes for a tag.
-	* *It has no support for namespaces.* This is not an issue if you're not using namespaces, but if you do use namespaces, it's a non-starter.
+    * *It requires somewhat verbose specification*. You need to specify the start and end tags explicitly, making it easy to "typo" the matching end tag. You also had to jump through a few hoops and casts to access the attributes for a tag.
+    * *It has no support for namespaces.* This is not an issue if you're not using namespaces, but if you do use namespaces, it's a non-starter.
 
 As a simple example of a grammar in XPA, I could write
 
@@ -272,12 +272,12 @@ the SAX parse, and feeding those tokens to a hungry ANTLR parser.
 
 But what do those tokens look like?
 
-	* *Start Tokens*
-		* Each time the SAX parser notifies XMLTokenStream that it has seen a start tag, a new XMLToken is created with a type matching the tag name. (This type is defined by your parser.)
-	* *End Tokens*
-		* Assuming that we _can_ validate, at least to ensure well-formed-ness, we only need a single type of end token. We call this type of token XML_END_TAG. Anytime the SAX parser notifies XMLTokenStream that an end tag has been seen, a new CommonToken is created of type *XML_END_TAG*.
-	* *Character Data*
-		* Character data is collected and returned as a CommonToken of type *PCDATA*.
+    * *Start Tokens*
+        * Each time the SAX parser notifies XMLTokenStream that it has seen a start tag, a new XMLToken is created with a type matching the tag name. (This type is defined by your parser.)
+    * *End Tokens*
+        * Assuming that we _can_ validate, at least to ensure well-formed-ness, we only need a single type of end token. We call this type of token XML_END_TAG. Anytime the SAX parser notifies XMLTokenStream that an end tag has been seen, a new CommonToken is created of type *XML_END_TAG*.
+    * *Character Data*
+        * Character data is collected and returned as a CommonToken of type *PCDATA*.
 
 XMLToken is an extension of ANTLR's CommonToken, providing access to a tag's 
 attribute data. The SAX attributes object is placed into this token for easy 
@@ -480,16 +480,16 @@ demonstrating most of the features of ANTXR:
 Let's walk through some of this example. Most of it is normal ANTLR syntax, 
 with the following modifications:
 
-	* *lines 11-12*: A much more natural namespace specification. (Well, XML namespace specifications are anything _but_ natural, but this is as natural as XML itself...).
-	* *line 16*: XML rules are referenced using <ruleName> syntax. Behind the scenes this becomes a call to __xml_ruleName().
-	* *line 19*: Declaring the <note> rule does the following:
-		* Changes the method name to __xml_note()
-		* Automatically adds a reference to the <note> token at the beginning of the rule
-		* Automatically adds a reference to the XML_END_TAG token at the end of the rule
-		* Assigns a variable to refer to the <note> tag so attribute references can see it.
+    * *lines 11-12*: A much more natural namespace specification. (Well, XML namespace specifications are anything _but_ natural, but this is as natural as XML itself...).
+    * *line 16*: XML rules are referenced using <ruleName> syntax. Behind the scenes this becomes a call to __xml_ruleName().
+    * *line 19*: Declaring the <note> rule does the following:
+        * Changes the method name to __xml_note()
+        * Automatically adds a reference to the <note> token at the beginning of the rule
+        * Automatically adds a reference to the XML_END_TAG token at the end of the rule
+        * Assigns a variable to refer to the <note> tag so attribute references can see it.
 	
-	* *lines 23, 30, 41, 45*: Attributes are referenced using @attributeName syntax. Attributes are retrieved from the start tag corresponding to the rule in which they appear. For example, the @name referred to in the <from> rule will retrieve the name attribute of the <from> tag that was matched in the XML input.
-	* *lines 49, 53*: PCDATA is a pre-defined token that represents parsed character data inside a tag. Its position corresponds to which PCDATA chunk you want to read from the tag. (Other tags can appear between PCDATA tags.)
+    * *lines 23, 30, 41, 45*: Attributes are referenced using @attributeName syntax. Attributes are retrieved from the start tag corresponding to the rule in which they appear. For example, the @name referred to in the <from> rule will retrieve the name attribute of the <from> tag that was matched in the XML input.
+    * *lines 49, 53*: PCDATA is a pre-defined token that represents parsed character data inside a tag. Its position corresponds to which PCDATA chunk you want to read from the tag. (Other tags can appear between PCDATA tags.)
 
 ==Writing Your XML Parser==
 
@@ -503,8 +503,8 @@ parser...
 The first thing you need to know about writing an ANTXR parser is how the XML 
 file is read and tokenized. There are two basic approaches here:
 
-	* *SAX-Based*: A SAX parser (such as Xerces or Crimson) reads the XML file, and a simple SAX handler creates ANTXR tokens for each tag and PCDATA found. These tokens are _pushed_ into a queue where they wait to be _ pulled _by an ANTXR-generated parser. This is a push-pull parser, requiring two threads to perform the overall parsing and a synchronization point (the blocking queue).
-	* *XMLPULL-Based*: An XMLPULL parser (such as kxml or StAX) waits to scan the XML file until the ANTXR-generated parser asks for a token. When a token is asked for, the XMLPULL parser scans for the next tag or PCDATA in the XML file, creates an ANTXR token and returns it. This is a pull parser, requiring only one thread to perform the overall parse.
+    * *SAX-Based*: A SAX parser (such as Xerces or Crimson) reads the XML file, and a simple SAX handler creates ANTXR tokens for each tag and PCDATA found. These tokens are _pushed_ into a queue where they wait to be _ pulled _by an ANTXR-generated parser. This is a push-pull parser, requiring two threads to perform the overall parsing and a synchronization point (the blocking queue).
+    * *XMLPULL-Based*: An XMLPULL parser (such as kxml or StAX) waits to scan the XML file until the ANTXR-generated parser asks for a token. When a token is asked for, the XMLPULL parser scans for the next tag or PCDATA in the XML file, creates an ANTXR token and returns it. This is a pull parser, requiring only one thread to perform the overall parse.
 
 Each of these has benefits and drawbacks.
 
@@ -525,9 +525,9 @@ tags can be represented by a common token type. However, if you want more than
 well-formedness checking, you need to examine which parser you want to use. For 
 example:
 
-	* Xerces SAX supports DTD and schema-based validation
-	* Crimson SAX (present in the JRE) supports only DTD-based validation
-	* kxml XMLPULL supports only DTD-based validation
+    * Xerces SAX supports DTD and schema-based validation
+    * Crimson SAX (present in the JRE) supports only DTD-based validation
+    * kxml XMLPULL supports only DTD-based validation
 
 I strongly recommend that you do any desired validation with the SAX or 
 XMLPULL validator, and keep your ANTXR parser simple, just recognizing and 
@@ -574,9 +574,9 @@ ANTLR.
 
 First, we should establish some ground rules:
 
-	* Each tag in your XML file is represented by one rule in the grammar. You can have additional rules to help organize things, but in order to take advantage of the shortcuts, you must define a top-level ANTXR rule for each tag in your grammar file.
-	* We assume that if you want to validate the XML, you're using the validation options of the SAX or XMLPULL parser you're using. You _could_ do all the validation yourself in the grammar file, but that would be much more difficult than specifying an XML schema or DTD for the validation.
-	* We assume you're familiar with XML, so when we say things like "namespace", you know what it means.
+    * Each tag in your XML file is represented by one rule in the grammar. You can have additional rules to help organize things, but in order to take advantage of the shortcuts, you must define a top-level ANTXR rule for each tag in your grammar file.
+    * We assume that if you want to validate the XML, you're using the validation options of the SAX or XMLPULL parser you're using. You _could_ do all the validation yourself in the grammar file, but that would be much more difficult than specifying an XML schema or DTD for the validation.
+    * We assume you're familiar with XML, so when we say things like "namespace", you know what it means.
 
 Ok, fair enough. Let's create a real XML parser in ANTXR.
 
@@ -657,20 +657,20 @@ As a quick refresher:
 To run this grammar, we need some startup code. You can choose between the 
 following scanners (all in package com.javadude.antxr.scanner)
 
-	* *XMLTokenStream*: The basic SAX-based XML scanner. You create and configure a SAX parser for your XML input and feed it to the XMLTokenStream. This is highly configurable, but only really necessary if you need extra flexibility.
+    * *XMLTokenStream*: The basic SAX-based XML scanner. You create and configure a SAX parser for your XML input and feed it to the XMLTokenStream. This is highly configurable, but only really necessary if you need extra flexibility.
 
-	* *XMLPullTokenStream*: The basic XMLPULL-based XML scanner. You create and configure an XMLPULL parser for your XML input and feed it into the XMLPullTokenStream.
+    * *XMLPullTokenStream*: The basic XMLPULL-based XML scanner. You create and configure an XMLPULL parser for your XML input and feed it into the XMLPullTokenStream.
 
-	* *BasicCrimsonXMLTokenStream*: An easy to create Crimson-based SAX scanner. You don't need any extra jars (other than antxr.jar). This is useful if you only need to specify:
-		* The XML input (as a java.io.Reader)
-		* If you want a namespace-aware parse
-		* If you want DTD validation<br/>
+    * *BasicCrimsonXMLTokenStream*: An easy to create Crimson-based SAX scanner. You don't need any extra jars (other than antxr.jar). This is useful if you only need to specify:
+        * The XML input (as a java.io.Reader)
+        * If you want a namespace-aware parse
+        * If you want DTD validation<br/>
 	
-	* *BasicXercesXMLTokenStream*: An easy to create Xerces-based SAX scanner. You will need the Xerces.jar in your classpath to use this option. This is useful if you only need to specify:
-		* The XML input (as a java.io.Reader)
-		* If you want a namespace-aware parse
-		* If you want validation
-		* Whether than validation is DTD or XML Schema based
+    * *BasicXercesXMLTokenStream*: An easy to create Xerces-based SAX scanner. You will need the Xerces.jar in your classpath to use this option. This is useful if you only need to specify:
+        * The XML input (as a java.io.Reader)
+        * If you want a namespace-aware parse
+        * If you want validation
+        * Whether than validation is DTD or XML Schema based
 
 Here's an example:
 
@@ -1061,7 +1061,7 @@ component returns [Component component=null]
 
 Note that this grammar demonstrates several things:
 
-	* *Passing data down and up*
+    * *Passing data down and up*
 	
 		That things like components are passed back to their caller, which is 
 		usually a layout constraint. This allows the layout constraint to decide how 
@@ -1070,16 +1070,16 @@ Note that this grammar demonstrates several things:
 		representation of a constraint) back to the container rule for it to 
 		determine how to add the component.<br/>
 
-	* *Use of rules that do not represent tags
+    * *Use of rules that do not represent tags
 	
-		*Check out the *component* and *layout* rules. These rules are 
+        *Check out the *component* and *layout* rules. These rules are 
 		simply there to make our lives easier, as we can logically represent the 
 		contents of a tag via a single rule, and let that new rule be used in more 
 		than one place. (For example, *layout* is used in both *panel* and
-		*frame*, and this prevents us from having to specify all of the 
+        *frame*, and this prevents us from having to specify all of the 
 		possible layouts under both *panel* and *frame*.<br/>
 
-	* *Converting some attribute values to numbers*<br/>
+    * *Converting some attribute values to numbers*<br/>
 		This is something I'd like to make easier, but for now, you'll have to live 
 		with it. Attributes are strings, and if you want them in another form such 
 		as ints, you'll need to do the conversion.
@@ -1124,8 +1124,8 @@ usage. You can download the ANTXR plugin as noted at the top of this page.)
 
 The main differences between the ANTXR plugin and the ANTLR plugin are names:
 
-	* You use the "Toggle ANTXR nature" option instead of "Toggle ANTLR nature".
-	* You must name your grammars foo.antxr instead of foo.g.
+    * You use the "Toggle ANTXR nature" option instead of "Toggle ANTLR nature".
+    * You must name your grammars foo.antxr instead of foo.g.
 
 ==Performance==
 
