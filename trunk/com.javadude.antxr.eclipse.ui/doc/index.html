@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>ANTXR plugin for Eclipse</title>
+	<meta name="Keywords" content="ANTXR, Eclipse, Plugin, Java, Parser, Recognizer, Generator, IDE, Open, Source">
+</head>
+
+<body>
+<h1>ANTXR plugin for Eclipse</h1>
+
+This project leverages the
+<a href="http://www.eclipse.org/" target="_blank">Eclipse platform</a>
+(v2.1) 	by adding support for the parser generator
+<a href="http://www.antxr.org/" target="_blank">ANTXR</a>.
+<p>
+It provides the following plugins:
+<dl>
+	<dt><b>org.antxr</b></dt>
+	<dd>ANTXR 2.7.2 (final) library</dd>
+
+	<dt><b>com.javadude.antxr.doc</b></dt>
+	<dd>ANTXR 2.7.2 (final) documentation</dd>
+
+	<dt><b>com.javadude.antxr.eclipse.core</b></dt>
+	<dd>ANTXR project nature with builder</dd>
+
+	<dt><b>com.javadude.antxr.eclipse.ui</b></dt>
+	<dd>ANTXR-aware text editor (associated to files with extension '*.g')</dd>
+</dl>
+<img src="Editor.png" width="711" height="568" alt="" border="0">
+
+
+<p>
+<h2>Features</h2>
+<ul>
+	<li>Project nature with builder for ANTXR grammar files</li>
+	<li>Problem markers for errors and warnings in grammar files</li>
+	<li>ANTXR-aware multi-page text editor with syntax highlight</li>
+	<li>Additional editor page with overview of ANTXR grammar (only terminals and
+		non-terminals are displayed)
+		-&gt; <a href="OverviewPage.png">Screenshot</a></li>
+	<li>Outline view which shows sections of ANTXR grammar files</li>
+	<li>Action in navigator context menu to compile ANTXR grammar files manually</li>
+	<li>Action in navigator context menu to add/remove ANTXR project nature
+		to/from the currently selected project</li>
+	<li>Menu item 'Go to Rule' (available in workbench's navigate menu and editor's
+		context menu) for navigating to definition of rule under cursor
+		(keyboard shortcut 'F3' or context menu)
+		-&gt; <a href="GotoRule.png">Screenshot</a><br>
+		Use Workbench's navigation history to return to previous location
+		(keyboard shortcut 'Alt + Arrow Left').</li>
+	<li>Annotation hover for errors (<a href="AnnotationHover.png">Screenshot</a>)</li>
+	<li>Text annotations for rules (first 10  lines of the rule's source code)
+		-&gt; <a href="TextHover.png">Screenshot</a></li>
+	<li>Commenting and uncommenting text (Ctrl+/ and Ctrl+\)</li>
+	<li>Content assist for rules (Ctrl+Space)
+		-&gt; <a href="ContentAssist.png">Screenshot</a></li>
+	<li>Leverage customizable keybinding facility of Eclipse 2.1
+	<li>Preferences page for editor's syntax highlight
+		(<a href="PreferencesSyntaxHighlighting.png">Screenshot</a>)</li>
+	<li>Resource label decoration of ANTXR generated files with name of according
+		grammar file (<a href="LabelDecoration.png">Screenshot</a>)</li>
+	<li>property page for grammar files which allows to specify an alternate output
+		path (option '-o') and optional super grammars (option '-glib')
+		-&gt; <a href="PropertiesGrammar.png">Screenshot</a></li>
+	<li>property page for generated files which displays the related grammar file
+		(<a href="PropertiesGeneratedCode.png">Screenshot</a>)</li>
+</ul>
+
+
+<p>
+<h2>Installation</h2>
+
+<h3>Via Eclipse Update Manager</h3>
+
+Online updates are available on
+<a href="http://antxreclipse.sourceforge.net/updates/">http://antxreclipse.sourceforge.net/updates/</a>.
+Define a site bookmark in Eclipse's Update Manager view
+(<a href="UpdateSiteBookmark.png">Screenshot</a>), navigate to the update site via this
+bookmark (<a href="UpdateSitePreview.png">Screenshot</a>) and install the ANTXR UI feature.
+<p>
+This update site can also be downloaded from
+<a href="http://sourceforge.net/project/showfiles.php?group_id=55477" target="_blank">SourceForge</a>
+and used locally.
+
+
+<h3>Manually</h3>
+
+Download the archives <i>org.antxr_x.x.x.zip</i>, (optionally) <i>com.javadude.antxr.doc_x.x.x.zip</i>,
+<i>com.javadude.antxr.eclipse.core_x.x.x.zip</i> and <i>com.javadude.antxr.eclipse.ui_x.x.x.zip</i> from
+<a href="http://sourceforge.net/project/showfiles.php?group_id=55477" target="_blank">here</a>
+and unzip them in your Eclipse plugin directory "&lt;eclipse install path&gt;/plugins/".
+
+
+<p>
+<h2>Usage</h2>
+
+To keep Eclipse from copying ANTXR grammar files to the output folder during build
+you have to add an additional entry (&quot;*.g&quot;) to the resource filter in the Java
+compiler preferences.
+<p>
+<img src="PreferencesCompilerBuildPath.png" width="619" height="534" alt="" border="0">
+<p>
+To add/remove the ANTXR project nature to/from a project select a project in Eclipse's
+navigator view and select from the context menu 'Toggle ANTXR project nature'.
+<p>
+<img src="ToggleProjectNature.png" width="711" height="568" alt="" border="0">
+<p>
+You can verify if the project nature is added by examining in the project's properties the
+list 'External Tool Builders'. Here appears our builder as 'ANTXR Builder'.
+<p>
+<img src="PropertiesBuilders.png" width="609" height="534" alt="" border="0">
+<p>
+If your project is built then this builder automatically starts the ANTXR parser generator for
+every modified grammar file.
+
+
+<p>
+<hr>
+<A href="http://sourceforge.net/projetcs/antxreclipse/"> <IMG src="http://sourceforge.net/sflogo.php?group_id=55477&amp;type=1" width="88" height="31" border="0" alt="SourceForge Logo"></A>
+</body>
+</html>

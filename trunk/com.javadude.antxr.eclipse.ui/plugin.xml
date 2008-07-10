@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="ANTXR Editor"
+			icon="icons/full/obj16/antxr_file.gif"
+			extensions="antxr"
+			contributorClass="com.javadude.antxr.eclipse.ui.editor.AntxrActionContributor"
+			class="com.javadude.antxr.eclipse.ui.editor.AntxrMultiPageEditor"
+			id="com.javadude.antxr.eclipse.ui.AntxrEditor" />
+	</extension>
+
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			targetID="com.javadude.antxr.eclipse.ui.AntxrEditor"
+			id="com.javadude.antxr.eclipse.ui.AntxrEditor.BreakpointRulerActions">
+			<action
+				label="Toggle &amp;Breakpoint"
+				class="com.javadude.antxr.eclipse.ui.actions.ManageBreakpointRulerActionDelegate"
+				actionID="RulerDoubleClick"
+				id="com.javadude.antxr.eclipse.ui.actions.ManageBreakpointRulerAction" />
+		</editorContribution>
+	</extension>
+
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IFile"
+			nameFilter="*.antxr"
+			id="com.javadude.antxr.eclipse.ui.actions.compile">
+			<action
+				label="Compile ANTXR Grammar"
+				class="com.javadude.antxr.eclipse.ui.actions.CompileAction"
+				enablesFor="1"
+				id="com.javadude.antxr.eclipse.ui.actions.compile" />
+		</objectContribution>
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IProject"
+			adaptable="true"
+			id="com.javadude.antxr.eclipse.ui.actions.convert">
+			<action
+				label="Toggle ANTXR project nature"
+				class="com.javadude.antxr.eclipse.ui.actions.ConversionAction"
+				enablesFor="1"
+				id="com.javadude.antxr.eclipse.ui.actions.convert" />
+		</objectContribution>
+
+		<viewerContribution
+			targetID="#AntxrGrammarFileRulerContext"
+			id="com.javadude.antxr.eclipse.ui.AntxrGrammarFileRulerPopupActions">
+			<action
+				label="Breakpoint P&amp;roperties..."
+				helpContextId="breakpoint_properties_action_context"
+				class="com.javadude.antxr.eclipse.ui.actions.JavaBreakpointPropertiesRulerActionDelegate"
+				menubarPath="debug"
+				id="com.javadude.antxr.eclipse.ui.actions.JavaBreakpointPropertiesRulerActionDelegate" />
+			<action
+				label="&amp;Toggle Breakpoint Enabled"
+				helpContextId="enable_disable_breakpoint_action_context"
+				class="com.javadude.antxr.eclipse.ui.actions.EnableDisableBreakpointRulerActionDelegate"
+				menubarPath="debug"
+				id="com.javadude.antxr.eclipse.ui.actions.EnableDisableBreakpointRulerActionDelegate" />
+			<action
+				label="Toggle &amp;Breakpoint"
+				helpContextId="manage_breakpoint_action_context"
+				class="com.javadude.antxr.eclipse.ui.actions.ManageBreakpointRulerActionDelegate"
+				menubarPath="debug"
+				id="com.javadude.antxr.eclipse.ui.actions.ManageBreakpointRulerActionDelegate" />
+		</viewerContribution>
+	</extension>
+	<extension point="org.eclipse.ui.decorators">
+		<decorator
+			adaptable="true"
+			label="ANTXR"
+			state="true"
+			class="com.javadude.antxr.eclipse.ui.AntxrLabelDecorator"
+			id="com.javadude.antxr.eclipse.ui.decorator">
+			<description>Shows for an ANTXR generated file the name of the grammar file it's created from.</description>
+			<enablement>
+				<objectClass name="org.eclipse.core.resources.IResource" />
+			</enablement>
+		</decorator>
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<scope
+			name="ANTXR Editor"
+			parent="org.eclipse.jdt.ui.javaEditorScope"
+			description="ANTXR Editor"
+			id="com.javadude.antxr.ui.antxrEditorScope" />
+		<command
+			categoryId="org.eclipse.ui.category.navigate"
+			description="Go to definition of referenced ANTXR rule"
+			id="com.javadude.antxr.eclipse.ui.edit.goto.rule"
+			name="Go to Rule" />
+		<keyBinding
+			string="F3"
+			scope="com.javadude.antxr.ui.antxrEditorScope"
+			command="com.javadude.antxr.eclipse.ui.edit.goto.rule"
+			configuration="org.eclipse.ui.defaultAcceleratorConfiguration" />
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			name="ANTXR Preferences"
+			class="com.javadude.antxr.eclipse.ui.preferences.EditorPreferencePage"
+			id="com.javadude.antxr.eclipse.ui.preferences.editor" />
+	</extension>
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			name="ANTXR Grammar Options"
+			nameFilter="*.antxr"
+			class="com.javadude.antxr.eclipse.ui.properties.GrammarPropertyPage"
+			id="com.javadude.antxr.eclipse.ui.properties.grammar">
+			<enabledWhen>
+				<instanceof value="org.eclipse.core.resources.IFile" />
+			</enabledWhen>
+		</page>
+		<page
+			name="ANTXR Generated Code"
+			nameFilter="*.java"
+			class="com.javadude.antxr.eclipse.ui.properties.CodePropertyPage"
+			id="com.javadude.antxr.eclipse.ui.properties.code.java">
+			<enabledWhen>
+				<instanceof value="org.eclipse.core.resources.IFile" />
+			</enabledWhen>
+		</page>
+		<page
+			name="ANTXR Generated Code"
+			nameFilter="*.smap"
+			class="com.javadude.antxr.eclipse.ui.properties.CodePropertyPage"
+			id="com.javadude.antxr.eclipse.ui.properties.code.smap">
+			<enabledWhen>
+				<instanceof value="org.eclipse.core.resources.IFile" />
+			</enabledWhen>
+		</page>
+		<page
+			name="ANTXR Generated Code"
+			nameFilter="*TokenTypes.txt"
+			class="com.javadude.antxr.eclipse.ui.properties.CodePropertyPage"
+			id="com.javadude.antxr.eclipse.ui.properties.code.txt">
+			<enabledWhen>
+				<instanceof value="org.eclipse.core.resources.IFile" />
+			</enabledWhen>
+		</page>
+	</extension>
+
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory
+			class="com.javadude.antxr.eclipse.ui.BreakpointAdapterFactory"
+			adaptableType="com.javadude.antxr.eclipse.ui.editor.AntxrMultiPageEditor">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+		</factory>
+	</extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="com.javadude.antxr.eclipse.ui.AntxrPreferenceInitializer"/>
+	</extension>
+</plugin>
