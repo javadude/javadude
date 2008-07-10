@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaDude Annotation Plugin
+Bundle-SymbolicName: com.javadude.annotation;singleton:=true
+Bundle-Version: 2.0.24
+Export-Package: com.javadude.annotation;uses:="com.sun.mirror.apt",
+ com.javadude.annotation.processors
+Bundle-ClassPath: .,
+ lib/velocity-dep-1.5.jar
+Require-Bundle: org.eclipse.jdt.apt.core,
+ org.eclipse.core.runtime
+Bundle-Vendor: JavaDude.com
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
