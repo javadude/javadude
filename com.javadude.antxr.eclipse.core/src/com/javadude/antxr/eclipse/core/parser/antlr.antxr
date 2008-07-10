@@ -1,0 +1,436 @@
+// *******************************************************************************
+// *  Copyright 2008 Scott Stanchfield.
+// *
+// *  Licensed under the Apache License, Version 2.0 (the "License");
+// *  you may not use this file except in compliance with the License.
+// *  You may obtain a copy of the License at
+// *
+// *      http://www.apache.org/licenses/LICENSE-2.0
+// *
+// *  Unless required by applicable law or agreed to in writing, software
+// *  distributed under the License is distributed on an "AS IS" BASIS,
+// *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// *  See the License for the specific language governing permissions and
+// *  limitations under the License.
+// *******************************************************************************/
+header {
+package com.javadude.antxr.eclipse.core.parser;
+}
+
+{
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+}
+
+class AntxrParser extends Parser;
+options {
+    k=1;
+    interactive=true;
+    defaultErrorHandler=false;
+}
+
+// Define some methods to test in the generated parser.
+{
+  // Define a main
+  public static void main(String[] anArgs) {
+    try {
+      if (anArgs.length > 0 ) {
+          System.out.println("Start lexing...");
+        for (int i = 0; i < anArgs.length; i++) {
+          doFile(new File(anArgs[i]));
+        }
+      } else {
+        System.err.println("Usage: java AntxrParser <file/directory name>");
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+    }
+  }
+
+  public static void doFile(File aFile) throws IOException {
+    if (aFile.isDirectory()) {
+      String files[] = aFile.list();
+      for (int i = 0; i < files.length; i++) {
+        doFile(new File(aFile, files[i]));
+      }
+    } else if (aFile.getName().length() > 2 &&
+             aFile.getName().substring(aFile.getName().length() - 2).equals(".antxr")) {
+      System.out.println("   " + aFile.getAbsolutePath());
+      parseFile(aFile);
+    }
+  }
+
+  public static void parseFile(File aFile) throws IOException {
+    try {
+      AntxrLexer lexer = new AntxrLexer(new FileInputStream(aFile));
+      AntxrParser parser = new AntxrParser(lexer);
+      Hierarchy h = parser.grammarFile(aFile.getName());
+      System.out.println("Header: " + h.getHeader());
+      System.out.println("Options: " + h.getOptions());
+      System.out.println(h);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+
+
+grammarFile [String name] returns [Hierarchy h]
+{
+    h = new Hierarchy(name);
+}
+    :	( hdr:HEADER
+            { h.setHeader(hdr); }
+        )*
+        ( opt:OPTIONS
+            { h.setOptions(opt); }
+        )?
+        ( classDef[h] )*
+        end:EOF
+        { h.setEndLine(end.getColumn()); }
+    ;
+    exception catch [Exception e] {
+        h.setException(e);
+    }
+
+classDef [Hierarchy h]
+{
+    Grammar g = null;
+}
+    :	( preamble:ACTION )?
+        ( doc:DOC_COMMENT )?
+        ( cls:"class" sub:ID "extends" sup:ID SEMI
+            { g = new Grammar(h, sub.getText(), sup.getText(), cls.getLine());
+              if (preamble != null) {
+                g.setPreamble(preamble);
+              }
+              if (doc != null) {
+                g.setDocComment(doc);
+              }
+              h.addGrammar(g);
+            }
+        )
+        ( opt:OPTIONS
+            { g.setOptions(opt); }
+        )?
+        ( tk:TOKENS
+            { g.setTokens(tk); }
+        )?
+        ( memberA:ACTION
+            { g.setMemberAction(memberA); }
+        )?
+        (	options {
+                // limitation of appox LL(k) says ambig upon
+                // DOC_COMMENT TOKEN_REF, but that's an impossible sequence
+                warnWhenFollowAmbig=false;
+            }
+        :	rule[g]
+        )+
+            { Rule r = g.getLastRule();
+              if (r == null) {
+                  g.setEndLine(g.getStartLine());
+              } else {
+                g.setEndLine(r.getEndLine());
+              }
+            }
+    ;
+
+rule [Grammar g]
+{
+    Rule r;
+    int vis = Rule.PUBLIC, line = -1;
+}
+    :
+        (	doc:DOC_COMMENT )?
+        (	p1:"protected"	{ vis = Rule.PROTECTED; line = p1.getLine(); }
+        |	p2:"private"	{ vis = Rule.PRIVATE;   line = p2.getLine(); }
+        |	p3:"public"		{ vis = Rule.PUBLIC;    line = p3.getLine(); }
+        )?
+
+        n1:ID
+        {
+            if (line == -1) {
+                vis = Rule.PUBLIC;
+                line = n1.getLine();
+            }
+            r = new Rule(g, n1.getText(), vis, line);
+            if (doc != null)
+                r.setDocComment(doc);
+            g.addRule(r);
+        }
+
+        ( BANG
+            { r.setIsExcluded(true); }
+        )?
+
+        ( ARG_ACTION )?
+
+        ( "returns" ARG_ACTION )?
+        ( "throws" ID ( COMMA ID )* )?
+
+        ( opt:OPTIONS
+            { r.setOptions(opt); }
+        )?
+
+        ( memberA:ACTION
+            { r.setMemberAction(memberA); }
+        )?
+
+        rb:RULE_BLOCK
+            { r.setEndLine(rb.getColumn()); }
+
+        ( e:"exception" ( ARG_ACTION )?
+          ( "catch" ARG_ACTION a:ACTION
+            { r.setEndLine(a.getColumn());
+              r.addException(e); }
+          )*
+        )*
+    ;
+
+
+class AntxrLexer extends Lexer;
+options {
+    k=2;
+    charVocabulary = '\3'..'\377';	// allow iso-8859-15 characters too
+    interactive=true;
+    defaultErrorHandler=false;
+}
+
+{
+    protected Token makeToken(int t) {
+        Token tok = super.makeToken(t);
+        tok.setColumn(getLine());
+        return tok;
+    }
+}
+
+RULE_BLOCK
+    :   ':' (options {greedy=true;}:WS!)?
+        ALT (options {greedy=true;}:WS!)?
+        ( '|' (options {greedy=true;}:WS!)? ALT (options {greedy=true;}:WS!)? )* ';'
+    ;
+
+SUBRULE_BLOCK
+    :	'(' (options {greedy=true;}:WS)? ALT
+        (	options {greedy=true;}
+        :	(WS)? '|' (options {greedy=true;}:WS)? ALT
+        )*
+        (WS)?
+        ')'
+        (	options {greedy=true;}
+        :	'*'
+        |	'+'
+        |	'?'
+        |	"=>"
+        )?
+    ;
+
+protected
+ALT	:	(options {greedy=true;} : ELEMENT)*
+    ;
+
+protected
+ELEMENT
+    :	COMMENT
+    |	ACTION
+    |	STRING_LITERAL
+    |	CHAR_LITERAL
+    |	SUBRULE_BLOCK
+    |	NEWLINE
+    |	~('\n' | '\r' | '(' | ')' | '/' | '{' | '"' | '\'' | ';')
+    ;
+
+BANG:	'!'
+    ;
+
+SEMI:	';'
+    ;
+
+COMMA
+    :	','
+    ;
+
+RCURLY
+    :	'}'
+    ;
+
+/** This rule picks off keywords in the lexer that need to be
+ *  handled specially.  For example, "header" is the start
+ *  of the header action (used to distinguish between options
+ *  block and an action).  We do not want "header" to go back
+ *  to the parser as a simple keyword...it must pick off
+ *  the action afterwards.
+ */
+ID_OR_KEYWORD
+    :	id:ID	{$setType(id.getType());}
+        (	{id.getText().equals("header")}? (options {greedy=true;}:WS)?
+            (STRING_LITERAL)? (WS|COMMENT)* ACTION
+            {$setType(HEADER);}
+        |	{id.getText().equals("tokens")}? (WS|COMMENT)* CURLY_BLOCK_SCARF
+            {$setType(TOKENS);}
+        |	{id.getText().equals("options")}? (WS|COMMENT)* CURLY_BLOCK_SCARF
+            {$setType(OPTIONS);}
+        )?
+    ;
+
+
+protected
+CURLY_BLOCK_SCARF
+    :	'{'
+        (	options {greedy=false;}
+        :	NEWLINE
+        |	STRING_LITERAL
+        |	CHAR_LITERAL
+        |	COMMENT
+        |	.
+        )*
+        '}'
+    ;
+
+protected
+ID
+options {
+    testLiterals=true;
+}
+    :	( options {greedy=true;} :
+            ( '<' ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|':'|'-'|'0'..'9')* '>'
+            | ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+            )
+        )
+    ;
+
+WS	:	(	options {greedy=true;}
+        : 	' '
+        |	'\t'
+        |	NEWLINE
+        )+
+        {$setType(Token.SKIP);}
+    ;
+
+protected
+NEWLINE
+    :	(	options {
+                generateAmbigWarnings=false;
+            }
+        :	'\r' '\n'	{newline();}
+        |	'\r'		{newline();}
+        |	'\n'		{newline();}
+        )
+    ;
+
+COMMENT
+    :	( SL_COMMENT | t:ML_COMMENT {$setType(t.getType());} )
+            { if ( _ttype != DOC_COMMENT ) $setType(Token.SKIP); }
+    ;
+
+protected
+SL_COMMENT :
+    "//"
+    ( ~('\n'|'\r') )*
+    (
+        /*	'\r' '\n' can be matched in one alternative or by matching
+            '\r' and then in the next token.  The language
+            that allows both "\r\n" and "\r" and "\n" to all be valid
+            newline is ambiguous.  Consequently, the resulting grammar
+            must be ambiguous.  I'm shutting this warning off.
+         */
+            options {
+                generateAmbigWarnings=false;
+            }
+        :	'\r' '\n'
+        |	'\r'
+        |	'\n'
+    )
+    { newline(); }
+    ;
+
+protected
+ML_COMMENT :
+    "/*"
+    (	{ LA(2)!='/' }? '*' {$setType(DOC_COMMENT);}
+    |
+    )
+    (	options {greedy=false;}
+    :	NEWLINE
+    |	.
+    )*
+    "*/"
+    ;
+
+CHAR_LITERAL
+    :	'\'' (ESC|~'\'') '\''
+    ;
+
+STRING_LITERAL
+    :	'"' (ESC|~'"')* '"'
+    ;
+
+protected
+ESC	:	'\\'
+        (	'n'
+        |	'r'
+        |	't'
+        |	'b'
+        |	'f'
+        |	'w'
+        |	'a'
+        |	'"'
+        |	'\''
+        |	'\\'
+        |	('0'..'3')
+            (	options {greedy=true;}
+            :	DIGIT
+                (	options {greedy=true;}
+                :	DIGIT
+                )?
+            )?
+        |	('4'..'7') (options {greedy=true;}:DIGIT)?
+        |	'u' XDIGIT XDIGIT XDIGIT XDIGIT
+        )
+    ;
+
+protected
+DIGIT
+    :	'0'..'9'
+    ;
+
+protected
+XDIGIT
+    :	'0' .. '9'
+    |	'a' .. 'f'
+    |	'A' .. 'F'
+    ;
+
+ARG_ACTION
+    :	'['
+        (
+            options {
+                greedy=false;
+            }
+        :	ARG_ACTION
+        |	NEWLINE
+        |	CHAR_LITERAL
+        |	STRING_LITERAL
+        |	.
+        )*
+        ']'
+    ;
+
+ACTION
+    :	'{'
+        (
+            options {
+                greedy=false;
+            }
+        :	NEWLINE
+        |	ACTION
+        |	CHAR_LITERAL
+        |	COMMENT
+        |	STRING_LITERAL
+        |	.
+        )*
+        '}'
+   ;
