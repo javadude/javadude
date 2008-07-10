@@ -21,7 +21,7 @@ There are three main download types:
 
 	* *Eclipse*: A set of eclipse plugins for editing and running ANTXR applications.
 		* Use the Eclipse Update Manager (*Help->Software Updates->Find and Install...*) and add a new remote update site
-			* Name: JavaDude Eclipse Plugins
+			* Name: !JavaDude Eclipse Plugins
 			* URL: [http://javadude.com/eclipse/update http://javadude.com/eclipse/update]
 		
 		* Select the ANTXR eclipse plugins
@@ -62,7 +62,7 @@ to Torsten and the others who have contributed to the plugin.
 		* [#Hacking_ANTLR_into_submission Hacking ANTLR into submission]
 		* [#Forking_from_ANTLR Forking from ANTLR]
 	
-	* [#Writing_Your_XML_Parser Writing Your XML Parser]<ul>
+	* [#Writing_Your_XML_Parser Writing Your XML Parser]
 		* [#Scanning_XML Scanning_XML]
 		* [#A_skeletal_XML_grammar A skeletal XML grammar]
 		* [#The_Ground_Rules The Ground Rules]
