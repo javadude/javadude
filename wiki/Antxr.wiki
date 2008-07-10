@@ -51,14 +51,14 @@ to Torsten and the others who have contributed to the plugin.
 
 ==Contents==
 	* [#History History]
-		* [#Introduction_and_motivation Introduction and motivation]<ul>
+		* [#Introduction_and_motivation Introduction and motivation]
 			* [#DOM DOM]
 			* [#SAX SAX]
 			* [#Digester Digester]
 			* [#Keeping_in_synch_with_the_XML_schema Keeping in synch with the XML schema]
 		
 		* [#Enter_ANTLR_XML_Parsing Enter ANTLR-Based XML Parsing]
-		* [#Poof!_We_Have_ANTLR_Native_XML_Support! Poof! We Have ANTLR Native XML Support!]
+		* [#Poof_We_Have_ANTLR_Native_XML_Support Poof! We Have ANTLR Native XML Support!]
 		* [#Hacking_ANTLR_into_submission Hacking ANTLR into submission]
 		* [#Forking_from_ANTLR Forking from ANTLR]
 	
@@ -68,7 +68,7 @@ to Torsten and the others who have contributed to the plugin.
 		* [#The_Ground_Rules The Ground Rules]
 		* [#A_Simple_XML_Parser A Simple XML Parser]
 		* [#A_More_Complex_Parser A More Complex Parser]
-		* [#AnyTags AnyTags]
+		* [#Any_Tags Any Tags]
 	
 	* [#Performance Performance]
 	* [#Future Future]
@@ -242,7 +242,7 @@ and a slightly awkward attribute access mechanism.
 I wanted to make things easier for my coworkers, so I downloaded the latest 
 ANTLR source and started hacking...
 
-==Poof! We Have ANTLR Native XML Support!==
+==Poof We Have ANTLR Native XML Support==
 
 The first thing I wanted was easy optional validation. It must be fast, and 
 robust. It seemed to me that using an existing SAX parser was the best solution 
