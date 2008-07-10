@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.jdt.ui.java"
+            class="com.javadude.dependencies.DependencyView"
+            id="com.javadude.dependencies.dependencyview"
+            name="Project Dependencies"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup class="com.javadude.dependencies.DummyStartup"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.javadude.dependencies.actionSet"
+            label="Dependency Action Set"
+            visible="true">
+         <menu
+               id="dependencyMenu"
+               label="&amp;Dependencies">
+            <separator
+                  name="dependencyGroup">
+            </separator>
+         </menu>
+         <action
+               class="com.javadude.dependencies.actions.DOTReportAction"
+               icon="icons/sample.gif"
+               id="com.javadude.dependencies.actions.DOTReportAction"
+               label="&amp;Generate DOT Report"
+               menubarPath="dependencyMenu/dependencyGroup"
+               toolbarPath="dependencyGroup"
+               tooltip="Generate a Graphviz Dependency Report">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>

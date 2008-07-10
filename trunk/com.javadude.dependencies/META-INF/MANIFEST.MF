@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependencies Plug-in
+Bundle-SymbolicName: com.javadude.dependencies; singleton:=true
+Bundle-Version: 2.0.8
+Bundle-Activator: com.javadude.dependencies.DependenciesPlugin
+Bundle-Vendor: JavaDude.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core,
+ org.eclipse.gef,
+ com.javadude.annotation,
+ org.eclipse.jdt.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

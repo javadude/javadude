@@ -1,0 +1,5 @@
+Mon Aug 28 10:22:57 2006  Scott Stanchfield  <scott.stanchfield@hcrest.com>
+	* src/com/javadude/dependencies/editparts/GraphLayoutManager.java
+
+	add proper size setting before doing graph layout
+

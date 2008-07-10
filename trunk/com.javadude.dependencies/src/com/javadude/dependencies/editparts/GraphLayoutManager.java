@@ -1,0 +1,132 @@
+/*******************************************************************************
+ *  Copyright 2008 Scott Stanchfield.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *******************************************************************************/
+package com.javadude.dependencies.editparts;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.draw2d.AbstractLayout;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.graph.CompoundDirectedGraph;
+import org.eclipse.draw2d.graph.CompoundDirectedGraphLayout;
+import org.eclipse.draw2d.graph.Edge;
+import org.eclipse.draw2d.graph.Node;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.NodeEditPart;
+import org.eclipse.gef.editparts.AbstractConnectionEditPart;
+
+class GraphLayoutManager extends AbstractLayout {
+    private EditPart editPart;
+
+    GraphLayoutManager(EditPart editPart) {
+        this.editPart = editPart;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) {
+        // if (state == PLAYBACK)
+        // return container.getSize();
+        container.validate();
+        List children = container.getChildren();
+        Rectangle result = new Rectangle().setLocation(container.getClientArea().getLocation());
+
+        for (int i = 0; i < children.size(); i++) {
+            result.union(((IFigure) children.get(i)).getBounds());
+        }
+
+        result.resize(container.getInsets().getWidth(), container.getInsets().getHeight());
+
+        return result.getSize();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void layout(IFigure container) {
+        CompoundDirectedGraph graph = new CompoundDirectedGraph();
+        Map nodes = new HashMap();
+
+        Node dummyNode = new Node(null);
+        graph.nodes.add(dummyNode);
+
+        List sourceConnections = new ArrayList();
+        for (Iterator i = editPart.getChildren().iterator(); i.hasNext();) {
+            Object part = i.next();
+            Node n = new Node(part);
+            Rectangle bounds = ((GraphicalEditPart) part).getFigure().getBounds();
+            n.width = bounds.width;
+            n.height = bounds.height;
+            nodes.put(part, n);
+            graph.nodes.add(n);
+
+            // keep track of connections for edge setup
+            if (part instanceof NodeEditPart) {
+                NodeEditPart nodeEditPart = (NodeEditPart) part;
+                sourceConnections.addAll(nodeEditPart.getSourceConnections());
+
+                // add any nodes without target dependencies to the dummy node
+                if (nodeEditPart.getTargetConnections().isEmpty()) {
+                    graph.edges.add(new Edge(null, dummyNode, n));
+                }
+            }
+        }
+
+        for (Iterator i = sourceConnections.iterator(); i.hasNext();) {
+            AbstractConnectionEditPart part = (AbstractConnectionEditPart) i.next();
+            Node m = (Node) nodes.get(part.getSource());
+            Node e = (Node) nodes.get(part.getTarget());
+            graph.edges.add(new Edge(part, m, e));
+        }
+
+        // layout the graph
+        new CompoundDirectedGraphLayout().visit(graph);
+
+        int dummyY = 0;
+        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = (Node) i.next();
+            if (node.data == null) {
+                dummyY = node.y;
+            }
+        }
+
+        int minGap = Integer.MAX_VALUE;
+        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = (Node) i.next();
+            if (node.data != null) {
+                minGap = Math.min(minGap, node.y - dummyY);
+            }
+        }
+
+        // update the positions of the figures
+        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = (Node) i.next();
+
+            if (node.data == null) {
+                continue;
+            }
+
+            GraphicalEditPart part = (GraphicalEditPart) node.data;
+            Dimension size = part.getFigure().getPreferredSize();
+            Rectangle rectangle = new Rectangle(node.x, node.y - minGap, size.width, size.height);
+            part.getFigure().setBounds(rectangle);
+        }
+    }
+}
