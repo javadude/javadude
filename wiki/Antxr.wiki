@@ -1,6 +1,6 @@
 =ANTXR: Easy XML Parsing, based on the ANTLR parser generator=
 ===Scott Stanchfield, http://JavaDude.com=== 
-==ANTXR = ANother Tool for Xml Recognition==
+==ANTXR: ANother Tool for Xml Recognition==
 
 Pronounce it "Ant-zer"...
 
