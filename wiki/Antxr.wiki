@@ -124,7 +124,7 @@ And then comes the handler...
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-
+ 
 public void startElement(String uri, String localName, 
                          String qName, Attributes attributes)
             throws SAXException {
@@ -192,7 +192,7 @@ As a simple example of a grammar in XPA, I could write
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-
+ 
 // XPA example grammar rules
 note
   {String to, from, subject, body;}
@@ -211,13 +211,13 @@ note
         //    to, from, subject and body
      }
   ;  
-
+ 
 subjectTag returns [String subject=null]
   : "<subject>"
     value:PCDATA  {subject=value.getText();}
     "</subject>"
   ;
-
+ 
 bodyTag returns [String body=null]
   : "<body>"
     value:PCDATA  {body=value.getText();}
@@ -308,8 +308,7 @@ I wanted to be able to write something like the following:
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-*<note>
+<note>
   { String subject, body; }
   :  subject=<subject>
      body=<body>
@@ -324,8 +323,7 @@ tried something a bit different:
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-*noteTag *options* {*xmlTag*="note";}
+noteTag options {xmlTag="note";}
   : { String subject, body; }
      subject=subjectTag
      body=bodyTag
@@ -346,8 +344,7 @@ is really the same as:
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-*noteTag
+noteTag
   :  start:"<note>"
      ( // extra paren in case there were some alternatives...
        { String subject, body, to=/*code to get "to"*/, from=/*code to get "from" */; }
@@ -355,7 +352,7 @@ is really the same as:
        body=bodyTag
        {doSomethingWith(to, from, subject, body);}
      ) // extra paren in case there were some alternatives...
-     *XML_END_TAG*
+     XML_END_TAG
   ;
 }}}
 
@@ -367,8 +364,7 @@ The next trick was to allow easy namespace usage. I wanted to be able to use
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-*xmlTag="foo:someTag"
+xmlTag="foo:someTag"
 @foo:someAttribute
 }}}
 
@@ -380,12 +376,11 @@ grammar level, mapping a prefix to a namespace URI:
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-class* NoteParser *extends* Parser;
-*options* {
-  *xmlMode*=*true*;
-  *xmlNamespaceMapping*="$DEFAULT=http://www.w3schools.com";
-  *xmlNamespaceMapping*="xsi=http://www.w3.org/2001/XMLSchema-instance";
+class NoteParser extends Parser;
+options {
+  xmlMode=true;
+  xmlNamespaceMapping="$DEFAULT=http://www.w3schools.com";
+  xmlNamespaceMapping="xsi=http://www.w3.org/2001/XMLSchema-instance";
 }
 }}}
 
@@ -396,8 +391,7 @@ this because
 
 {{{
 // !!! NON-ANTXR Sample -- do not use with ANTXR !!!
-*
-*xmlNamespaceMapping="=http://www.w3schools.com";
+xmlNamespaceMapping="=http://www.w3schools.com";
 }}}
 
 looked more like an error than an intentional default namespace 
@@ -542,26 +536,26 @@ header {
 package your.packagename;
 // any necessary import statements
 }
-
+ 
 class YourParserName extends Parser;
-
+ 
   options {
     xmlns="http://your.default.namespace/uri";
     xmlns:somePrefix="http://some.namespace/uri";
   }
-
+ 
 document
     : <sampleRootTag> EOF;
-
+ 
 <sampleRootTag>
     : <sampleTagWithAttributes>
     | <sampleTagWithPCDATA?
     ;
-
+ 
 <sampleTagWithAttributes>
     : { System.out.println(@name); }
     ;
-
+ 
 <sampleTagWithPCDATA>
     : pcData:PCDATA { System.out.println(pcData.getText()); }
     ;
@@ -614,26 +608,26 @@ doesn't use namespaces, so we don't need to define any in the grammar.
 header {
 package com.javadude.antlr.sample.xml;
 }
-
+ 
 class PeopleParser extends Parser;
-
+ 
 document
   : <people> EOF;
-
+ 
 <people>
   : (<person>)*
   ;
-
+ 
 <person> 
   : ( <firstName>
     | <lastName>
     )*
   ;
-
+ 
 <firstName>
   : PCDATA
   ;
-
+ 
 <lastName>
   : PCDATA
   ;
@@ -676,22 +670,22 @@ Here's an example:
 
 {{{
 package com.javadude.antxr.sample;
-
+ 
 import java.io.FileReader;
 import com.javadude.antxr.scanner.BasicCrimsonXMLTokenStream;
-
+ 
 public class PeopleTest {
-
+ 
   public static void main(String[] args) throws Exception {
     // Create our scanner (using a simple SAX parser setup)
     BasicCrimsonXMLTokenStream stream =
         new BasicCrimsonXMLTokenStream(new FileReader("people.xml"),
                                        PeopleParser.class, false, false);
-
-
+ 
+ 
     // Create our ANTLR parser
     PeopleParser peopleParser = new PeopleParser(stream);
-
+ 
     // parse the document
     peopleParser.document();
   }
@@ -711,32 +705,32 @@ Suppose I have the following Person class (a simple JavaBean):
 
 {{{
 package com.javadude.antlr.sample.xml;
-
+ 
 public class Person {
   private String ssn;
   private String firstName;
   private String lastName;
-
+ 
   public String getFirstName() {
     return firstName;
   }
-
+ 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
-
+ 
   public String getLastName() {
     return lastName;
   }
-
+ 
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
-
+ 
   public String getSsn() {
     return ssn;
   }
-
+ 
   public void setSsn(String ssn) {
     this.ssn = ssn;
   }
@@ -749,34 +743,34 @@ data and pass it upwards to the caller.
 {{{
 header {
 package com.javadude.antlr.sample.xml;
-
+ 
 import java.util.List;
 import java.util.ArrayList;
 }
-
+ 
 class PeopleParser extends Parser;
-
-
+ 
+ 
 document returns [List results = null]
   : results=<people> EOF
   ;
-
+ 
 <people> returns [List results = new ArrayList()]
   { Person p; }
   : ( p=<person>  { results.add(p); }   )*
   ;
-
+ 
 <person> returns [Person p = new Person()]
   { String first, last; }
   : ( first=<firstName>  { p.setFirstName(first); }
     | last=<lastName>    { p.setLastName(last);   }
     )*
   ;
-
+ 
 <firstName> returns [String value = null]
   : pcdata:PCDATA { value = pcdata.getText(); }
   ;
-
+ 
 <lastName> returns [String value = null]
   : pcdata:PCDATA { value = pcdata.getText(); }
   ;
@@ -789,8 +783,8 @@ Now we can change our calling code to include
 
 {{{
 List people = peopleParser.document();
-
-*for* (Iterator i = people.iterator(); i.hasNext();) {
+ 
+for (Iterator i = people.iterator(); i.hasNext();) {
   Person p = (Person)i.next();
   System.out.println(p.getFirstName() + " " + p.getLastName());
 }
