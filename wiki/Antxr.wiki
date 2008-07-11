@@ -866,16 +866,16 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 }
-
+ 
 /**
 * A sample parser that generates a Java GUI based on an XML specification
 */
 class GUIParser extends Parser;
-
+ 
 document returns [JFrame f=null] 
   : f=<frame> EOF
   ;
-
+ 
 /**
 * Create a JFrame based on a frame tag
 * @return the generated JPanel
@@ -888,7 +888,7 @@ document returns [JFrame f=null]
       f.pack();
     }
   ;
-
+ 
 /**
 * Create a JPanel based on a panel tag
 * @return the generated JPanel
@@ -896,7 +896,7 @@ document returns [JFrame f=null]
 <panel> returns [JPanel p=new JPanel()] 
   : layout[p]
   ;
-
+ 
 /**
 * Recognizes layout managers
 * @param container the container to which we add the layout manager
@@ -906,7 +906,7 @@ layout [Container container]
   | <flowLayout>[container]
   | <gridLayout>[container]
   ;
-
+ 
 /**
 * Create BorderLayout for the borderLayout tag
 * @param container the container to which we add the layout manager
@@ -920,7 +920,7 @@ layout [Container container]
     | <center>[container]
     )*
   ;
-
+ 
 /**
 * Add the nested component to the container at the "north" position
 * @param container the container to which we add the nested component
@@ -929,7 +929,7 @@ layout [Container container]
   { Component c; }
   : c=component {container.add(c, BorderLayout.NORTH); }
   ;
-
+ 
 /**
 * Add the nested component to the container at the "south" position
 * @param container the container to which we add the nested component
@@ -938,7 +938,7 @@ layout [Container container]
   { Component c; }
   : c=component {container.add(c, BorderLayout.SOUTH); }
   ;
-
+ 
 /**
 * Add the nested component to the container at the "east" position
 * @param container the container to which we add the nested component
@@ -947,7 +947,7 @@ layout [Container container]
   { Component c; }
   : c=component {container.add(c, BorderLayout.EAST); }
   ;
-
+ 
 /**
 * Add the nested component to the container at the "west" position
 * @param container the container to which we add the nested component
@@ -956,7 +956,7 @@ layout [Container container]
   { Component c; }
   : c=component {container.add(c, BorderLayout.WEST); }
   ;
-
+ 
 /**
 * Add the nested component to the container at the "center" position
 * @param container the container to which we add the nested component
@@ -965,7 +965,7 @@ layout [Container container]
   { Component c; }
   : c=component {container.add(c, BorderLayout.CENTER); }
   ;
-
+ 
 /**
 * Create FlowLayout for the flowLayout tag
 * @param container the container to which we add the layout manager
@@ -981,14 +981,14 @@ layout [Container container]
         alignment = FlowLayout.LEFT;
       else if ("CENTER".equals(align))
         alignment = FlowLayout.CENTER;
-
+ 
     container.setLayout(new FlowLayout(alignment));
-
+ 
     Component c;
   }
   : ( c=component {container.add(c);} )*
   ;
-
+  
 /**
 * Create GridLayout for the gridLayout tag
 * @param container the container to which we add the layout manager
@@ -1002,7 +1002,7 @@ layout [Container container]
   }
   : ( c=component {container.add(c);} )*
   ;
-
+ 
 /**
 * Recognize a component
 * @return the component created based on an xml spec
@@ -1013,7 +1013,7 @@ component returns [Component component=null]
   | component=<textField>
   | component=<panel>
   ;
-
+ 
 /**
 * Create a JButton based on a "button" xml tag
 * @return the created JButton
@@ -1022,7 +1022,7 @@ component returns [Component component=null]
   { b.setText(@text); }
   : (<printAction>[b])?
   ;
-
+ 
 /**
 * Create a JLabel based on a "label" xml tag
 * @return the created JLabel
@@ -1031,7 +1031,7 @@ component returns [Component component=null]
   { l.setText(@text); }
   : 
   ;
-
+ 
 /**
 * Create a JTextField based on a "textField" xml tag
 * @return the created JTextField
@@ -1040,7 +1040,7 @@ component returns [Component component=null]
   { t.setText(@text); }
   : 
   ;
-
+ 
 /**
 * Create an ActionListener that prints the data in a "printAction" xml tag
 * @param b the button to which we add the listener
