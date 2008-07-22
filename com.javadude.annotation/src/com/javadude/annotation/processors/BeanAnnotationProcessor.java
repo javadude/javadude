@@ -43,7 +43,6 @@ import com.sun.mirror.declaration.Modifier;
 import com.sun.mirror.declaration.PackageDeclaration;
 import com.sun.mirror.declaration.ParameterDeclaration;
 import com.sun.mirror.declaration.TypeDeclaration;
-import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.MirroredTypeException;
 import com.sun.mirror.type.ReferenceType;
 
@@ -154,13 +153,14 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 ClassDeclaration classDeclaration = (ClassDeclaration) declaration;
                 PackageDeclaration packageDeclaration = classDeclaration.getPackage();
 
-                ClassType superclass = classDeclaration.getSuperclass();
-                String superClassName = superclass.toString();
-                if (!superClassName.equals(classDeclaration.getSimpleName() + "Gen")) {
-                	env_.getMessager().printError(declaration.getPosition(),
-                								  classDeclaration.getSimpleName() + " must extend " + classDeclaration.getSimpleName() + "Gen for @Bean to work properly");
-                	return;
-                }
+// TAKEN OUT FOR NOW - For some reason this causes every other build to not generate a class...
+//                ClassType superclass = classDeclaration.getSuperclass();
+//                String superClassName = superclass.toString();
+//                if (!superClassName.equals(classDeclaration.getSimpleName() + "Gen")) {
+//                	env_.getMessager().printError(declaration.getPosition(),
+//                								  classDeclaration.getSimpleName() + " must extend " + classDeclaration.getSimpleName() + "Gen for @Bean to work properly");
+//                	return;
+//                }
 
                 Bean bean = declaration.getAnnotation(Bean.class);
                 Data data = new Data();
