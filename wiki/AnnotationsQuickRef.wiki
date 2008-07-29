@@ -35,8 +35,10 @@ import com.javadude.annotation.PropertyKind;
     
     reader=Access.NONE, // or PACKAGE, PROTECTED, PUBLIC - default: PUBLIC
         // default access for property reader methods
+        // NONE means that no reader methods will be generated
     writer=Access.NONE, // or PACKAGE, PROTECTED, PUBLIC - default: PUBLIC
         // default access for property writer methods
+        // NONE means that no writer methods will be generated
     
     delegates= {
         // objects to delegate to
