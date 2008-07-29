@@ -69,7 +69,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
 
 #foreach ($property in ${data.properties})
-## define simple propertis
+## define simple properties
 #if (${property.kind.isSimple()})
     private ${property.type} ${property.name}_;
 #if (${property.isReadable()})
@@ -87,7 +87,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
     }
 #end
 
-## define list propertis
+## define list properties
 #elseif (${property.kind.isList()})
     private java.util.List<${property.type}> ${property.pluralName}_ = new java.util.ArrayList<${property.type}>();
 #if (${property.isReadable()})
@@ -122,7 +122,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
     }
 #end
 
-## define list propertis
+## define list properties
 #elseif (${property.kind.isSet()})
     private java.util.Set<${property.type}> ${property.pluralName}_ = new java.util.HashSet<${property.type}>();
 #if (${property.isReadable()})

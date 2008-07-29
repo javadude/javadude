@@ -34,7 +34,7 @@ package com.javadude.annotation;
  * <pre>@{@link Property}(name="x", writer=Access.PROTECTED)</pre>
  * <p>defines a property named "x" with a protected setter. Its getter will default to the
  * access defined in the Bean annotation containing the {@link Property}.</p>
- * 
+ *
  * @see Bean
  * @see Property
  */
@@ -52,12 +52,12 @@ public enum Access {
      *  <p>would create a read-only property called "name"; it would have a getName() method, but not a setName(String name) method.</p>
      */
     NONE,
-    
+
     /** <p>Indicates that you want the reader or writer to be declared PUBLIC.</p>
      *  <p>This is the default value for reader and writer access in the {@link Bean} annotation.</p>
      */
     PUBLIC,
-    
+
     /** Indicates that you want the reader or writer to be declared PROTECTED.</p>
      *  This is the default value for reader and writer access in the {@link Bean} annotation.</p>
      */
@@ -67,7 +67,7 @@ public enum Access {
      *  This is the default value for reader and writer access in the {@link Bean} annotation.</p>
      */
     PACKAGE;
-    
+
     /**
      * Converts the specified access into the access modifier to put in the generated code.
      * @return an access modifier string (public, protected, <none>)
@@ -84,12 +84,12 @@ public enum Access {
             	throw new IllegalArgumentException("Cannot ask for the modifier for Access." + this);
         }
     }
-    
+
     /**
      * A convenience method to check if a modifier was specified.
      * @return true if PUBLIC, PROTECTED, PACKAGE; false otherwise.
      */
     public boolean exists() {
-        return this != NONE;
+        return this != NONE && this != NOT_SPECIFIED;
     }
 }
