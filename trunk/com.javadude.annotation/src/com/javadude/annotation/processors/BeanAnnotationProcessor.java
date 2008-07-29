@@ -208,12 +208,19 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                                 if (!"".equals(property.plural())) {
                                     env_.getMessager().printError(declaration.getPosition(),
                                                                   "Cannot specify plural name for Simple properties in @Bean");
+                                    return;
                                 }
                                 break;
                         }
 
                         if (property.bound()) {
-                            atLeastOneBound = true;
+                        	if (property.isStatic()) {
+                        		env_.getMessager().printError(declaration.getPosition(),
+                        			"Static properties cannot be declared bound");
+                        		return;
+                        	} else {
+                        		atLeastOneBound = true;
+                        	}
                         }
                         PropertySpec propertySpec = new PropertySpec();
                         propertySpec.setKind(property.kind());
@@ -270,6 +277,21 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         propertySpec.setReadable(reader.exists());
                         propertySpec.setWriteable(writer.exists());
                         propertySpec.setNotNull(property.notNull());
+                        String extraFieldKeywords = "";
+                        String extraMethodKeywords = "";
+                        if (property.isStatic()) {
+                        	extraFieldKeywords = "static ";
+                        	extraMethodKeywords = "static ";
+                        }
+                        if (property.isSynchronized()) {
+                        	if (property.isStatic()) {
+                        		extraMethodKeywords += "synchronized ";
+                        	} else {
+                        		extraMethodKeywords = "synchronized ";
+                        	}
+                        }
+                        propertySpec.setExtraFieldKeywords(extraFieldKeywords);
+                        propertySpec.setExtraMethodKeywords(extraMethodKeywords);
                     }
                 }
 

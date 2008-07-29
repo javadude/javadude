@@ -36,6 +36,8 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="upperPluralName"),
 		@Property(name="baseType"),
 		@Property(name="keyType"),
+		@Property(name="extraMethodKeywords"),
+		@Property(name="extraFieldKeywords"),
 		@Property(name="omitFromToString", type=boolean.class),
 		@Property(name="kind", type=PropertyKind.class)
 })

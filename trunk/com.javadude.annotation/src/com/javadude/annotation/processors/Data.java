@@ -38,7 +38,7 @@ import com.javadude.annotation.PropertyKind;
 })
 public class Data extends DataGen {
 	private String superClass_;
-	
+
 	public void setSuperClass(String superClass) {
     	superClass_ = superClass;
     }
