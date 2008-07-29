@@ -38,13 +38,13 @@ If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->
 ===Project Setup===
 If you're creating a plugin, you can add a dependency to the com.javadude.annotation plugin. Otherwise:
 
-  # Download com.javadude.annotation_2.0.18.jar and import it into your project. 
-  # Right-click on the jar and choose Build Path->Add to Build Path. (This gives you access to the annotation definitions so you can use them in your code.) 
-  # Open your project properties (Select the project and press Alt-Enter) 
-  # Go to Java Compiler->Annotation Processing 
-  # Check Enable project specific settings 
-  # Uncheck Enable processing in editor (not really necessary but can improve performance slightly) 
-  # The plugin will automatically process the @Bean and @!ExtractInterface annotations.
+# Download com.javadude.annotation_2.0.18.jar and import it into your project. 
+# Right-click on the jar and choose Build Path->Add to Build Path. (This gives you access to the annotation definitions so you can use them in your code.) 
+# Open your project properties (Select the project and press Alt-Enter) 
+# Go to Java Compiler->Annotation Processing 
+# Check Enable project specific settings 
+# Uncheck Enable processing in editor (not really necessary but can improve performance slightly) 
+# The plugin will automatically process the @Bean and @!ExtractInterface annotations.
 
 
 ===In Ant===
