@@ -10,7 +10,7 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 
 =Documentation=
 (Work in progress... might be a while...)
- * [AnnotationsQuickReference Quick Reference]
+ * [AnnotationsQuickRef Quick Reference]
  * [AnnotationsExamples Examples]
 
 =Downloading and Installation=
