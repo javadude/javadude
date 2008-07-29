@@ -51,8 +51,16 @@ public @interface Property {
 
     /**
      * The type of keys for map properties. This attribute is ignored for non-map properties.
+     * Exactly one of keyType or keyTypeString must be specified.
      */
     Class<?> keyType() default Void.class;
+
+    /**
+     * The type of keys for map properties. This attribute is ignored for non-map properties.
+     * If the type is in the same package as the annotated bean, you don't need to
+     *   package-qualify it. Otherwise, prepend with the package name.
+     * Exactly one of keyType or keyTypeString must be specified.
+     */
     String keyTypeString() default "";
 
     /**
