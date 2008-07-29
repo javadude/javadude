@@ -129,10 +129,10 @@ import com.javadude.annotation.PropertyKind;
                 // access modifier for generated writer methods
                 //   use NONE to generate no writers
                 // default:[@Bean.writer() value]
-
+ 
             isStatic=true, // default:false
                 // defines the generated fields and methods for this property as static
-
+ 
             isSynchronized=true, // default:false
                 // defines the generated methods for this property as synchronized
         ),
