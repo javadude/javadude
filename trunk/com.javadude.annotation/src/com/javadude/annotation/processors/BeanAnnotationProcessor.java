@@ -26,6 +26,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.exception.MethodInvocationException;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
+
 import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
 import com.javadude.annotation.Delegate;
@@ -46,13 +53,6 @@ import com.sun.mirror.declaration.TypeDeclaration;
 import com.sun.mirror.type.MirroredTypeException;
 import com.sun.mirror.type.ReferenceType;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
-
 // does not support standard indexed properties
 // does not support constrained properties
 
@@ -63,21 +63,21 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
     private static final Set<String> METHODS_TO_SKIP = new HashSet<String>();
     private static final Map<String, String> PRIMITIVE_TYPE_INT_CONVERSIONS = new HashMap<String, String>();
     static {
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("char", "");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("byte", "");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("int", "");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("short", "");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("long", "(int) ");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("float", "(int) ");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("double", "(int) ");
-        PRIMITIVE_TYPE_INT_CONVERSIONS.put("boolean", "X");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("char", "");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("byte", "");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("int", "");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("short", "");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("long", "(int) ");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("float", "(int) ");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("double", "(int) ");
+        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("boolean", "X");
         // TODO add parameters...
-        METHODS_TO_SKIP.add("equals");
-        METHODS_TO_SKIP.add("hashCode");
-        METHODS_TO_SKIP.add("toString");
-        METHODS_TO_SKIP.add("wait");
-        METHODS_TO_SKIP.add("notify");
-        METHODS_TO_SKIP.add("notifyAll");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("equals");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("hashCode");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("toString");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("wait");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("notify");
+        BeanAnnotationProcessor.METHODS_TO_SKIP.add("notifyAll");
     }
     private static final Class<?>[] EMPTY_PARAMS = {};
     private static final Object[] EMPTY_ARGS = {};
@@ -90,11 +90,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
     	java.lang.reflect.Method classMethod;
     	java.lang.reflect.Method stringMethod;
         try {
-	        classMethod = o.getClass().getMethod(classAttribute, EMPTY_PARAMS);
-	        stringMethod = o.getClass().getMethod(stringAttribute, EMPTY_PARAMS);
+	        classMethod = o.getClass().getMethod(classAttribute, BeanAnnotationProcessor.EMPTY_PARAMS);
+	        stringMethod = o.getClass().getMethod(stringAttribute, BeanAnnotationProcessor.EMPTY_PARAMS);
 	        String classValue = null;
 	        try {
-	        	classMethod.invoke(o, EMPTY_ARGS);
+	        	classMethod.invoke(o, BeanAnnotationProcessor.EMPTY_ARGS);
 	        } catch (InvocationTargetException e) {
 	        	if (e.getTargetException() instanceof MirroredTypeException) {
 	        		classValue = ((MirroredTypeException) e.getTargetException()).getQualifiedName();
@@ -107,7 +107,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 	        	classValue = null;
 	        }
 
-	        String stringValue = (String) stringMethod.invoke(o, EMPTY_ARGS);
+	        String stringValue = (String) stringMethod.invoke(o, BeanAnnotationProcessor.EMPTY_ARGS);
 
 	        if ("java.lang.Void".equals(stringValue) || "".equals(stringValue)) {
 	        	stringValue = null;
@@ -166,8 +166,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 Data data = new Data();
                 data.setBean(bean);
                 data.setSuperClass(selectType(declaration, "@Bean", bean, "superclass", "superclassString", null, false));
-                String defaultReadAccess = bean.reader().getModifier();
-                String defaultWriteAccess = bean.writer().getModifier();
 
                 data.setParamStringOverridden(bean.overrideParamString());
                 data.setClassAccess(classDeclaration.getModifiers().contains(Modifier.PUBLIC) ? "public " : "");
@@ -240,7 +238,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         } else if (property.kind().isList() || property.kind().isSet()) {
                             propertySpec.setPluralName(plural);
                         } else {
-                            String intConversion = PRIMITIVE_TYPE_INT_CONVERSIONS.get(type);
+                            String intConversion = BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.get(type);
                             propertySpec.setPrimitive(intConversion != null);
                             if ("X".equals(intConversion)) {
                                 intConversion = '(' + property.name() + "_ ? 1 : 0)";
@@ -254,18 +252,23 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
                         propertySpec.setName(property.name());
                         propertySpec.setBound(property.bound());
-                        if (property.writer() == Access.NOT_SPECIFIED) {
-                            propertySpec.setWriterAccess(defaultWriteAccess);
-                        } else if (property.writer() != Access.NONE) {
-                            propertySpec.setWriterAccess(property.writer().getModifier());
+                        Access reader = property.reader();
+                        Access writer = property.writer();
+                        if (writer == Access.NOT_SPECIFIED) {
+                        	writer = bean.writer();
                         }
-                        if (property.reader() == Access.NOT_SPECIFIED) {
-                            propertySpec.setReaderAccess(defaultReadAccess);
-                        } else if (property.reader() != Access.NONE) {
-                            propertySpec.setReaderAccess(property.reader().getModifier());
+                        if (reader == Access.NOT_SPECIFIED) {
+                        	reader = bean.reader();
                         }
-                        propertySpec.setReadable(property.reader().exists());
-                        propertySpec.setWriteable(property.writer().exists());
+
+                        if (writer.exists()) {
+                        	propertySpec.setWriterAccess(writer.getModifier());
+                        }
+                        if (reader.exists()) {
+                        	propertySpec.setReaderAccess(reader.getModifier());
+                        }
+                        propertySpec.setReadable(reader.exists());
+                        propertySpec.setWriteable(writer.exists());
                     }
                 }
 
@@ -441,7 +444,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                     continue;
                 }
             }
-            if (METHODS_TO_SKIP.contains(methodDeclaration.getSimpleName())) {
+            if (BeanAnnotationProcessor.METHODS_TO_SKIP.contains(methodDeclaration.getSimpleName())) {
                 continue;
             }
             Method method = new Method();
