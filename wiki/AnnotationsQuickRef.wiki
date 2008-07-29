@@ -135,6 +135,10 @@ import com.javadude.annotation.PropertyKind;
  
             isSynchronized=true, // default:false
                 // defines the generated methods for this property as synchronized
+ 
+            notNull=true, // default:false
+                // adds != null check for simple properties, throwing IllegalArgumentException if violated
+                // note this check always happens for list, set and map properties
         ),
     }
 )    
