@@ -17,22 +17,14 @@ package com.javadude.annotation;
 
 /**
  * <p>Defines an event set to generate code for.</p>
- * 
+ *
  * <p>An event set is an interface that is used as an observer. The Bean containing the event set will
  * 		allow instances of that interface to be registered as listeners, and will fire events to them by calling
  * 		their methods.</p>
- * 
- * <p>This annotation supports the following attributes:</p>
- * <dl>
- * 		<dt>type</dt>
- * 			<dd>The listener interface that represents the event set</dd>
- * 		<dt>addOverrides</dt>
- * 			<dd>If set to true, an &#064;Override annotation will be added to generated methods</dd>
- * </dl>
- * 
+ *
  * <p>This annotation will generate the following methods in the generated superclass (assuming SomeListener is the listener interface,
  *     and someMethod is a method in that interface):</p>
- *     
+ *
  * <pre>
  * private java.util.List&lt;SomeListener&gt; someListeners_ = new java.util.ArrayList&lt;SomeListener&gt;();
  * public void add&lt;SomeListener&gt;(SomeListener listener) {
@@ -57,7 +49,20 @@ package com.javadude.annotation;
  * </pre>
  */
 public @interface Observer {
+	/**
+	 * The listener interface that represents the observer.
+	 * Exactly one of type or typeString must be specified.
+	 */
     Class<?> type() default Void.class;
+
+    /**
+     * The listener interface that represents the observer.
+     * Exactly one of type or typeString must be specified.
+     */
     String typeString() default "";
+
+    /**
+     * If true, @Override will be added to the generated methods.
+     */
     boolean addOverrides() default false;
 }
