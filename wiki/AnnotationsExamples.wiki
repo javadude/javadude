@@ -6,9 +6,9 @@ import com.javadude.annotation.Property;
 import com.javadude.annotation.PropertyKind;
  
 @Bean(properties={
-		@Property(name="name"),
-		@Property(name="phone", bound=true),
-		@Property(name="friend", type=Person.class, kind=PropertyKind.LIST)
+    @Property(name="name"),
+    @Property(name="phone", bound=true),
+    @Property(name="friend", type=Person.class, kind=PropertyKind.LIST)
 }) 
 public class Person extends PersonGen {
 }
