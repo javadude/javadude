@@ -8,7 +8,10 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 || Null Object Pattern || all methods in named interfaces will perform "null" operations; void methods do nothing, while non-void methods return null, false, or 0. || 
 || Interface Extraction || an interface will be generated for all public methods in a class, or just those that are explicitly tagged for export. ||
 
-I'll describe using each of these features in detail below.
+=Documentation=
+(Work in progress... might be a while...)
+ * [AnnotationsQuickReference Quick Reference]
+ * [AnnotationsExamples Examples]
 
 =Downloading and Installation=
 ==Jars==
