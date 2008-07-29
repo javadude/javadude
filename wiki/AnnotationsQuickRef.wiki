@@ -151,7 +151,7 @@ public class Sample extends SampleGen {
 }
 }}}
 
-=@ExtractInterfaces Annotation=
+=@ExtractInterface Annotation=
 {{{
 package com.javadude.annotation.example;
 
