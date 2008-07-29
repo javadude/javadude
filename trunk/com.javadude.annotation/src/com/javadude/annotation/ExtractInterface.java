@@ -23,25 +23,30 @@ import java.lang.annotation.Target;
 /**
  * <p>Flags a class to have an interface created for. Methods to expose are
  * marked with &#064;Expose. The interface will be generated in the same package as the class.</p>
- * 
+ *
  * <p><b><i>Note: This annotation currently does not work properly for interfaces whose methods use parameterized types for their arguments and return types.
  * 		A later release will correct this.</i></b></p>
- * 
- * <p>This annotation supports the following attributes:</p>
- * <dl>
- * 		<dt>name</dt>
- * 			<dd>The name of the interface to generate.</dd>
- * 		<dt>nonPublic</dt>
- * 			<dd>If set to true, the generated interface will not be public (it will not be accessible outside the package)</dd>
- * 		<dt>exposeAllPublicMethods</dt>
- * 			<dd>If set to true, all public methods will be extracted into the interface.</dd>
- * </dl>
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface ExtractInterface {
+	/**
+	 * The name of the interface to generate.
+	 */
     String name();
+
+    /**
+     * Any super-interfaces you wish to define in the generated interface.
+     */
     String[] superinterfaces() default {};
+
+    /**
+     * If true, the generated interface will not be public.
+     */
     boolean nonPublic() default false;
+
+    /**
+     * If true, all public methods in the annotated class will be extracted into the interface.
+     */
     boolean exposeAllPublicMethods() default false;
 }

@@ -18,17 +18,22 @@ package com.javadude.annotation;
 /**
  * <p>Specifies a java interface that will be implemented using Null Object methods. If the methods have a return value, they will
  * 	return null, false or 0. If they do not have a return value, they will do nothing.</p>
- * 
- * <p>This annotation supports the following attributes:</p>
- * <dl>
- * 		<dt>type</dt>
- * 			<dd>The interface that will be implemented using null-object methods</dd>
- * 		<dt>addOverrides</dt>
- * 			<dd>If set to true, an &#064;Override annotation will be added to generated methods</dd>
- * </dl>
  */
 public @interface NullObject {
+	/**
+	 * The interface that will be implemented using null-object methods.
+	 * Exactly one of type or typeString must be specified.
+	 */
     Class<?> type() default Void.class;
+
+    /**
+     * The interface that will be implemented using null-object methods.
+     * Exactly one of type or typeString must be specified.
+     */
     String typeString() default "";
+
+    /**
+     * If true, @Override will be added to all generated methods.
+     */
     boolean addOverrides() default false;
 }
