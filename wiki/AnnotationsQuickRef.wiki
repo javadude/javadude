@@ -151,13 +151,13 @@ public class Sample extends SampleGen {
 }
 }}}
 
-=@ExtractInterface Annotation=
+=@!ExtractInterface Annotation=
 {{{
 package com.javadude.annotation.example;
-
+ 
 import com.javadude.annotation.Expose;
 import com.javadude.annotation.ExtractInterface;
-
+ 
 @ExtractInterface(
     exposeAllPublicMethods=true,  // default:false
         // if true, all public methods in the annotated class will
@@ -176,7 +176,7 @@ import com.javadude.annotation.ExtractInterface;
  
 public class AnotherSample extends AnotherSampleGen {
     // for a class named XXXX, declaration must extend XXXXGen
-
+ 
     @Expose public void someMethod() {}
         // if exposeAllPublicMethods=false, add @Expose to indicate 
         //   which methods to add to the generated interface
