@@ -81,7 +81,7 @@ public @interface Bean {
     boolean cloneable() default false;
 
     /**
-     * If true, the superclass will add {@link @Override} to the generated paramString method and include
+     * If true, the superclass will add {@link Override} to the generated paramString method and include
      *   the contents of its superclass' paramString() method.
      */
     boolean overrideParamString() default false;
@@ -100,30 +100,30 @@ public @interface Bean {
     /**
      * If true, generate a createPropertyMap() method in the superclass. This method will generate a
      *   Map<String, Object> that contains property name/values for properties defined via an
-     *   {@link @Property} annotation inside this bean.
+     *   {@link Property} annotation inside this bean.
      */
     boolean createPropertyMap() default false;
 
     /**
-     * A list of {@link @Property} annotations that define properties to be generated in the generated
+     * A list of {@link Property} annotations that define properties to be generated in the generated
      *   superclass.
      */
     Property[] properties() default { };
 
     /**
-     * A list of {@link @Observer} annotations that specify observer pattern creation in the generated
+     * A list of {@link Observer} annotations that specify observer pattern creation in the generated
      *   superclass.
      */
     Observer[] observers() default { };
 
     /**
-     * A list of {@link @Delegate} annotations that specify creation of delegate methods in the generated
+     * A list of {@link Delegate} annotations that specify creation of delegate methods in the generated
      *   superclass.
      */
     Delegate[] delegates() default { };
 
     /**
-     * A list of {@link @NullObject} annotations that specify creation of null stub methods in the generated
+     * A list of {@link NullObject} annotations that specify creation of null stub methods in the generated
      *   superclass.
      */
     NullObject[] nullObjectImplementations() default { };
