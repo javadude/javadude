@@ -27,6 +27,7 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="readerAccess"),
 		@Property(name="type"),
 		@Property(name="intConversion"),
+		@Property(name="notNull", type=boolean.class),
 		@Property(name="readable", type=boolean.class),
 		@Property(name="writeable", type=boolean.class),
 		@Property(name="bound", type=boolean.class),

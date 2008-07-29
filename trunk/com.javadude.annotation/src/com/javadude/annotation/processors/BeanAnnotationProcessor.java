@@ -269,6 +269,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         }
                         propertySpec.setReadable(reader.exists());
                         propertySpec.setWriteable(writer.exists());
+                        propertySpec.setNotNull(property.notNull());
                     }
                 }
 

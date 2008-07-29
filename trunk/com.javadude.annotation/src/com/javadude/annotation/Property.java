@@ -100,4 +100,10 @@ public @interface Property {
      *   to avoid cyclic toString() definitions.
      */
     boolean omitFromToString() default false;
+
+    /**
+     * If true and this property is writeable, an "if not null" check will be added that will throw an
+     *   IllegalArgumentException.
+     */
+    boolean notNull() default false;
 }

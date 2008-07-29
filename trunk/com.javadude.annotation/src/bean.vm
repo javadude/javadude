@@ -77,6 +77,9 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
 #if (${property.isWriteable()})
     ${property.writerAccess}void set${property.upperName}(${property.type} value)  {
+#if (${property.isNotNull()})
+        if (value == null) throw new IllegalArgumentException("${property.name} cannot be null");
+#end
 #if (${property.isBound()})
         ${property.type} oldValue = ${property.name}_;
 #end
@@ -103,12 +106,14 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
 #if (${property.isWriteable()})
     ${property.writerAccess}void add${property.upperName}(${property.type} value) {
+        if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
     }
     ${property.writerAccess}void add${property.upperName}(int i, ${property.type} value) {
+        if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(i, value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
@@ -135,6 +140,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
 #if (${property.isWriteable()})
     ${property.writerAccess}void add${property.upperName}(${property.type} value) {
+        if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
@@ -168,6 +174,8 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end    
 #if (${property.isWriteable()})
     ${property.writerAccess}void put${property.upperName}(${property.keyType} key, ${property.type} value) {
+        if (key == null) throw new IllegalArgumentException("Cannot put null key in ${property.name}");
+        if (value == null) throw new IllegalArgumentException("Cannot put null value in ${property.name}");
         ${property.pluralName}_.put(key, value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
