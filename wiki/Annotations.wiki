@@ -54,4 +54,4 @@ If you're creating a plugin, you can add a dependency to the com.javadude.annota
  
 
 ==Runtime==
-The generated code does not have any dependencies; you can run without adding extra jars to your classpath.
+The generated code does not have any dependencies; you can run without adding extra jars to your classpath!
