@@ -7,11 +7,11 @@ import com.javadude.annotation.NullObject;
 import com.javadude.annotation.Observer;
 import com.javadude.annotation.Property;
 import com.javadude.annotation.PropertyKind;
-
+ 
 @Bean(
     cloneable=true, // default:false
         // implements Cloneable and defines clone() method
-
+ 
     createPropertyMap=true, // default:false
         // generates Map<String, Object> getPropertyMap()
     
@@ -104,13 +104,15 @@ import com.javadude.annotation.PropertyKind;
                 // exactly one of these required for MAP/UNMODIFIABLE_MAP properties
                 // default:[ignored]
             
-            kind=PropertyKind.SIMPLE, // or MAP, SIMPLE, UNMODIFIABLE_LIST, UNMODIFIABLE_MAP,
+            kind=PropertyKind.SIMPLE, // or MAP, SIMPLE, SET, UNMODIFIABLE_LIST, UNMODIFIABLE_MAP, UNMODIFIABLE_SET
                 // kind of property code to generate
                 //   SIMPLE: single value property
                 //   LIST: list of values property
+                //   SET: set of values property
                 //   MAP: map of key/value pairs property
                 //   UNMODIFIABLE_LIST: same as LIST, but collection "get" returns unmodifiableList
                 //   UNMODIFIABLE_MAP: same as MAP, but collection "get" returns unmodifiableMap
+                //   UNMODIFIABLE_SET: same as SET, but collection "get" returns unmodifiableMap
                 // default: SIMPLE
             
             omitFromToString=true, // default:false
@@ -127,6 +129,12 @@ import com.javadude.annotation.PropertyKind;
                 // access modifier for generated writer methods
                 //   use NONE to generate no writers
                 // default:[@Bean.writer() value]
+
+            isStatic=true, // default:false
+                // defines the generated fields and methods for this property as static
+
+            isSynchronized=true, // default:false
+                // defines the generated methods for this property as synchronized
         ),
     }
 )    
