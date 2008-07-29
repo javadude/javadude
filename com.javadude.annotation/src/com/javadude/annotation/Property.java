@@ -106,4 +106,14 @@ public @interface Property {
      *   IllegalArgumentException.
      */
     boolean notNull() default false;
+
+    /**
+     * If true, the generated field and its reader/writer methods will be declared static.
+     */
+    boolean isStatic() default false;
+
+    /**
+     * If true, the generated reader/writer methods will be declared synchronized.
+     */
+    boolean isSynchronized() default false;
 }

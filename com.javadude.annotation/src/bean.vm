@@ -71,12 +71,12 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #foreach ($property in ${data.properties})
 ## define simple properties
 #if (${property.kind.isSimple()})
-    private ${property.type} ${property.name}_;
+    private ${property.extraFieldKeywords}${property.type} ${property.name}_;
 #if (${property.isReadable()})
-    ${property.readerAccess}${property.type} ${property.isGet()}${property.upperName}() { return ${property.name}_; }
+    ${property.readerAccess}${property.extraMethodKeywords}${property.type} ${property.isGet()}${property.upperName}() { return ${property.name}_; }
 #end
 #if (${property.isWriteable()})
-    ${property.writerAccess}void set${property.upperName}(${property.type} value)  {
+    ${property.writerAccess}${property.extraMethodKeywords}void set${property.upperName}(${property.type} value)  {
 #if (${property.isNotNull()})
         if (value == null) throw new IllegalArgumentException("${property.name} cannot be null");
 #end
@@ -92,34 +92,34 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 
 ## define list properties
 #elseif (${property.kind.isList()})
-    private java.util.List<${property.type}> ${property.pluralName}_ = new java.util.ArrayList<${property.type}>();
+    private ${property.extraFieldKeywords}final java.util.List<${property.type}> ${property.pluralName}_ = new java.util.ArrayList<${property.type}>();
 #if (${property.isReadable()})
-    ${property.readerAccess}${property.type} ${property.isGet()}${property.upperName}(int i) {
+    ${property.readerAccess}${property.extraMethodKeywords}${property.type} ${property.isGet()}${property.upperName}(int i) {
         return ${property.pluralName}_.get(i);
     }
-    ${property.readerAccess}java.util.List<${property.type}> get${property.upperPluralName}() {
+    ${property.readerAccess}${property.extraMethodKeywords}java.util.List<${property.type}> get${property.upperPluralName}() {
         return ${property.kind.prefix}${property.pluralName}_${property.kind.suffix};
     }
-    ${property.readerAccess}boolean ${property.pluralName}Contains(${property.type} value) {
+    ${property.readerAccess}${property.extraMethodKeywords}boolean ${property.pluralName}Contains(${property.type} value) {
         return ${property.pluralName}_.contains(value);
     }
 #end
 #if (${property.isWriteable()})
-    ${property.writerAccess}void add${property.upperName}(${property.type} value) {
+    ${property.writerAccess}${property.extraMethodKeywords}void add${property.upperName}(${property.type} value) {
         if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
     }
-    ${property.writerAccess}void add${property.upperName}(int i, ${property.type} value) {
+    ${property.writerAccess}${property.extraMethodKeywords}void add${property.upperName}(int i, ${property.type} value) {
         if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(i, value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
     }
-    ${property.writerAccess}void clear${property.upperPluralName}() {
+    ${property.writerAccess}${property.extraMethodKeywords}void clear${property.upperPluralName}() {
         ${property.pluralName}_.clear();
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
@@ -129,24 +129,24 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 
 ## define list properties
 #elseif (${property.kind.isSet()})
-    private java.util.Set<${property.type}> ${property.pluralName}_ = new java.util.HashSet<${property.type}>();
+    private ${property.extraFieldKeywords}final java.util.Set<${property.type}> ${property.pluralName}_ = new java.util.HashSet<${property.type}>();
 #if (${property.isReadable()})
-    ${property.readerAccess}java.util.Set<${property.type}> get${property.upperPluralName}() {
+    ${property.readerAccess}${property.extraMethodKeywords}java.util.Set<${property.type}> get${property.upperPluralName}() {
         return ${property.kind.prefix}${property.pluralName}_${property.kind.suffix};
     }
-    ${property.readerAccess}boolean ${property.pluralName}Contains(${property.type} value) {
+    ${property.readerAccess}${property.extraMethodKeywords}boolean ${property.pluralName}Contains(${property.type} value) {
         return ${property.pluralName}_.contains(value);
     }
 #end
 #if (${property.isWriteable()})
-    ${property.writerAccess}void add${property.upperName}(${property.type} value) {
+    ${property.writerAccess}${property.extraMethodKeywords}void add${property.upperName}(${property.type} value) {
         if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(value);
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
     }
-    ${property.writerAccess}void clear${property.upperPluralName}() {
+    ${property.writerAccess}${property.extraMethodKeywords}void clear${property.upperPluralName}() {
         ${property.pluralName}_.clear();
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
@@ -157,23 +157,23 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #else
 ## define map properties
 ## if (${property.kind.isMap()})
-    private java.util.Map<${property.keyType}, ${property.type}> ${property.pluralName}_ = new java.util.HashMap<${property.keyType}, ${property.type}>();
+    private ${property.extraFieldKeywords}final java.util.Map<${property.keyType}, ${property.type}> ${property.pluralName}_ = new java.util.HashMap<${property.keyType}, ${property.type}>();
 #if (${property.isReadable()})
-    ${property.readerAccess}${property.type} get${property.upperName}(${property.keyType} key) {
+    ${property.readerAccess}${property.extraMethodKeywords}${property.type} get${property.upperName}(${property.keyType} key) {
         return ${property.pluralName}_.get(key);
     }
-    ${property.readerAccess}java.util.Map<${property.keyType}, ${property.type}> get${property.upperPluralName}() {
+    ${property.readerAccess}${property.extraMethodKeywords}java.util.Map<${property.keyType}, ${property.type}> get${property.upperPluralName}() {
         return ${property.kind.prefix}${property.pluralName}_${property.kind.suffix};
     }
-    ${property.readerAccess}boolean ${property.pluralName}ContainsKey(${property.keyType} key) {
+    ${property.readerAccess}${property.extraMethodKeywords}boolean ${property.pluralName}ContainsKey(${property.keyType} key) {
         return ${property.pluralName}_.containsKey(key);
     }
-    ${property.readerAccess}boolean ${property.pluralName}ContainsValue(${property.type} value) {
+    ${property.readerAccess}${property.extraMethodKeywords}boolean ${property.pluralName}ContainsValue(${property.type} value) {
         return ${property.pluralName}_.containsValue(value);
     }
 #end    
 #if (${property.isWriteable()})
-    ${property.writerAccess}void put${property.upperName}(${property.keyType} key, ${property.type} value) {
+    ${property.writerAccess}${property.extraMethodKeywords}void put${property.upperName}(${property.keyType} key, ${property.type} value) {
         if (key == null) throw new IllegalArgumentException("Cannot put null key in ${property.name}");
         if (value == null) throw new IllegalArgumentException("Cannot put null value in ${property.name}");
         ${property.pluralName}_.put(key, value);
@@ -181,7 +181,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end    
     }
-    ${property.writerAccess}void clear${property.upperPluralName}() {
+    ${property.writerAccess}${property.extraMethodKeywords}void clear${property.upperPluralName}() {
         ${property.pluralName}_.clear();
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
