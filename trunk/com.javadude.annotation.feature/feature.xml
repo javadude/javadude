@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.annotation.feature"
       label="JavaDude Annotation Feature"
-      version="2.0.28"
+      version="2.0.29"
       provider-name="JavaDude.com">
 
    <description url="http://javadude.com/tools/annotations">
