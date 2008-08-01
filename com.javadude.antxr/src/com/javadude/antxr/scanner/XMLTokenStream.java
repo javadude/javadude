@@ -20,6 +20,8 @@
 package com.javadude.antxr.scanner;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -242,7 +244,16 @@ public class XMLTokenStream implements TokenStream {
             return (Token)o;
         }
         catch (Throwable e) {
-            throw new TokenStreamException("Error during XML parse", e);
+        	StringWriter sw = new StringWriter();
+        	PrintWriter pw = new PrintWriter(sw);
+        	e.printStackTrace(pw);
+        	pw.close();
+        	String lineCol = "";
+        	if (e instanceof SAXParseException) {
+        		SAXParseException se = (SAXParseException) e;
+        		lineCol = " (line " + se.getLineNumber() + " col " + se.getColumnNumber() + ")";
+        	}
+            throw new TokenStreamException("Error during XML parse" + lineCol + ':' + sw);
         }
     }
 
