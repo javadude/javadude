@@ -73,9 +73,9 @@ public class DependencyView extends ViewPart {
 
 		// create a key handler for the delete, redo, and undo actions
 		KeyHandler keyHandler = new KeyHandler();
-		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), deleteAction);
-		keyHandler.put(KeyStroke.getPressed('y', 121, 0), redoAction);
-		keyHandler.put(KeyStroke.getPressed('z', 122, 0), undoAction);
+		keyHandler.put(KeyStroke.getPressed(SWT.DEL, SWT.DEL, 0), deleteAction);
+		keyHandler.put(KeyStroke.getPressed((char) 0x19, 0x79, SWT.CTRL), redoAction);
+		keyHandler.put(KeyStroke.getPressed((char) 0x1a, 0x7a, SWT.CTRL), undoAction);
 
 		// create the GraphicalViewerKeyHandler
 		GraphicalViewerKeyHandler overallHandler = new GraphicalViewerKeyHandler(viewer);
@@ -83,7 +83,7 @@ public class DependencyView extends ViewPart {
 		viewer.setKeyHandler(overallHandler);
 
 		// set the selection provider
-//		getSite().setSelectionProvider(viewer);
+		getSite().setSelectionProvider(viewer);
 		getViewSite().getPage().addSelectionListener(selectionListener_);
 	}
 	private ISelectionListener selectionListener_ = new ISelectionListener() {
@@ -101,7 +101,7 @@ public class DependencyView extends ViewPart {
 				}
 			}
 		}};
-		
+
 	@Override
     public void dispose() {
 	    super.dispose();
