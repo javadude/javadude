@@ -37,11 +37,11 @@ friend
    * void clearFriends()
  
 Because at least one of the properties is bound, the following methods are generated:
-  * PropertyChangeSupport getPropertyChangeSupport()
-  * void addPropertyChangeListener(PropertyChangeListener listener)
-  * void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-  * void removePropertyChangeListener(PropertyChangeListener listener)
-  * void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
+  * PropertyChangeSupport! getPropertyChangeSupport()
+  * void addPropertyChangeListener(PropertyChangeListener! listener)
+  * void addPropertyChangeListener(String propertyName, PropertyChangeListener! listener)
+  * void removePropertyChangeListener(PropertyChangeListener! listener)
+  * void removePropertyChangeListener(String propertyName, PropertyChangeListener! listener)
 
 A toString() method is generated that reports the values of all three properties.
 
