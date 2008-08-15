@@ -25,11 +25,9 @@ will generate the following code. The following methods are created for each pro
 name
   * String getName()
   * void setName(String value)
-
 phone
   * String getPhone()
   * void setPhone(String value)
-
 friend
    * Person getFriend(int i)
    * List<Person> getFriends()
