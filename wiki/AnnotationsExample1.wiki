@@ -25,10 +25,11 @@ will generate the following code. The following methods are created for each pro
 name
   * String getName()
   * void setName(String value)
+
 phone
   * String getPhone()
   * void setPhone(String value)
-listener)
+
 friend
    * Person getFriend(int i)
    * List<Person> getFriends()
@@ -42,7 +43,7 @@ Because at least one of the properties is bound, the following methods are gener
   * void addPropertyChangeListener(PropertyChangeListener listener)
   * void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
   * void removePropertyChangeListener(PropertyChangeListener listener)
-  * void removePropertyChangeListener(String propertyName, PropertyChangeListener 
+  * void removePropertyChangeListener(String propertyName, PropertyChangeListener listener)
 
 A toString() method is generated that reports the values of all three properties.
 
