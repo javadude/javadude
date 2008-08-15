@@ -1,4 +1,5 @@
-[JavaDudeTools Back to main tools page]
+=JavaDude Annotations Examples=
+[Annotations Back to main tools page]
 
    * [AnnotationsPropertyExample1 Simple Property Example]
    * [AnnotationsDecoratorExample Decorator Example]
