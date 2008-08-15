@@ -59,13 +59,13 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
     public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
-    public void addPropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+    public void addPropertyChangeListener(java.lang.String propertyName, java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(propertyName, listener);
     }
     public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
-    public void removePropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+    public void removePropertyChangeListener(java.lang.String propertyName, java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(propertyName, listener);
     }
 #end
@@ -254,7 +254,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 ## Define simple equals() and hashCode() methods
 ##
 #if (${data.isDefineSimpleEqualsAndHashCode()})
-    protected boolean checkEquals(Object o1, Object o2) {
+    protected boolean checkEquals(java.lang.Object o1, java.lang.Object o2) {
         if (o1 == o2) {
             return true;
         }
@@ -265,7 +265,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(java.lang.Object obj) {
         if (obj == this) {
             return true;
         }
@@ -320,13 +320,13 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 ## Define a nice default toString method
 ##
     @Override
-    public String toString() {
+    public java.lang.String toString() {
         return getClass().getName() + '[' + paramString() + ']';
     }
 #if (${data.isParamStringOverridden()})
     @Override
 #end
-    protected String paramString() {
+    protected java.lang.String paramString() {
 #if (${data.properties.isEmpty()})
         return "";
 #else
@@ -352,8 +352,8 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
     }
 #if (${data.isCreatePropertyMap()})
-    public java.util.Map<String, Object> createPropertyMap() {
-                    java.util.Map<String, Object> map = new java.util.HashMap<String, Object>();
+    public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() {
+                    java.util.Map<java.lang.String, java.lang.Object> map = new java.util.HashMap<java.lang.String, java.lang.Object>();
 #foreach ($property in ${data.properties})
 #if (${property.isReadable()})
 #if (${property.kind.isSimple()})
