@@ -23,24 +23,9 @@ public class Person extends PersonGen {
 will generate the following code. The following methods are created for each property:
 
 || property || methods ||
-|| name ||     String getName()
-    void setName(String value) ||
-|| phone ||
-    String getPhone()
-    void setPhone(String value)
-    PropertyChangeSupport getPropertyChangeSupport()
-    void addPropertyChangeListener(PropertyChangeListener listener)
-    void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)
-    void removePropertyChangeListener(PropertyChangeListener listener)
-    void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) ||
-|| friend ||  
-    Person getFriend(int i)
-    List<Person> getFriends()
-    boolean friendsContains(Person value)
-    void addFriend(Person value)
-    void addFriend(int i, Person value)
-    void clearFriends()
-||
+|| name || String getName()<br/>void setName(String value) ||
+|| phone || String getPhone()<br/>void setPhone(String value)<br/>PropertyChangeSupport getPropertyChangeSupport()<br/>void addPropertyChangeListener(PropertyChangeListener listener)<br/>void addPropertyChangeListener(String propertyName, PropertyChangeListener listener)<br/>void removePropertyChangeListener(PropertyChangeListener listener)<br/>void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) ||
+|| friend || Person getFriend(int i)<br/>List<Person> getFriends()<br/>boolean friendsContains(Person value)<br/>void addFriend(Person value)<br/>void addFriend(int i, Person value)<br/>void clearFriends() ||
  
     String toString()
 
