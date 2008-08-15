@@ -65,13 +65,13 @@ public abstract class PersonGen  {
     public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
-    public void addPropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+    public void addPropertyChangeListener(java.lang.String propertyName, java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(propertyName, listener);
     }
     public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(listener);
     }
-    public void removePropertyChangeListener(String propertyName, java.beans.PropertyChangeListener listener) {
+    public void removePropertyChangeListener(java.lang.String propertyName, java.beans.PropertyChangeListener listener) {
         getPropertyChangeSupport().removePropertyChangeListener(propertyName, listener);
     }
  
@@ -117,10 +117,10 @@ public abstract class PersonGen  {
  
  
     @Override
-    public String toString() {
+    public java.lang.String toString() {
         return getClass().getName() + '[' + paramString() + ']';
     }
-    protected String paramString() {
+    protected java.lang.String paramString() {
         return 
                "name=" + name_ +
                ",phone=" + phone_ +
