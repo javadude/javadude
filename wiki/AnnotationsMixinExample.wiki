@@ -1,3 +1,4 @@
+=Mixin Example=
 [AnnotationsExamples Back to main annotations example page]
 
 Suppose we have the following three interfaces:
