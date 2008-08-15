@@ -1,3 +1,5 @@
+[AnnotationsExamples Back to main annotations example page]
+
 This is a simple property example. It demonstrates three properties:
 
    * name: a simple read-write, non-bound string property
@@ -128,3 +130,5 @@ public abstract class PersonGen  {
     }
 }
 }}}
+
+[AnnotationsExamples Back to main annotations example page]
