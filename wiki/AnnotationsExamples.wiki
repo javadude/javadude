@@ -1,1 +1,1 @@
-   * [AnnotationsExamples1 Simple Property Example]
+   * [AnnotationsExample1 Simple Property Example]
