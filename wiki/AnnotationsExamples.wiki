@@ -1,3 +1,3 @@
-   * [AnnotationsExample1 Simple Property Example]
+   * [AnnotationsPropertyExample1 Simple Property Example]
    * [AnnotationsDecoratorExample Decorator Example]
    * [AnnotationsMixinExample Mixin Example]
