@@ -190,7 +190,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 						types[n] = parameterDeclaration.getType().toString();
 						if (annotation != null) {
 							seenDefault = true;
-							defaults[n] = annotation.value();
+							if ("java.lang.String".equals(types[n])) {
+								defaults[n] = '"' + annotation.value() + '"';
+							} else {
+								defaults[n] = annotation.value();
+							}
 						} else if (seenDefault) {
                             env_.getMessager().printError(parameterDeclaration.getPosition(),
                             		"All parameters after a parameter annotated with @Default must be annotated with @Default");

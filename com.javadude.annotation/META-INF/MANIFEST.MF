@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JavaDude Annotation Plugin
 Bundle-SymbolicName: com.javadude.annotation;singleton:=true
-Bundle-Version: 2.1.0
+Bundle-Version: 2.1.1
 Export-Package: com.javadude.annotation;uses:="com.sun.mirror.apt",
  com.javadude.annotation.processors
 Bundle-ClassPath: .,
