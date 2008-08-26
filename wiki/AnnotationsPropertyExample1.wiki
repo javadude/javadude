@@ -1,5 +1,4 @@
-* [Annotations Annotations]
-  * [AnnotationsExamples Annotations examples]
+[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Basic Property Example 1=
 
 This is a simple property example. It demonstrates three properties:
