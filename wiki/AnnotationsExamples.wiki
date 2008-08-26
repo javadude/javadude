@@ -4,3 +4,4 @@
    * [AnnotationsPropertyExample1 Simple Property Example]
    * [AnnotationsDecoratorExample Decorator Example]
    * [AnnotationsMixinExample Mixin Example]
+   * [AnnotationsDefaultParametersExample Default Parameters Example]
