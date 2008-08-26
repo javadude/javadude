@@ -16,22 +16,30 @@
 package com.javadude.annotation.processors;
 
 import java.util.Set;
+import java.util.StringTokenizer;
 
-import com.javadude.annotation.Bean;
-import com.javadude.annotation.Default;
-import com.javadude.annotation.Delegate;
-import com.javadude.annotation.NullObject;
-import com.javadude.annotation.Observer;
-import com.javadude.annotation.Property;
 import com.sun.mirror.apt.AnnotationProcessor;
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 import com.sun.mirror.declaration.AnnotationTypeDeclaration;
 
-public class BeanAnnotationProcessorFactory extends BaseAnnotationProcessorFactory {
-	public BeanAnnotationProcessorFactory() {
-		super(Bean.class, Delegate.class, Default.class, Observer.class, NullObject.class, Property.class);
+public class HushProcessorFactory extends BaseAnnotationProcessorFactory {
+	public HushProcessorFactory() {
+		String annotationsToHush = System.getProperty("annotations.to.hush.during.apt");
+		if (annotationsToHush == null)
+			return;
+		StringTokenizer tokenizer = new StringTokenizer(annotationsToHush, " ,");
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken();
+			Class<?> annotationClass;
+			try {
+				annotationClass = Class.forName(token);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Bad annotation class namd in annotations.to.hush: " + e.getMessage());
+			}
+			add(annotationClass);
+		}
     }
     public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-        return new BeanAnnotationProcessor(env);
+        return new HushProcessor(env);
     }
 }

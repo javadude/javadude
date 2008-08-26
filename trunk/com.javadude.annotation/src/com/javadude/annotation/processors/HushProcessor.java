@@ -15,23 +15,10 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import java.util.Set;
-
-import com.javadude.annotation.Bean;
-import com.javadude.annotation.Default;
-import com.javadude.annotation.Delegate;
-import com.javadude.annotation.NullObject;
-import com.javadude.annotation.Observer;
-import com.javadude.annotation.Property;
 import com.sun.mirror.apt.AnnotationProcessor;
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
-import com.sun.mirror.declaration.AnnotationTypeDeclaration;
 
-public class BeanAnnotationProcessorFactory extends BaseAnnotationProcessorFactory {
-	public BeanAnnotationProcessorFactory() {
-		super(Bean.class, Delegate.class, Default.class, Observer.class, NullObject.class, Property.class);
-    }
-    public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
-        return new BeanAnnotationProcessor(env);
-    }
+public class HushProcessor implements AnnotationProcessor {
+    public HushProcessor(AnnotationProcessorEnvironment env) {}
+    public void process() {}
 }

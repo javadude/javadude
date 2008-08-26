@@ -5,3 +5,4 @@
 # http://www.eclipse.org/legal/epl-v10.html
 com.javadude.annotation.processors.BeanAnnotationProcessorFactory
 com.javadude.annotation.processors.ExtractInterfaceAnnotationProcessorFactory
+com.javadude.annotation.processors.HushProcessorFactory
