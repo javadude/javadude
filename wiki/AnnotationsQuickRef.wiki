@@ -147,6 +147,9 @@ import com.javadude.annotation.PropertyKind;
  
 public class Sample extends SampleGen {
     // for a class named XXXX, declaration must extend XXXXGen
+    public void someMethod(int x, @Default("10") int y, @Default("Hello") String s) {
+        ...
+    }
 
 }
 }}}
