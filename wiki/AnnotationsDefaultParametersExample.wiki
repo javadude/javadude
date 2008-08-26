@@ -1,0 +1,11 @@
+=Default Parameters Example=
+[AnnotationsExamples Back to main annotations example page]
+
+C++-like default parameter values are now easy to implement in Java!
+
+{{{
+}}}
+
+
+
+[AnnotationsExamples Back to main annotations example page]
