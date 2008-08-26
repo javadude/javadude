@@ -1,5 +1,5 @@
+[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Mixin Example=
-[AnnotationsExamples Back to main annotations example page]
 
 Suppose we have the following three interfaces:
 
@@ -102,4 +102,4 @@ public abstract class TravelAgentGen  {
 }
 }}}
 
-[AnnotationsExamples Back to main annotations example page]
+[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
