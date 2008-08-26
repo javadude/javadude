@@ -1,5 +1,5 @@
+[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Decorator Example=
-[AnnotationsExamples Back to main annotations example page]
 
 Suppose we have interface IPerson:
 
@@ -100,4 +100,4 @@ public abstract class DoctorGen  {
 }
 }}}
 
-[AnnotationsExamples Back to main annotations example page]
+[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
