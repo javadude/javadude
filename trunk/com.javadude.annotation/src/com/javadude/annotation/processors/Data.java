@@ -33,6 +33,7 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="createPropertyMap", type=boolean.class),
 		@Property(name="property", plural="properties", type=PropertySpec.class, kind=PropertyKind.LIST),
 		@Property(name="listener", type=Listener.class, kind=PropertyKind.LIST),
+		@Property(name="defaultMethod", type=Method.class, kind=PropertyKind.LIST),
 		@Property(name="delegate", type=DelegateSpec.class, kind=PropertyKind.LIST),
 		@Property(name="nullImplementation", type=Listener.class, kind=PropertyKind.LIST)
 })

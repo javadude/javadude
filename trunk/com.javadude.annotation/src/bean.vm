@@ -196,6 +196,16 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #end
 
 ##
+## Define default methods
+##
+#foreach ($defaultMethod in ${data.defaultMethods})
+    ${defaultMethod.access}${defaultMethod.abstractQualifier}${defaultMethod.returnType} ${defaultMethod.name}(${defaultMethod.argDecls})${defaultMethod.throwsClause} ${defaultMethod.symbolAfterDecl}
+#if (!${defaultMethod.isAbstract()})
+        ${defaultMethod.returnOrNot}${defaultMethod.name}(${defaultMethod.args});
+    }
+#end
+#end
+##
 ## Define delegate methods
 ##
 #foreach ($delegate in ${data.delegates})

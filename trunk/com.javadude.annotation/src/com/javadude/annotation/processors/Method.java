@@ -28,22 +28,34 @@ import com.javadude.annotation.Property;
 		@Property(name="argDecls"),
 		@Property(name="returnType"),
 		@Property(name="returnOrNot"),
-		@Property(name="throwsClause")
+		@Property(name="throwsClause"),
+		@Property(name="access"),
+		@Property(name="abstract", type=boolean.class)
 })
 public class Method extends MethodGen {
     private static final Set<String> NUMBER_TYPES = new HashSet<String>();
     static {
-        NUMBER_TYPES.add("byte");
-        NUMBER_TYPES.add("short");
-        NUMBER_TYPES.add("int");
-        NUMBER_TYPES.add("long");
-        NUMBER_TYPES.add("float");
-        NUMBER_TYPES.add("double");
+        Method.NUMBER_TYPES.add("byte");
+        Method.NUMBER_TYPES.add("short");
+        Method.NUMBER_TYPES.add("int");
+        Method.NUMBER_TYPES.add("long");
+        Method.NUMBER_TYPES.add("float");
+        Method.NUMBER_TYPES.add("double");
     }
     @Override
     public void setName(String name) {
         super.setName(name);
         super.setUpperName(Utils.upperFirstChar(name));
+    }
+    public String getSymbolAfterDecl() {
+    	if (isAbstract())
+    		return ";";
+    	return " {";
+    }
+    public String getAbstractQualifier() {
+    	if (isAbstract())
+    		return "abstract ";
+    	return "";
     }
     @Override
     public void setReturnType(String returnType) {
@@ -64,7 +76,7 @@ public class Method extends MethodGen {
         if ("char".equals(getReturnType())) {
             return "return ' '; // null object implementation";
         }
-        if (NUMBER_TYPES.contains(getReturnType())) {
+        if (Method.NUMBER_TYPES.contains(getReturnType())) {
             return "return 0; // null object implementation";
         }
         return "return null; // null object implementation";
