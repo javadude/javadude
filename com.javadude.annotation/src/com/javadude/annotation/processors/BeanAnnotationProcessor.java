@@ -35,6 +35,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 
 import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
+import com.javadude.annotation.Default;
 import com.javadude.annotation.Delegate;
 import com.javadude.annotation.NullObject;
 import com.javadude.annotation.Observer;
@@ -139,9 +140,10 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
         }
 
     }
+
     public void process() {
-        final AnnotationTypeDeclaration ann = (AnnotationTypeDeclaration) env_.getTypeDeclaration(Bean.class.getName());
-        for (Declaration declaration : env_.getDeclarationsAnnotatedWith(ann)) {
+    	final AnnotationTypeDeclaration beanAnn = (AnnotationTypeDeclaration) env_.getTypeDeclaration(Bean.class.getName());
+    	for (Declaration declaration : env_.getDeclarationsAnnotatedWith(beanAnn)) {
             try {
                 if (!(declaration instanceof ClassDeclaration)) {
                     env_.getMessager().printError(declaration.getPosition(),
@@ -172,6 +174,82 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 data.setClassName(classDeclaration.getSimpleName());
                 String packageName = packageDeclaration.getQualifiedName();
                 data.setPackageName(packageName);
+
+                // find any methods that have default parameters
+                Collection<MethodDeclaration> methodsToCheck = classDeclaration.getMethods();
+                for (MethodDeclaration methodDeclaration : methodsToCheck) {
+					Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
+					boolean seenDefault = false;
+					String[] names    = new String[parameters.size()];
+					String[] types    = new String[parameters.size()];
+					String[] defaults = new String[parameters.size()];
+					int n = 0;
+					for (ParameterDeclaration parameterDeclaration : parameters) {
+						Default annotation = parameterDeclaration.getAnnotation(Default.class);
+						names[n] = parameterDeclaration.getSimpleName();
+						types[n] = parameterDeclaration.getType().toString();
+						if (annotation != null) {
+							seenDefault = true;
+							defaults[n] = annotation.value();
+						} else if (seenDefault) {
+                            env_.getMessager().printError(parameterDeclaration.getPosition(),
+                            		"All parameters after a parameter annotated with @Default must be annotated with @Default");
+						}
+						n++;
+					}
+
+					if (seenDefault) {
+			            if (methodDeclaration.getModifiers().contains(Modifier.PRIVATE)) {
+			            	env_.getMessager().printError(methodDeclaration.getPosition(),
+			            								  "Private methods cannot use @Default parameters");
+			            }
+			            String access = "";
+			            if (methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
+			            	access = "public ";
+			            } else if (methodDeclaration.getModifiers().contains(Modifier.PROTECTED)) {
+			            	access = "protected ";
+			            }
+						String throwsClause = getThrowsClause(methodDeclaration);
+						String returnType = methodDeclaration.getReturnType().toString();
+						String methodName = methodDeclaration.getSimpleName();
+						String argDecl = "";
+						String callArgs = "";
+						for (int i = 0; i < n; i++) {
+							if (defaults[i] != null) {
+								String callArgsWithDefaults = callArgs;
+								for (int j = i; j < n; j++) {
+									if (j > 0) {
+										callArgsWithDefaults += ", ";
+									}
+									callArgsWithDefaults += defaults[j];
+								}
+								Method method = new Method();
+								method.setName(methodName);
+								method.setReturnType(returnType);
+								method.setThrowsClause(throwsClause);
+								method.setArgDecls(argDecl);
+								method.setAccess(access);
+								method.setArgs(callArgsWithDefaults);
+								data.addDefaultMethod(method);
+							}
+							if (i > 0) {
+								argDecl += ", ";
+								callArgs += ", ";
+							}
+							argDecl += types[i] + ' ' + names[i];
+							callArgs += names[i];
+						}
+						Method method = new Method();
+						method.setName(methodName);
+						method.setReturnType(returnType);
+						method.setThrowsClause(throwsClause);
+						method.setAccess(access);
+						method.setAbstract(true);
+						method.setArgDecls(argDecl);
+						data.addDefaultMethod(method);
+					}
+				}
+
 
                 Set<String> propertyNames = new HashSet<String>();
                 boolean atLeastOneBound = false;
@@ -488,22 +566,25 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
             }
             method.setArgDecls(argDecls.replaceAll(",", ", "));
             method.setArgs(args);
-            Collection<ReferenceType> thrownTypes = methodDeclaration.getThrownTypes();
-            boolean first = true;
-            if (!thrownTypes.isEmpty()) {
-                String throwsClause = " throws ";
-                for (ReferenceType thrownType : thrownTypes) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        throwsClause += ", ";
-                    }
-                    throwsClause += Utils.getTypeName(thrownType);
+            method.setThrowsClause(getThrowsClause(methodDeclaration));
+        }
+    }
+    private String getThrowsClause(MethodDeclaration methodDeclaration) {
+        Collection<ReferenceType> thrownTypes = methodDeclaration.getThrownTypes();
+        boolean first = true;
+        if (!thrownTypes.isEmpty()) {
+            String throwsClause = " throws ";
+            for (ReferenceType thrownType : thrownTypes) {
+                if (first) {
+                    first = false;
+                } else {
+                    throwsClause += ", ";
                 }
-                method.setThrowsClause(throwsClause);
-            } else {
-                method.setThrowsClause("");
+                throwsClause += Utils.getTypeName(thrownType);
             }
+            return throwsClause;
+        } else {
+            return "";
         }
     }
 }
