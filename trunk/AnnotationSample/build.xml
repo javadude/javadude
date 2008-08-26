@@ -1,0 +1,28 @@
+<project name="foo" default="build">
+	<property environment="env"/>
+	<property name="apt.generated.source" value="generated" />
+	<property name="classes" value="javac-out" />
+	<property name="source" value="src" />
+	<property name="annotation.jar" value="C:\eclipse34\javadude-workspace\com.javadude.annotation\bin" />
+	<property name="velocity.jar" value="C:\eclipse34\javadude-workspace\com.javadude.annotation\lib\velocity-dep-1.5.jar" />
+	<target name="build">
+		<mkdir dir="${apt.generated.source}"/>
+		<mkdir dir="${classes}"/>
+		<!-- if compiling for java 5 target, you can just do the <apt> task with compile="true"
+		     if compiling for java 6 target, you must do compile="false" and run a separate <javac> -->
+		<apt compile="false" preprocessdir="${apt.generated.source}" destdir="${classes}">
+			<compilerarg value="-J-Dannotations.to.hush.during.apt=java.lang.Override,javax.annotation.Generated"/>
+			<src location="${source}"/>
+			<classpath path="${annotation.jar};${velocity.jar}"/>
+		</apt>
+		<javac destdir="javac-out" source="1.6" target="1.6">
+			<src location="${source}"/>
+			<src location="${apt.generated.source}"/>
+			<classpath path="${annotation.jar}"/> <!-- only needed for compile, not for runtime! -->
+		</javac>
+	</target>
+	<target name="clean">
+		<delete dir="${classes}" />
+		<delete dir="${apt.generated.source}" />
+	</target>
+</project>
