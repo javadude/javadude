@@ -42,6 +42,8 @@ import com.javadude.annotation.PropertyKind;
     
     delegates= {
         // objects to delegate to
+        //    ([AnnotationsDecoratorExample decorator example])
+        //    ([AnnotationsMixinExample mixin example])
         @Delegate(
             accessor="getDelegate()", // default:[ignored]
                 // explicit means to access the delegate instance
@@ -88,7 +90,7 @@ import com.javadude.annotation.PropertyKind;
     },
     
     properties = {
-        // JavaBean property generation
+        // JavaBean property generation ([AnnotationsPropertyExample1 example])
         @Property(
             name="name", // required
             // name of property
