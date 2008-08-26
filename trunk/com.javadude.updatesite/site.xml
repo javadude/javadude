@@ -6,7 +6,7 @@
    <feature url="features/com.javadude.dependencies.feature_2.0.9.jar" id="com.javadude.dependencies.feature" version="2.0.9">
       <category name="Miscellaneous"/>
    </feature>
-   <feature url="features/com.javadude.annotation.feature_2.1.0.jar" id="com.javadude.annotation.feature" version="2.1.0">
+   <feature url="features/com.javadude.annotation.feature_2.1.1.jar" id="com.javadude.annotation.feature" version="2.1.1">
       <category name="Annotations"/>
    </feature>
    <feature url="features/com.javadude.antxr.feature_2.1.3.jar" id="com.javadude.antxr.feature" version="2.1.3">
