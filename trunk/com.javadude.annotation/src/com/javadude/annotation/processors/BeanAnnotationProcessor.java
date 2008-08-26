@@ -51,6 +51,7 @@ import com.sun.mirror.declaration.Modifier;
 import com.sun.mirror.declaration.PackageDeclaration;
 import com.sun.mirror.declaration.ParameterDeclaration;
 import com.sun.mirror.declaration.TypeDeclaration;
+import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.MirroredTypeException;
 import com.sun.mirror.type.ReferenceType;
 
@@ -155,14 +156,22 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 ClassDeclaration classDeclaration = (ClassDeclaration) declaration;
                 PackageDeclaration packageDeclaration = classDeclaration.getPackage();
 
-// TAKEN OUT FOR NOW - For some reason this causes every other build to not generate a class...
-//                ClassType superclass = classDeclaration.getSuperclass();
-//                String superClassName = superclass.toString();
-//                if (!superClassName.equals(classDeclaration.getSimpleName() + "Gen")) {
-//                	env_.getMessager().printError(declaration.getPosition(),
-//                								  classDeclaration.getSimpleName() + " must extend " + classDeclaration.getSimpleName() + "Gen for @Bean to work properly");
-//                	return;
-//                }
+                ClassType superclass = classDeclaration.getSuperclass();
+                String superClassName = superclass.toString();
+                int dot = superClassName.lastIndexOf('.');
+                if (dot != -1) {
+                	String superClassPackageName = superClassName.substring(0, dot);
+                	if (!superClassPackageName.equals(packageDeclaration.getQualifiedName())) {
+                		superClassName = ""; // force error below
+                	} else {
+                		superClassName = superClassName.substring(dot + 1);
+                	}
+                }
+                if (!superClassName.equals(classDeclaration.getSimpleName() + "Gen")) {
+                	env_.getMessager().printError(declaration.getPosition(),
+                								  classDeclaration.getQualifiedName() + " must extend " + classDeclaration.getQualifiedName() + "Gen for @Bean to work properly");
+                	return;
+                }
 
                 Bean bean = declaration.getAnnotation(Bean.class);
                 Data data = new Data();
@@ -177,7 +186,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
                 // find any methods that have default parameters
                 Collection<MethodDeclaration> methodsToCheck = classDeclaration.getMethods();
-                for (MethodDeclaration methodDeclaration : methodsToCheck) {
+                methods: for (MethodDeclaration methodDeclaration : methodsToCheck) {
 					Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
 					boolean seenDefault = false;
 					String[] names    = new String[parameters.size()];
@@ -198,6 +207,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 						} else if (seenDefault) {
                             env_.getMessager().printError(parameterDeclaration.getPosition(),
                             		"All parameters after a parameter annotated with @Default must be annotated with @Default");
+                            continue methods;
 						}
 						n++;
 					}
