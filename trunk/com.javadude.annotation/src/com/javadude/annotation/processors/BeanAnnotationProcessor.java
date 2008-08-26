@@ -207,6 +207,10 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			            	env_.getMessager().printError(methodDeclaration.getPosition(),
 			            								  "Private methods cannot use @Default parameters");
 			            }
+			            if (methodDeclaration.getModifiers().contains(Modifier.STATIC)) {
+			            	env_.getMessager().printError(methodDeclaration.getPosition(),
+			            								  "Static methods cannot use @Default parameters");
+			            }
 			            String access = "";
 			            if (methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
 			            	access = "public ";

@@ -52,7 +52,7 @@ public class Method extends MethodGen {
     		return ";";
     	return " {";
     }
-    public String getAbstractQualifier() {
+    public String getQualifiers() {
     	if (isAbstract())
     		return "abstract ";
     	return "";
