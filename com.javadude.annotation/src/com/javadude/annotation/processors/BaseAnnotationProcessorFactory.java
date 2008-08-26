@@ -25,12 +25,16 @@ import com.sun.mirror.apt.AnnotationProcessorFactory;
 public abstract class BaseAnnotationProcessorFactory implements AnnotationProcessorFactory {
     private final List<String> annotations_ = new ArrayList<String>();
 
-    public BaseAnnotationProcessorFactory(Class<?>... annotations) {
-    	for (Class<?> annotation : annotations) {
-			annotations_.add(annotation.getName());
-		}
+    public BaseAnnotationProcessorFactory() {}
+   	public BaseAnnotationProcessorFactory(Class<?>... annotations) {
+   		add(annotations);
     }
 
+   	protected void add(Class<?>... annotations) {
+   		for (Class<?> annotation : annotations) {
+   			annotations_.add(annotation.getName());
+   		}
+   	}
     public Collection<String> supportedAnnotationTypes() {
         return annotations_;
     }
