@@ -199,7 +199,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 ## Define default methods
 ##
 #foreach ($defaultMethod in ${data.defaultMethods})
-    ${defaultMethod.access}${defaultMethod.abstractQualifier}${defaultMethod.returnType} ${defaultMethod.name}(${defaultMethod.argDecls})${defaultMethod.throwsClause} ${defaultMethod.symbolAfterDecl}
+    ${defaultMethod.access}${defaultMethod.qualifiers}${defaultMethod.returnType} ${defaultMethod.name}(${defaultMethod.argDecls})${defaultMethod.throwsClause} ${defaultMethod.symbolAfterDecl}
 #if (!${defaultMethod.isAbstract()})
         ${defaultMethod.returnOrNot}${defaultMethod.name}(${defaultMethod.args});
     }
