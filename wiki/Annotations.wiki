@@ -21,7 +21,7 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 If you're using the eclipse plugin or not, you'll still need to download the annotation jar, which contains the annotations and the annotation processors. Download
 
   * [http://javadude.googlecode.com/svn/trunk/com.javadude.annotation/javadude-annotation-2.1.6.jar javadude-annotation_2.1.6.jar]
-  * [http://javadude.googlecode.com/svn/trunk/com.javadude.annotation/lib/velocity-dep-1.5.jar velocity-dep-1.5.jar]
+  * [http://javadude.googlecode.com/svn/trunk/com.javadude.annotation/lib/velocity-dep-1.5.jar velocity-dep-1.5.jar] (Only if not using the Eclipse plugin)
 
 --------------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->
 ====Project Setup====
 If you're creating a plugin, you can add a dependency to the com.javadude.annotation plugin. Otherwise:
 
- * Download com.javadude.annotation_2.0.18.jar and import it into your project. 
+ * Download javadude-annotation_2.1.6.jar and import it into your project. (Alternatively you can place it in another project, export it, and add the other project as a dependency) 
  * Right-click on the jar and choose Build Path->Add to Build Path. (This gives you access to the annotation definitions so you can use them in your code.) 
  * Open your project properties (Select the project and press Alt-Enter) 
  * Go to Java Compiler->Annotation Processing 
