@@ -1,17 +1,9 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package com.javadude.workingsets;
 
@@ -67,7 +59,7 @@ public class RegExWorkingSetUpdater implements IWorkingSetUpdater {
 					Activator.getUtil().error(2, "Error walking delta", e);
 				}
 			}
-			
+
 			private void removeFromWorkingSet(IWorkingSet workingSet, IProject project) {
 				IAdaptable[] elements = workingSet.getElements();
 				if (elements.length == 0) {
@@ -89,7 +81,7 @@ public class RegExWorkingSetUpdater implements IWorkingSetUpdater {
 			}
 			private Set<IWorkingSet> setsContainingProject(IProject project) {
 				Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
-				for (IWorkingSet workingSet : workingSets_.values()) {
+				for (IWorkingSet workingSet : RegExWorkingSetUpdater.workingSets_.values()) {
 					IAdaptable[] elements = workingSet.getElements();
 					for (IAdaptable element : elements) {
 	                    if (element.equals(project)) {
@@ -103,7 +95,7 @@ public class RegExWorkingSetUpdater implements IWorkingSetUpdater {
 				if (!project.isOpen()) {
 					return;
 				}
-				for (Map.Entry<String, IWorkingSet> entry : workingSets_.entrySet()) {
+				for (Map.Entry<String, IWorkingSet> entry : RegExWorkingSetUpdater.workingSets_.entrySet()) {
 					if (Pattern.matches(entry.getKey(), project.getName())) {
 						// add project to working set
 						IWorkingSet workingSet = entry.getValue();
@@ -118,36 +110,36 @@ public class RegExWorkingSetUpdater implements IWorkingSetUpdater {
 					}
 				}
 			}});
-		
+
 	}
-		
+
 	public RegExWorkingSetUpdater() {
 		// assign working sets based on reading projects in workspace
-		
+
 	}
 
 	private String regex(IWorkingSet workingSet) {
 		String id = workingSet.getName();
 		return id.substring("RegEx: ".length());
 	}
-	
+
 	@Override
 	public void add(IWorkingSet workingSet) {
-		workingSets_.put(regex(workingSet), workingSet);
+		RegExWorkingSetUpdater.workingSets_.put(regex(workingSet), workingSet);
 	}
 
 	@Override
 	public boolean contains(IWorkingSet workingSet) {
-		return workingSets_.values().contains(workingSet);
+		return RegExWorkingSetUpdater.workingSets_.values().contains(workingSet);
 	}
 
 	@Override
 	public void dispose() {
-		workingSets_.clear();
+		RegExWorkingSetUpdater.workingSets_.clear();
 	}
 
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
-		return workingSets_.remove(regex(workingSet)) != null;
+		return RegExWorkingSetUpdater.workingSets_.remove(regex(workingSet)) != null;
 	}
 }
