@@ -1,17 +1,9 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package com.javadude.dependencies.editparts;
 
@@ -20,10 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.javadude.dependencies.DependenciesPlugin;
-import com.javadude.dependencies.Dependency;
-import com.javadude.dependencies.commands.DeleteCommand;
 
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Graphics;
@@ -48,6 +36,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.javadude.dependencies.DependenciesPlugin;
+import com.javadude.dependencies.Dependency;
+import com.javadude.dependencies.commands.DeleteCommand;
+
 public class DependencyEditPart extends AbstractConnectionEditPart {
     private static final String GREEN = "green";
     private static final String RED = "red";
@@ -56,7 +48,7 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
     private static final String BLUE = "blue";
     private static final String WHITE = "white";
     private static final String PINK = "pink";
-    private String lineColor = BLACK;
+    private String lineColor = DependencyEditPart.BLACK;
     private IWorkbenchPage page;
 
     /**
@@ -64,13 +56,13 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
      */
     public DependencyEditPart(IWorkbenchPage page) {
         this.page = page;
-        DependenciesPlugin.getDefault().setColor(GREEN, 0,255,0);
-        DependenciesPlugin.getDefault().setColor(PINK, 255,20,147);
-        DependenciesPlugin.getDefault().setColor(YELLOW, 250,250,210);
-        DependenciesPlugin.getDefault().setColor(RED, 255,0,0);
-        DependenciesPlugin.getDefault().setColor(BLACK, 0,0,0);
-        DependenciesPlugin.getDefault().setColor(BLUE, 0,0,255);
-        DependenciesPlugin.getDefault().setColor(WHITE, 255,255,255);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.GREEN, 0,255,0);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.PINK, 255,20,147);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.YELLOW, 250,250,210);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.RED, 255,0,0);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.BLACK, 0,0,0);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.BLUE, 0,0,255);
+        DependenciesPlugin.getDefault().setColor(DependencyEditPart.WHITE, 255,255,255);
     }
 
     private ISelectionListener listener = new ISelectionListener() {
@@ -79,10 +71,10 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
             if (selection instanceof IStructuredSelection) {
                 Dependency dependency = (Dependency) getModel();
 
-                lineColor = BLACK;
-                
+                lineColor = DependencyEditPart.BLACK;
+
                 if (DependencyManager.indirectPathExists(dependency, dependency.getSource(), dependency.getTarget())) {
-                	lineColor = WHITE;
+                	lineColor = DependencyEditPart.WHITE;
             	} else {
             		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
             		boolean isSource = false;
@@ -102,13 +94,13 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
             			}
             		}
             		if (isSource && isTarget) {
-	                    lineColor = BLUE;
+	                    lineColor = DependencyEditPart.BLUE;
 	                } else if (isSource) {
-	                    lineColor = GREEN;
+	                    lineColor = DependencyEditPart.GREEN;
 	                } else if (isTarget) {
-	                    lineColor = RED;
+	                    lineColor = DependencyEditPart.RED;
 	                } else {
-	                    lineColor = BLACK;
+	                    lineColor = DependencyEditPart.BLACK;
 	                }
             	}
                 refreshVisuals();
@@ -133,10 +125,10 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
         Dependency dependency = (Dependency) getModel();
         if (!dependency.isExported()) {
         	((PolylineConnection) getFigure()).setLineStyle(Graphics.LINE_DOT);
-        	lineColor = PINK;
+        	lineColor = DependencyEditPart.PINK;
         }
         if (DependencyManager.indirectPathExists(dependency, dependency.getSource(), dependency.getTarget())) {
-        	lineColor = WHITE;
+        	lineColor = DependencyEditPart.WHITE;
     	}
         figure.setForegroundColor(DependenciesPlugin.getDefault().getColor(lineColor));
     }

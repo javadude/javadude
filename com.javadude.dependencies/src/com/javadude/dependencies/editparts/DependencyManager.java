@@ -1,17 +1,9 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package com.javadude.dependencies.editparts;
 
@@ -23,22 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.javadude.dependencies.Dependency;
-
 import org.eclipse.jdt.core.IJavaProject;
+
+import com.javadude.dependencies.Dependency;
 
 public class DependencyManager {
     private static Map<IJavaProject, Set<Dependency>> sourceDependencies = new HashMap<IJavaProject, Set<Dependency>>();
     private static Map<IJavaProject, Set<Dependency>> targetDependencies = new HashMap<IJavaProject, Set<Dependency>>();
 
     public static void add(Dependency dependency) {
-        add(dependency.getSource(), dependency, sourceDependencies);
-        add(dependency.getTarget(), dependency, targetDependencies);
+        DependencyManager.add(dependency.getSource(), dependency, DependencyManager.sourceDependencies);
+        DependencyManager.add(dependency.getTarget(), dependency, DependencyManager.targetDependencies);
     }
 
     public static boolean indirectPathExists(Dependency directPath, IJavaProject source, IJavaProject target) {
 //        System.out.print("checking " + source.getElementName() + "->" + target.getElementName());
-    	boolean result = indirectPathExists(new HashSet<IJavaProject>(), directPath, source, target);
+    	boolean result = DependencyManager.indirectPathExists(new HashSet<IJavaProject>(), directPath, source, target);
 //    	System.out.println(": " + result);
     	return result;
     }
@@ -48,7 +40,7 @@ public class DependencyManager {
     		return false;
     	}
     	visited.add(source);
-    	Set<Dependency> sourceDeps = sourceDependencies.get(source);
+    	Set<Dependency> sourceDeps = DependencyManager.sourceDependencies.get(source);
     	if (sourceDeps != null) {
 	    	for (Dependency dependency : sourceDeps) {
 	    		if (!dependency.isExported() || dependency.equals(directPath)) {
@@ -58,7 +50,7 @@ public class DependencyManager {
 		        	return true;
 		        } else {
 		        	// recurse to try to find an indirect path
-		        	if (indirectPathExists(visited, directPath, dependency.getTarget(), target)) {
+		        	if (DependencyManager.indirectPathExists(visited, directPath, dependency.getTarget(), target)) {
 		        		return true;
 		        	}
 		        }
@@ -78,10 +70,10 @@ public class DependencyManager {
     }
 
     public static List<Dependency> findSourceDependencies(IJavaProject source) {
-        return get(source, sourceDependencies);
+        return DependencyManager.get(source, DependencyManager.sourceDependencies);
     }
     public static List<Dependency> findTargetDependencies(IJavaProject target) {
-        return get(target, targetDependencies);
+        return DependencyManager.get(target, DependencyManager.targetDependencies);
     }
     private static List<Dependency> get(IJavaProject source, Map<IJavaProject, Set<Dependency>> map) {
         Set<Dependency> set = map.get(source);
@@ -92,8 +84,8 @@ public class DependencyManager {
     }
 
     public static void removeDependency(IJavaProject source, IJavaProject target) {
-        remove(source, target, sourceDependencies);
-        remove(target, source, targetDependencies);
+        DependencyManager.remove(source, target, DependencyManager.sourceDependencies);
+        DependencyManager.remove(target, source, DependencyManager.targetDependencies);
     }
 
     private static void remove(IJavaProject key, IJavaProject value, Map<IJavaProject, Set<Dependency>> map) {
@@ -107,7 +99,7 @@ public class DependencyManager {
         }
     }
     public static void clear() {
-        sourceDependencies.clear();
-        targetDependencies.clear();
+        DependencyManager.sourceDependencies.clear();
+        DependencyManager.targetDependencies.clear();
     }
 }

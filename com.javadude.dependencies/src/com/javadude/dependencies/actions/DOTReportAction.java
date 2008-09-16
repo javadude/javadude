@@ -1,9 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package com.javadude.dependencies.actions;
 
 import java.io.FileWriter;
 import java.io.IOException;
-
-import com.javadude.dependencies.DependenciesPlugin;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -15,6 +20,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+
+import com.javadude.dependencies.DependenciesPlugin;
 
 public class DOTReportAction implements IWorkbenchWindowActionDelegate {
 	public DOTReportAction() {
