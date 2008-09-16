@@ -1,24 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package com.javadude.dependencies.editparts;
 
 import java.util.List;
 import java.util.Map;
-
-import com.javadude.dependencies.DependenciesPlugin;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
@@ -38,6 +28,8 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.jdt.core.IJavaProject;
 
+import com.javadude.dependencies.DependenciesPlugin;
+
 public class JavaProjectEditPart extends AbstractGraphicalEditPart implements NodeEditPart, GraphContributor {
     private static final String WHITE = "white";
     private static final String BLUE = "blue";
@@ -46,8 +38,8 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
      * Constructor of the ProjectEditPart class
      */
     public JavaProjectEditPart() {
-        DependenciesPlugin.getDefault().setColor(BLUE, 0,0,255);
-        DependenciesPlugin.getDefault().setColor(WHITE, 255,255,255);
+        DependenciesPlugin.getDefault().setColor(JavaProjectEditPart.BLUE, 0,0,255);
+        DependenciesPlugin.getDefault().setColor(JavaProjectEditPart.WHITE, 255,255,255);
     }
 
     @Override
@@ -55,8 +47,8 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
         Figure tempFigure = new Label();
         tempFigure.setOpaque(true);
         tempFigure.setBorder(new MyRaisedBorder());
-        tempFigure.setBackgroundColor(DependenciesPlugin.getDefault().getColor(BLUE));
-        tempFigure.setForegroundColor(DependenciesPlugin.getDefault().getColor(WHITE));
+        tempFigure.setBackgroundColor(DependenciesPlugin.getDefault().getColor(JavaProjectEditPart.BLUE));
+        tempFigure.setForegroundColor(DependenciesPlugin.getDefault().getColor(JavaProjectEditPart.WHITE));
         return tempFigure;
     }
 

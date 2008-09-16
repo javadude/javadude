@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package com.javadude.dependencies;
 
 import org.eclipse.swt.SWT;
@@ -120,7 +127,7 @@ static String keyCode (int keyCode) {
 		case SWT.PRINT_SCREEN:	return "PRINT_SCREEN";
 		case SWT.HELP:			return "HELP";
 	}
-	return character ((char) keyCode);
+	return Snippet25.character ((char) keyCode);
 }
 
 public static void main (String [] args) {
@@ -129,9 +136,9 @@ public static void main (String [] args) {
 	Listener listener = new Listener () {
 		public void handleEvent (Event e) {
 			String string = e.type == SWT.KeyDown ? "DOWN:" : "UP  :";
-			string += " stateMask=0x" + Integer.toHexString (e.stateMask) + stateMask (e.stateMask) + ",";
-			string += " keyCode=0x" + Integer.toHexString (e.keyCode) + " " + keyCode (e.keyCode) + ",";
-			string += " character=0x" + Integer.toHexString (e.character) + " " + character (e.character);
+			string += " stateMask=0x" + Integer.toHexString (e.stateMask) + Snippet25.stateMask (e.stateMask) + ",";
+			string += " keyCode=0x" + Integer.toHexString (e.keyCode) + " " + Snippet25.keyCode (e.keyCode) + ",";
+			string += " character=0x" + Integer.toHexString (e.character) + " " + Snippet25.character (e.character);
 			System.out.println (string);
 		}
 	};
