@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.common.feature"
       label="JavaDude Common Feature"
-      version="2.0.1"
+      version="2.0.2"
       provider-name="JavaDude Common Feature">
 
    <description url="http://www.example.com/description">
