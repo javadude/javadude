@@ -21,8 +21,8 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 ===Jars===
 If you're using the eclipse plugin or not, you'll still need to download the annotation jar, which contains the annotations and the annotation processors. Download
 
-com.javadude.annotation_2.0.18.jar 
-velocity-dep-1.5.jar 
+  * [http://javadude.googlecode.com/svn/trunk/com.javadude.annotation/javadude-annotation-2.1.6.jar javadude-annotation_2.1.6.jar]
+  * [http://javadude.googlecode.com/svn/trunk/com.javadude.annotation/lib/velocity-dep-1.5.jar velocity-dep-1.5.jar]
 
 --------------------------------------------------------------------------------
 
