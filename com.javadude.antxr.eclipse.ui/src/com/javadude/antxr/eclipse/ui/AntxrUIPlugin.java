@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui;
 
@@ -19,8 +16,6 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import com.javadude.common.PluginUtil;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -33,6 +28,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import com.javadude.common.PluginUtil;
 
 /**
  * Central access point for the ANTXR UI plug-in
@@ -50,18 +47,18 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
     /** Singleton instance of this plugin */
     private static AntxrUIPlugin plugin;
 
-    private static final String RESOURCE_NAME = PLUGIN_ID + ".messages";
+    private static final String RESOURCE_NAME = AntxrUIPlugin.PLUGIN_ID + ".messages";
     private ResourceBundle resourceBundle;
 
     /**
      * Create the plugin instance
      */
     public AntxrUIPlugin() {
-        plugin = this;
+        AntxrUIPlugin.plugin = this;
         try {
-            resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);
+            resourceBundle = ResourceBundle.getBundle(AntxrUIPlugin.RESOURCE_NAME);
         } catch (MissingResourceException e) {
-            log(e);
+            AntxrUIPlugin.log(e);
             resourceBundle = null;
         }
     }
@@ -71,7 +68,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the shared instance
      */
     public static AntxrUIPlugin getDefault() {
-        return plugin;
+        return AntxrUIPlugin.plugin;
     }
 
     /**
@@ -95,7 +92,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the shell
      */
     public static Shell getActiveWorkbenchShell() {
-        IWorkbenchWindow window = getActiveWorkbenchWindow();
+        IWorkbenchWindow window = AntxrUIPlugin.getActiveWorkbenchWindow();
         return (window != null ? window.getShell() : null);
     }
 
@@ -104,7 +101,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the active window
      */
     public static IWorkbenchWindow getActiveWorkbenchWindow() {
-        return getDefault().getWorkbench().getActiveWorkbenchWindow();
+        return AntxrUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
     }
 
 
@@ -113,7 +110,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the active page
      */
     public static IWorkbenchPage getActiveWorkbenchPage() {
-        return getDefault().getWorkbench().getActiveWorkbenchWindow().
+        return AntxrUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().
                                                                getActivePage();
     }
 
@@ -122,7 +119,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return my installation URL
      */
     public static URL getInstallURL() {
-        return Platform.getBundle((PLUGIN_ID)).getEntry("/");
+        return Platform.getBundle((AntxrUIPlugin.PLUGIN_ID)).getEntry("/");
     }
 
     /**
@@ -130,7 +127,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return my plugin id
      */
     public static String getUniqueIdentifier() {
-        return Platform.getBundle((PLUGIN_ID)).getSymbolicName();
+        return Platform.getBundle((AntxrUIPlugin.PLUGIN_ID)).getSymbolicName();
     }
 
     /**
@@ -138,7 +135,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @param aStatus the status to log
      */
     public static void log(IStatus aStatus) {
-        getDefault().getLog().log(aStatus);
+        AntxrUIPlugin.getDefault().getLog().log(aStatus);
     }
 
     /**
@@ -146,8 +143,8 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @param aThrowable the exception to log
      */
     public static void log(Throwable aThrowable) {
-        log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
-                        getMessage("Plugin.internal_error"),
+        AntxrUIPlugin.log(new Status(IStatus.ERROR, AntxrUIPlugin.PLUGIN_ID, IStatus.OK,
+                        AntxrUIPlugin.getMessage("Plugin.internal_error"),
                         aThrowable));
     }
 
@@ -156,7 +153,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @param aMessage the message to log
      */
     public static void logErrorMessage(String aMessage) {
-        log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, aMessage, null));
+        AntxrUIPlugin.log(new Status(IStatus.ERROR, AntxrUIPlugin.PLUGIN_ID, IStatus.OK, aMessage, null));
     }
 
 
@@ -167,12 +164,12 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      */
     public static void logErrorStatus(String aMessage, IStatus aStatus) {
         if (aStatus == null) {
-            logErrorMessage(aMessage);
+            AntxrUIPlugin.logErrorMessage(aMessage);
         } else {
-            MultiStatus multi = new MultiStatus(PLUGIN_ID, IStatus.OK,
+            MultiStatus multi = new MultiStatus(AntxrUIPlugin.PLUGIN_ID, IStatus.OK,
                                                 aMessage, null);
             multi.add(aStatus);
-            log(multi);
+            AntxrUIPlugin.log(multi);
         }
     }
 
@@ -181,7 +178,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return true for debug mode; false otherwise
      */
     public static boolean isDebug() {
-        return getDefault().isDebugging();
+        return AntxrUIPlugin.getDefault().isDebugging();
     }
 
     /**
@@ -191,12 +188,12 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      */
     public static String getMessage(String aKey) {
         String bundleString;
-        ResourceBundle bundle = getDefault().getResourceBundle();
+        ResourceBundle bundle = AntxrUIPlugin.getDefault().getResourceBundle();
         if (bundle != null) {
             try {
                 bundleString = bundle.getString(aKey);
             } catch (MissingResourceException e) {
-                log(e);
+                AntxrUIPlugin.log(e);
                 bundleString = "!" + aKey + "!";
             }
         } else {
@@ -212,7 +209,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the formatted messsage
      */
     public static String getFormattedMessage(String aKey, String anArg) {
-        return getFormattedMessage(aKey, new String[] { anArg });
+        return AntxrUIPlugin.getFormattedMessage(aKey, new String[] { anArg });
     }
 
     /**
@@ -222,7 +219,7 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      * @return the formatted messsage
      */
     public static String getFormattedMessage(String aKey, String[] anArgs) {
-        return MessageFormat.format(getMessage(aKey), (Object[]) anArgs);
+        return MessageFormat.format(AntxrUIPlugin.getMessage(aKey), (Object[]) anArgs);
     }
 
     /**
@@ -241,14 +238,14 @@ public class AntxrUIPlugin extends AbstractUIPlugin {
      */
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
-        plugin = null;
+        AntxrUIPlugin.plugin = null;
         resourceBundle = null;
     }
 
     public static PluginUtil getUtil() {
-        if (util_ == null) {
-            util_ = new PluginUtil(getDefault().getBundle().getSymbolicName(), getDefault().getLog());
+        if (AntxrUIPlugin.util_ == null) {
+            AntxrUIPlugin.util_ = new PluginUtil(AntxrUIPlugin.getDefault().getBundle().getSymbolicName(), AntxrUIPlugin.getDefault().getLog());
         }
-        return util_;
+        return AntxrUIPlugin.util_;
     }
 }

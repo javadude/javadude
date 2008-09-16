@@ -1,25 +1,19 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor.text;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.javadude.antxr.eclipse.ui.AntxrColorProvider;
-import com.javadude.antxr.eclipse.ui.IColorConstants;
 
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
@@ -29,6 +23,9 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
+
+import com.javadude.antxr.eclipse.ui.AntxrColorProvider;
+import com.javadude.antxr.eclipse.ui.IColorConstants;
 
 /**
  * An ANTXR and Java aware code scanner.
@@ -67,11 +64,11 @@ public class AntxrCodeScanner extends RuleBasedScanner {
 
         // Add word rule for ANTXR keywords
         WordRule wordRule = new WordRule(new WordDetector(), other);
-        for (int i = 0; i < ANTXR_KEYWORDS.length; i++) {
-            wordRule.addWord(ANTXR_KEYWORDS[i], keyword);
+        for (int i = 0; i < AntxrCodeScanner.ANTXR_KEYWORDS.length; i++) {
+            wordRule.addWord(AntxrCodeScanner.ANTXR_KEYWORDS[i], keyword);
         }
-        for (int i = 0; i < JAVA_KEYWORDS.length; i++) {
-            wordRule.addWord(JAVA_KEYWORDS[i], keyword);
+        for (int i = 0; i < AntxrCodeScanner.JAVA_KEYWORDS.length; i++) {
+            wordRule.addWord(AntxrCodeScanner.JAVA_KEYWORDS[i], keyword);
         }
         rules.add(wordRule);
 

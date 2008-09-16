@@ -1,26 +1,23 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor.text;
-
-import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
+
+import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
 
 /**
  * Double click strategy aware of ANTXR identifier syntax rules.
@@ -34,7 +31,7 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 
 	protected static final char[] BRACKETS = { '{', '}', '(', ')', '[', ']',
 	    										  '"', '"' };
-	
+
 	/** {@inheritDoc} */
 	public void doubleClicked(ITextViewer aText) {
 
@@ -48,7 +45,7 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 			}
 		}
 	}
-	
+
 	/**
 	 * Select the area between the selected bracket and the closing bracket.
 	 * @return true if successful
@@ -66,9 +63,9 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Select the word at the current selection. 
+	 * Select the word at the current selection.
 	 */
 	 protected void selectWord() {
 		if (matchWord()) {
@@ -80,18 +77,18 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
             }
 		}
 	}
-	
+
 	/**
 	 * Match the brackets at the current selection.
-	 * @return true if successful, false otherwise. 
+	 * @return true if successful, false otherwise.
 	 */
 	 protected boolean matchBracketsAt() {
 
 		char prevChar, nextChar;
 
 		int i;
-		int bracketIndex1 = BRACKETS.length;
-		int bracketIndex2 = BRACKETS.length;
+		int bracketIndex1 = DoubleClickStrategy.BRACKETS.length;
+		int bracketIndex2 = DoubleClickStrategy.BRACKETS.length;
 
 		fStartPos = -1;
 		fEndPos = -1;
@@ -104,14 +101,14 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 			nextChar = doc.getChar(fPos);
 
 			// is the char either an open or close bracket?
-			for (i = 0; i < BRACKETS.length; i += 2) {
-				if (prevChar == BRACKETS[i]) {
+			for (i = 0; i < DoubleClickStrategy.BRACKETS.length; i += 2) {
+				if (prevChar == DoubleClickStrategy.BRACKETS[i]) {
 					fStartPos = fPos - 1;
 					bracketIndex1 = i;
 				}
 			}
-			for (i = 1; i < BRACKETS.length; i += + 2) {
-				if (nextChar == BRACKETS[i]) {
+			for (i = 1; i < DoubleClickStrategy.BRACKETS.length; i += + 2) {
+				if (nextChar == DoubleClickStrategy.BRACKETS[i]) {
 					fEndPos = fPos;
 					bracketIndex2 = i;
 				}
@@ -119,13 +116,13 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			if (fStartPos > -1 && bracketIndex1 < bracketIndex2) {
 				fEndPos = searchForClosingBracket(fStartPos, prevChar,
-												  BRACKETS[bracketIndex1 + 1], doc);
+												  DoubleClickStrategy.BRACKETS[bracketIndex1 + 1], doc);
 				if (fEndPos > -1) {
 	                return true;
                 }
 				fStartPos= -1;
 			} else if (fEndPos > -1) {
-				fStartPos= searchForOpenBracket(fEndPos, BRACKETS[bracketIndex2 - 1],
+				fStartPos= searchForOpenBracket(fEndPos, DoubleClickStrategy.BRACKETS[bracketIndex2 - 1],
 												nextChar, doc);
 				if (fStartPos > -1) {
 	                return true;
@@ -138,9 +135,9 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Select the word at the current selection. 
+	 * Select the word at the current selection.
 	 * @return true if successful, false otherwise.
 	 */
 	 protected boolean matchWord() {
@@ -181,12 +178,12 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
 		}
 		return false;
 	}
-	
+
 	protected boolean isWordPart(char aChar) {
 		return Character.isLetterOrDigit(aChar) || aChar == '_';
 	}
 
-	
+
 	/**
 	 * Returns the position of the closing bracket after startPosition.
 	 *
@@ -219,7 +216,7 @@ public class DoubleClickStrategy implements ITextDoubleClickStrategy {
         }
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the position of the open bracket before startPosition.
 	 *

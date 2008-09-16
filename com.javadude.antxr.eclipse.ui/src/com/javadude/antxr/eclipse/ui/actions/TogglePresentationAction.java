@@ -1,28 +1,25 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.actions;
-
-import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
-import com.javadude.antxr.eclipse.ui.AntxrUIPluginImages;
-import com.javadude.antxr.eclipse.ui.IPreferencesConstants;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
+
+import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
+import com.javadude.antxr.eclipse.ui.AntxrUIPluginImages;
+import com.javadude.antxr.eclipse.ui.IPreferencesConstants;
 
 /**
  * A toolbar action which toggles the presentation model of the connected text
@@ -36,33 +33,33 @@ public class TogglePresentationAction extends TextEditorAction {
 	 * Constructs and updates the action.
 	 */
 	public TogglePresentationAction() {
-		super(AntxrUIPlugin.getDefault().getResourceBundle(), PREFIX, null);
+		super(AntxrUIPlugin.getDefault().getResourceBundle(), TogglePresentationAction.PREFIX, null);
         AntxrUIPluginImages.setToolImageDescriptors(this, "segment_edit.gif");
 		update();
 	}
-	
+
 	/** {@inheritDoc} */
 	public void run() {
 		ITextEditor editor = getTextEditor();
 		if (editor != null) {
 			IRegion remembered = editor.getHighlightRange();
 			editor.resetHighlightRange();
-			
+
 			boolean showAll = !editor.showsHighlightRangeOnly();
 			setChecked(showAll);
 			setToolTipText(getToolTipText(showAll));
-			
+
 			editor.showHighlightRangeOnly(showAll);
 			if (remembered != null)  {
 				editor.setHighlightRange(remembered.getOffset(),
 										 remembered.getLength(), true);
 			}
-			
+
 			IPreferenceStore store = AntxrUIPlugin.getDefault().getPreferenceStore();
 			store.setValue(IPreferencesConstants.EDITOR_SHOW_SEGMENTS, showAll);
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	public void update() {
 		ITextEditor editor = getTextEditor();
@@ -71,11 +68,11 @@ public class TogglePresentationAction extends TextEditorAction {
 		setToolTipText(getToolTipText(checked));
 		setEnabled(true);
 	}
-	
+
 	/** {@inheritDoc} */
 	public void setEditor(ITextEditor anEditor) {
 		super.setEditor(anEditor);
-		
+
 		if (anEditor != null) {
 			IPreferenceStore store = AntxrUIPlugin.getDefault().getPreferenceStore();
 			boolean showSegments = store.getBoolean(
@@ -84,7 +81,7 @@ public class TogglePresentationAction extends TextEditorAction {
 				setChecked(showSegments);
 				setToolTipText(getToolTipText(showSegments));
 			}
-			
+
 			if (anEditor.showsHighlightRangeOnly() != showSegments) {
 				IRegion remembered = anEditor.getHighlightRange();
 				anEditor.resetHighlightRange();
@@ -99,7 +96,7 @@ public class TogglePresentationAction extends TextEditorAction {
 
 	private String getToolTipText(boolean anIsChecked) {
 		return (anIsChecked
-				? AntxrUIPlugin.getMessage(PREFIX + ".tooltip.checked")
-				: AntxrUIPlugin.getMessage(PREFIX + ".tooltip.unchecked"));
+				? AntxrUIPlugin.getMessage(TogglePresentationAction.PREFIX + ".tooltip.checked")
+				: AntxrUIPlugin.getMessage(TogglePresentationAction.PREFIX + ".tooltip.unchecked"));
 	}
 }

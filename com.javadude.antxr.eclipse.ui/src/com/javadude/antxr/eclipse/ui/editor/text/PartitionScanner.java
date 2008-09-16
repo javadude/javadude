@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor.text;
 
@@ -46,16 +43,16 @@ public class PartitionScanner extends RuleBasedPartitionScanner {
      * types of partitions in an ANTXR grammar
      */
     public static final String[] PARTITION_TYPES = new String[] {
-                            IDocument.DEFAULT_CONTENT_TYPE, STRING,
-                            SINGLE_LINE_COMMENT, MULTI_LINE_COMMENT, JAVA_DOC };
+                            IDocument.DEFAULT_CONTENT_TYPE, PartitionScanner.STRING,
+                            PartitionScanner.SINGLE_LINE_COMMENT, PartitionScanner.MULTI_LINE_COMMENT, PartitionScanner.JAVA_DOC };
     /**
      * Creates the partitioner and sets up the appropriate rules.
      */
     public PartitionScanner() {
-        IToken string = new Token(STRING);
-        IToken singleLineComment = new Token(SINGLE_LINE_COMMENT);
-        IToken multiLineComment = new Token(MULTI_LINE_COMMENT);
-        IToken javaDoc = new Token(JAVA_DOC);
+        IToken string = new Token(PartitionScanner.STRING);
+        IToken singleLineComment = new Token(PartitionScanner.SINGLE_LINE_COMMENT);
+        IToken multiLineComment = new Token(PartitionScanner.MULTI_LINE_COMMENT);
+        IToken javaDoc = new Token(PartitionScanner.JAVA_DOC);
 
         List<IRule> rules = new ArrayList<IRule>();
 

@@ -1,24 +1,16 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor.outline;
-
-import com.javadude.antxr.eclipse.core.parser.ISegment;
-import com.javadude.antxr.eclipse.ui.actions.CollapseAllAction;
-import com.javadude.antxr.eclipse.ui.actions.LexicalSortingAction;
-import com.javadude.antxr.eclipse.ui.editor.AntxrEditor;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
@@ -29,6 +21,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+
+import com.javadude.antxr.eclipse.core.parser.ISegment;
+import com.javadude.antxr.eclipse.ui.actions.CollapseAllAction;
+import com.javadude.antxr.eclipse.ui.actions.LexicalSortingAction;
+import com.javadude.antxr.eclipse.ui.editor.AntxrEditor;
 
 /**
  * A content outline page which represents the content of an ANTXR grammar file.
@@ -52,7 +49,7 @@ public class AntxrOutlinePage extends ContentOutlinePage {
 	/** {@inheritDoc} */
 	public void createControl(Composite aParent) {
 		super.createControl(aParent);
-		
+
 		fLabelProvider = new AntxrOutlineLabelProvider();
 
 		// Init tree viewer
@@ -64,7 +61,7 @@ public class AntxrOutlinePage extends ContentOutlinePage {
 			viewer.setInput(fInput);
 		}
 		fIsDisposed = false;
-		
+
 		// Add collapse all button to viewer's toolbar
 		IToolBarManager mgr = getSite().getActionBars().getToolBarManager();
 		mgr.add(new CollapseAllAction(viewer));
