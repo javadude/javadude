@@ -1,4 +1,3 @@
-[JavaDudeTools JavaDude Tools]
 =!JavaDude Annotations=
 ==Overview==
 The !JavaDude Annotations are Java 5/6 annotations and annotation processors that generate some of the tedious code you need in your day-to-day programming. Using these annotations, you can generate:
