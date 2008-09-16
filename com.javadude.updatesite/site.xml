@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.javadude.common.feature_2.0.1.jar" id="com.javadude.common.feature" version="2.0.1">
+   <feature url="features/com.javadude.common.feature_2.0.2.jar" id="com.javadude.common.feature" version="2.0.2">
       <category name="Miscellaneous"/>
    </feature>
-   <feature url="features/com.javadude.dependencies.feature_2.0.10.jar" id="com.javadude.dependencies.feature" version="2.0.10">
+   <feature url="features/com.javadude.dependencies.feature_2.0.11.jar" id="com.javadude.dependencies.feature" version="2.0.11">
       <category name="Miscellaneous"/>
    </feature>
-   <feature url="features/com.javadude.annotation.feature_2.1.5.jar" id="com.javadude.annotation.feature" version="2.1.5">
+   <feature url="features/com.javadude.annotation.feature_2.1.6.jar" id="com.javadude.annotation.feature" version="2.1.6">
       <category name="Annotations"/>
    </feature>
-   <feature url="features/com.javadude.antxr.feature_2.1.4.jar" id="com.javadude.antxr.feature" version="2.1.4">
+   <feature url="features/com.javadude.antxr.feature_2.1.5.jar" id="com.javadude.antxr.feature" version="2.1.5">
       <category name="ANTXR"/>
    </feature>
-   <feature url="features/com.javadude.workingsets.feature_1.0.7.jar" id="com.javadude.workingsets.feature" version="1.0.7">
+   <feature url="features/com.javadude.workingsets.feature_1.0.8.jar" id="com.javadude.workingsets.feature" version="1.0.8">
       <category name="Miscellaneous"/>
    </feature>
    <category-def name="Annotations" label="Annotations"/>
