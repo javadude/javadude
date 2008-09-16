@@ -1,23 +1,26 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.reconciler.DirtyRegion;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
+import org.eclipse.swt.widgets.Display;
 
 import com.javadude.antxr.DefaultFileLineFormatter;
 import com.javadude.antxr.FileLineFormatter;
@@ -26,12 +29,6 @@ import com.javadude.antxr.eclipse.core.parser.AntxrParser;
 import com.javadude.antxr.eclipse.core.parser.Hierarchy;
 import com.javadude.antxr.eclipse.core.parser.ISegment;
 import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
-
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.reconciler.DirtyRegion;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Reconciler strategy which parses the whole editor's content (a ANTXR
@@ -83,7 +80,7 @@ public class AntxrReconcilingStrategy implements IReconcilingStrategy {
 			AntxrUIPlugin.log(e);
         } finally {
         	try {
-				reader.close();        
+				reader.close();
         	} catch (IOException e) {
         		AntxrUIPlugin.log(e);
         	}
@@ -100,7 +97,7 @@ public class AntxrReconcilingStrategy implements IReconcilingStrategy {
 
 		// Update outline view and display error message in status line
 		Display.getDefault().syncExec(new Runnable() {
-			public void run(){	
+			public void run(){
 				fEditor.updateOutlinePage();
 				fEditor.displayErrorMessage(fError);
 			}
@@ -110,7 +107,7 @@ public class AntxrReconcilingStrategy implements IReconcilingStrategy {
 	/**
 	 * Returns root elements of current parse tree.
 	 * @return the root elements
-	 */    
+	 */
     public Object[] getRootElements() {
         return fHierarchy.getChildren();
     }
@@ -118,7 +115,7 @@ public class AntxrReconcilingStrategy implements IReconcilingStrategy {
 	/**
 	 * Returns root node of current parse tree.
 	 * @return the segment
-	 */    
+	 */
     public ISegment getRootSegment() {
         return fHierarchy;
     }

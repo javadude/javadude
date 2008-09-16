@@ -1,28 +1,18 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor;
 
 import java.util.Iterator;
-
-import com.javadude.antxr.eclipse.core.parser.ISegment;
-import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
-import com.javadude.antxr.eclipse.ui.actions.GotoRuleAction;
-import com.javadude.antxr.eclipse.ui.actions.IAntxrActionConstants;
-import com.javadude.antxr.eclipse.ui.actions.IAntxrActionDefinitionIds;
-import com.javadude.antxr.eclipse.ui.editor.outline.AntxrOutlinePage;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jdt.ui.actions.IJavaEditorActionDefinitionIds;
@@ -51,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
@@ -58,6 +49,13 @@ import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.tasklist.TaskList;
+
+import com.javadude.antxr.eclipse.core.parser.ISegment;
+import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
+import com.javadude.antxr.eclipse.ui.actions.GotoRuleAction;
+import com.javadude.antxr.eclipse.ui.actions.IAntxrActionConstants;
+import com.javadude.antxr.eclipse.ui.actions.IAntxrActionDefinitionIds;
+import com.javadude.antxr.eclipse.ui.editor.outline.AntxrOutlinePage;
 
 /**
  * An editor for an ANTXR grammar
@@ -88,11 +86,11 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		fMultiPageEditor = aMultiPageEditor;
 		fModelTools = new ModelTools(this);
 		fReconcilingStrategy = new AntxrReconcilingStrategy(this);
-		
+
 		setEditorContextMenuId("#AntxrGrammarFilePopupContext"); //$NON-NLS-1$
 		setRulerContextMenuId("#AntxrGrammarFileRulerContext"); //$NON-NLS-1$
 //		setOutlinerContextMenuId("#ClassFileOutlinerContext"); //$NON-NLS-1$
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -113,7 +111,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { "com.javadude.antxr.ui.antxrEditorScope" });
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
 	 */
@@ -123,14 +121,14 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		// Add goto rule action
 		IAction action = new GotoRuleAction(
 								AntxrUIPlugin.getDefault().getResourceBundle(),
-								PREFIX + "GotoRule.", this);
+								AntxrEditor.PREFIX + "GotoRule.", this);
 		action.setActionDefinitionId(IAntxrActionDefinitionIds.GOTO_RULE);
 		setAction(IAntxrActionConstants.GOTO_RULE, action);
 
 		// Add content assist propsal action
 		action = new ContentAssistAction(
 								AntxrUIPlugin.getDefault().getResourceBundle(),
-								PREFIX + "ContentAssist.", this);
+								AntxrEditor.PREFIX + "ContentAssist.", this);
 		action.setActionDefinitionId(
 					  ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(IAntxrActionConstants.CONTENT_ASSIST, action);
@@ -138,25 +136,25 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		// Add comment action
 		action = new TextOperationAction(
 					  AntxrUIPlugin.getDefault().getResourceBundle(),
-					  PREFIX + "Comment.", this, ITextOperationTarget.PREFIX);
-		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);		
+					  AntxrEditor.PREFIX + "Comment.", this, ITextOperationTarget.PREFIX);
+		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.COMMENT);
 		setAction(IAntxrActionConstants.COMMENT, action);
 
 		// Add uncomment action
 		action = new TextOperationAction(
 			  AntxrUIPlugin.getDefault().getResourceBundle(),
-			  PREFIX + "Uncomment.", this, ITextOperationTarget.STRIP_PREFIX);
-		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);		
+			  AntxrEditor.PREFIX + "Uncomment.", this, ITextOperationTarget.STRIP_PREFIX);
+		action.setActionDefinitionId(IJavaEditorActionDefinitionIds.UNCOMMENT);
 		setAction(IAntxrActionConstants.UNCOMMENT, action);
 	}
-	
+
 	/**
-	 * The <code>AntxrEditor</code> implementation of this 
+	 * The <code>AntxrEditor</code> implementation of this
 	 * <code>AbstractTextEditor</code> method gets the ANTXR content outline
 	 * page if request is for a an outline page.
 	 * @param aClass the type to adapt to
 	 * @return the adapter
-	 */ 
+	 */
 	public Object getAdapter(Class aClass) {
 	    Object adapter;
 		if (aClass.equals(IContentOutlinePage.class)) {
@@ -172,10 +170,10 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		}
 		return adapter;
 	}
-	
+
 	/**
-	 * The <code>AntxrEditor</code> implementation of this 
-	 * <code>AbstractTextEditor</code> method performs any extra 
+	 * The <code>AntxrEditor</code> implementation of this
+	 * <code>AbstractTextEditor</code> method performs any extra
 	 * disposal actions required by the ANTXR editor.
 	 *
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
@@ -214,8 +212,8 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 				fOutlinePage.selectSegment(line, false);
 			}
 		}
-	}	
-	
+	}
+
 	/** {@inheritDoc} */
 	public void markInNavigationHistory() {
 		getEditorSite().getPage().getNavigationHistory().markLocation(
@@ -240,7 +238,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer != null) {
 			StyledText styledText = sourceViewer.getTextWidget();
-			int caret = widgetOffset2ModelOffset(sourceViewer,
+			int caret = AbstractTextEditor.widgetOffset2ModelOffset(sourceViewer,
 												  styledText.getCaretOffset());
 			IDocument document = sourceViewer.getDocument();
 			if (document != null) {
@@ -312,7 +310,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 				IRegion endLine = doc.getLineInformation(
 													aSegment.getEndLine() - 1);
 				int length = endLine.getOffset() + endLine.getLength() - offset;
-				
+
 				// Reveal segment's text area in document
 				StyledText widget = getSourceViewer().getTextWidget();
 				widget.setRedraw(false);
@@ -344,30 +342,30 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 	 */
 	public void gotoError(boolean anIsForward) {
 		ISelectionProvider provider = getSelectionProvider();
-		
+
 		if (fStatusLineClearer != null) {
 			provider.removeSelectionChangedListener(fStatusLineClearer);
 			fStatusLineClearer= null;
 		}
-		
+
 		ITextSelection s = (ITextSelection)provider.getSelection();
 		IMarker nextError = getNextError(s.getOffset(), anIsForward);
-		
+
 		if (nextError != null) {
-			
+
 			IGotoMarker gotoMarker = (IGotoMarker) getAdapter(IGotoMarker.class);
 			if (gotoMarker != null) {
 				gotoMarker.gotoMarker(nextError);
 			}
 
 			IWorkbenchPage page = getSite().getPage();
-			
+
 			IViewPart view = page.findView(IPageLayout.ID_TASK_LIST);
 			if (view != null && view instanceof TaskList) {
 				StructuredSelection ss = new StructuredSelection(nextError);
 				((TaskList)view).setSelection(ss, true);
 			}
-			
+
 			getStatusLineManager().setErrorMessage(nextError.getAttribute(
 														 IMarker.MESSAGE, ""));
 			fStatusLineClearer = new ISelectionChangedListener() {
@@ -385,13 +383,13 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 	}
 
 	private IMarker getNextError(int anOffset, boolean anIsForward) {
-		
+
 		IMarker nextError = null;
-		
+
 		IDocument document = getDocument();
-		int endOfDocument = document.getLength(); 
+		int endOfDocument = document.getLength();
 		int distance = 0;
-		
+
 		IAnnotationModel model = getDocumentProvider().getAnnotationModel(
 															 getEditorInput());
 		Iterator iter = model.getAnnotationIterator();
@@ -399,7 +397,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 			Annotation a = (Annotation)iter.next();
 			if (a instanceof MarkerAnnotation) {
 				IMarker marker = ((MarkerAnnotation)a).getMarker();
-		
+
 				if (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM)) {
 					Position p = model.getPosition(a);
 					if (!p.includes(anOffset)) {
@@ -416,14 +414,14 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 								currentDistance = anOffset + endOfDocument -
 												  p.getOffset();
 							}
-						}						
+						}
 						if (nextError == null || currentDistance < distance) {
 							distance = currentDistance;
 							nextError = marker;
 						}
 					}
 				}
-		
+
 			}
 		}
 		return nextError;
@@ -476,7 +474,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 			AntxrUIPlugin.log(e);
 		}
 	}
-	
+
 	/**
 	 * Returns the desktop's StatusLineManager.
 	 * @return the statusline manager
@@ -493,7 +491,7 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 			manager = null;
 		}
 		return manager;
-	}	
+	}
 
 	/**
 	 * Displays an error message in editor's status line.
@@ -504,5 +502,5 @@ public class AntxrEditor extends AbstractDecoratedTextEditor implements IGotoMar
 		if (manager != null) {
 			manager.setErrorMessage(aMessage);
 		}
-	}	
+	}
 }

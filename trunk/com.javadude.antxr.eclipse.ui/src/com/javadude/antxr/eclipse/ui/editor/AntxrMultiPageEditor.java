@@ -1,24 +1,19 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.ui.editor;
 
 import java.io.Reader;
 import java.io.StringReader;
-
-import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
@@ -35,6 +30,8 @@ import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+
+import com.javadude.antxr.eclipse.ui.AntxrUIPlugin;
 
 /**
  * The overall antxr editor
@@ -67,8 +64,8 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 	 * Activate the editor
 	 */
 	public void activateEditor() {
-		if (getActivePage() != PAGE_EDITOR) {
-			setActivePage(PAGE_EDITOR);
+		if (getActivePage() != AntxrMultiPageEditor.PAGE_EDITOR) {
+			setActivePage(AntxrMultiPageEditor.PAGE_EDITOR);
 		}
 	}
 
@@ -79,13 +76,13 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 		try {
 			fEditor = new AntxrEditor(this);
 			addPage(fEditor, getEditorInput());
-			setPageText(PAGE_EDITOR,
-						AntxrUIPlugin.getMessage(PREFIX + "Source"));
+			setPageText(AntxrMultiPageEditor.PAGE_EDITOR,
+						AntxrUIPlugin.getMessage(AntxrMultiPageEditor.PREFIX + "Source"));
 
 			fOverview = new AntxrOverview(getContainer());
 			addPage(fOverview.getControl());
-			setPageText(PAGE_OVERVIEW,
-						AntxrUIPlugin.getMessage(PREFIX + "Overview"));
+			setPageText(AntxrMultiPageEditor.PAGE_OVERVIEW,
+						AntxrUIPlugin.getMessage(AntxrMultiPageEditor.PREFIX + "Overview"));
 		} catch (PartInitException e) {
 			ErrorDialog.openError(getSite().getShell(),
 				 		 AntxrUIPlugin.getMessage("ErrorCreatingNestedEditor"),
@@ -97,14 +94,14 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
-		getEditor(PAGE_EDITOR).doSave(monitor);
+		getEditor(AntxrMultiPageEditor.PAGE_EDITOR).doSave(monitor);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
 	public void doSaveAs() {
-		IEditorPart editor = getEditor(PAGE_EDITOR);
+		IEditorPart editor = getEditor(AntxrMultiPageEditor.PAGE_EDITOR);
 		editor.doSaveAs();
 		setInput(editor.getEditorInput());
 	}
@@ -113,8 +110,8 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 	 * @see org.eclipse.ui.IEditorPart#gotoMarker(org.eclipse.core.resources.IMarker)
 	 */
 	public void gotoMarker(IMarker aMarker) {
-		setActivePage(PAGE_EDITOR);
-		IDE.gotoMarker(getEditor(PAGE_EDITOR), aMarker);
+		setActivePage(AntxrMultiPageEditor.PAGE_EDITOR);
+		IDE.gotoMarker(getEditor(AntxrMultiPageEditor.PAGE_EDITOR), aMarker);
 	}
 
 	/* (non-Javadoc)
@@ -130,7 +127,7 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 	 */
 	protected void pageChange(int aPageIndex) {
 		super.pageChange(aPageIndex);
-		if (aPageIndex == PAGE_OVERVIEW) {
+		if (aPageIndex == AntxrMultiPageEditor.PAGE_OVERVIEW) {
 			Reader reader = new StringReader(fEditor.getDocument().get());
 			fOverview.show(reader);
 		}
@@ -145,7 +142,7 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 
 	/**
 	 * Returns ANTXR content outline page from ANTXR editor page if request.
-	 */ 
+	 */
 	public Object getAdapter(Class aClass) {
 	    Object adapter;
 		if (aClass.equals(IContentOutlinePage.class)) {
