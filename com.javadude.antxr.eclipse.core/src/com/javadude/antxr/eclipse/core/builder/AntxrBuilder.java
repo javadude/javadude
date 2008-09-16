@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.core.builder;
 
@@ -23,11 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import com.javadude.antxr.AntxrTool;
-import com.javadude.antxr.eclipse.core.AntxrCorePlugin;
-import com.javadude.antxr.eclipse.core.AntxrNature;
-import com.javadude.antxr.eclipse.core.properties.SettingsPersister;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -50,6 +42,11 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+
+import com.javadude.antxr.AntxrTool;
+import com.javadude.antxr.eclipse.core.AntxrCorePlugin;
+import com.javadude.antxr.eclipse.core.AntxrNature;
+import com.javadude.antxr.eclipse.core.properties.SettingsPersister;
 
 /**
  * An eclipse builder to compile ANTXR grammars
@@ -87,7 +84,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
      * Create a builder
      */
     public AntxrBuilder() {
-        DEBUG = AntxrCorePlugin.isDebug(DEBUG_OPTION);
+        AntxrBuilder.DEBUG = AntxrCorePlugin.isDebug(AntxrBuilder.DEBUG_OPTION);
     }
 
     /** {@inheritDoc} */
@@ -98,8 +95,8 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
 
     /** {@inheritDoc} */
     protected IProject[] build(int aKind, Map anArgs, IProgressMonitor aMonitor) throws CoreException {
-        IResourceDelta delta = (aKind != FULL_BUILD ? getDelta(getProject()) : null);
-        if (delta == null || aKind == FULL_BUILD) {
+        IResourceDelta delta = (aKind != IncrementalProjectBuilder.FULL_BUILD ? getDelta(getProject()) : null);
+        if (delta == null || aKind == IncrementalProjectBuilder.FULL_BUILD) {
             IProject project = getProject();
             if (AntxrCorePlugin.getUtil().hasNature(project, AntxrNature.NATURE_ID)) {
                 project.accept(new Visitor(aMonitor));
@@ -112,7 +109,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
 
     /** {@inheritDoc} */
     public void streamAppended(String aText, Object aStream) {
-        if (DEBUG) {
+        if (AntxrBuilder.DEBUG) {
             fOriginalOut.println("ANTXR output: " + aText);
         }
         int line = 0;
@@ -148,7 +145,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
             severity = IMarker.SEVERITY_WARNING;
             message = aText.substring(9);
         } else {
-            if (DEBUG) {
+            if (AntxrBuilder.DEBUG) {
                 fOriginalOut.println("Unhandled ANTXR output: " + aText);
             }
         }
@@ -317,7 +314,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
         Map<String, Map<String, String>> map = SettingsPersister.readSettings(aFile.getProject());
 
         List<String> args = createArguments(map, aFile);
-        if (DEBUG) {
+        if (AntxrBuilder.DEBUG) {
             System.out.println("Compiling ANTXR grammar '" + aFile.getName() + "': arguments=" + args);
         }
 
@@ -543,7 +540,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
         Iterator files = aTool.files();
         while (files.hasNext()) {
             String fileName = (String) files.next();
-            if (DEBUG) {
+            if (AntxrBuilder.DEBUG) {
                 fOriginalOut.println("Deleting ANTXR generated file '" + fileName + "'");
             }
             IResource file = aFolder.findMember(fileName);
@@ -564,7 +561,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
                                                                                                .toString()));
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         IContainer folder = root.getContainerForLocation(aFolder.getLocation());
-        if (DEBUG) {
+        if (AntxrBuilder.DEBUG) {
             fOriginalOut.println("Refreshing output folder '" + folder.getFullPath() + "'");
         }
         try {
@@ -578,7 +575,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
             Iterator files = aTool.files();
             while (files.hasNext()) {
                 String fileName = (String) files.next();
-                if (DEBUG) {
+                if (AntxrBuilder.DEBUG) {
                     fOriginalOut.println("ANTXR generated file '" + fileName + "'");
                 }
                 IResource file = folder.getFile(new Path(fileName));
@@ -587,10 +584,10 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
                 file.setDerived(true);
                 String cleanWarnings = SettingsPersister.get(map, grammarFile, SettingsPersister.CLEAN_WARNINGS);
                 String installSmap = SettingsPersister.get(map, grammarFile, SettingsPersister.SMAP_PROPERTY);
-                file.setPersistentProperty(CLEAN_WARNINGS, cleanWarnings);
-                file.setPersistentProperty(INSTALL_SMAP, installSmap);
-                file.setPersistentProperty(GRAMMAR_ECLIPSE_PROPERTY, grammarFileName);
-                file.setPersistentProperty(COMMAND_LINE_OPTIONS_PROPERTY, argString.toString());
+                file.setPersistentProperty(AntxrBuilder.CLEAN_WARNINGS, cleanWarnings);
+                file.setPersistentProperty(AntxrBuilder.INSTALL_SMAP, installSmap);
+                file.setPersistentProperty(AntxrBuilder.GRAMMAR_ECLIPSE_PROPERTY, grammarFileName);
+                file.setPersistentProperty(AntxrBuilder.COMMAND_LINE_OPTIONS_PROPERTY, argString.toString());
                 if (fileName.endsWith(".java")) {
                     compilationUnitFiles.add(file);
                     Map sourceMap = (Map) sourceMaps.get(file.getName());

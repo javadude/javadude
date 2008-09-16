@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.smapinstaller;
 
@@ -75,7 +72,7 @@ public class SDEInstaller {
 
         this.sdeAttr = sdeAttr;
         // get the bytes
-        orig = readWhole(inClassFile);
+        orig = SDEInstaller.readWhole(inClassFile);
         gen = new byte[orig.length + sdeAttr.length + 100];
 
         // do it
@@ -89,7 +86,7 @@ public class SDEInstaller {
 
     SDEInstaller(File inClassFile, File attrFile, File outClassFile)
         throws IOException {
-        this(inClassFile, readWhole(attrFile), outClassFile);
+        this(inClassFile, SDEInstaller.readWhole(attrFile), outClassFile);
     }
 
     static byte[] readWhole(File input) throws IOException {
@@ -262,7 +259,7 @@ public class SDEInstaller {
                     writeU2(len);
                     byte[] utf8 = readBytes(len);
                     String str = new String(utf8, "UTF-8");
-                    if (str.equals(nameSDE)) {
+                    if (str.equals(SDEInstaller.nameSDE)) {
                         newSdeIndex = i;
                     }
                     writeBytes(utf8);
@@ -275,11 +272,11 @@ public class SDEInstaller {
     }
 
     void writeUtf8ForSDE() {
-        int len = nameSDE.length();
+        int len = SDEInstaller.nameSDE.length();
         writeU1(1); // Utf8 tag
         writeU2(len);
         for (int i = 0; i < len; ++i) {
-            writeU1(nameSDE.charAt(i));
+            writeU1(SDEInstaller.nameSDE.charAt(i));
         }
     }
 }

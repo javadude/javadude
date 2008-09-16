@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.core;
 
@@ -19,10 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.javadude.antxr.eclipse.core.builder.AntxrBuilder;
-import com.javadude.antxr.eclipse.core.builder.WarningCleanerBuilder;
-import com.javadude.antxr.eclipse.smapinstaller.SMapInstallerBuilder;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFolder;
@@ -37,6 +30,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+
+import com.javadude.antxr.eclipse.core.builder.AntxrBuilder;
+import com.javadude.antxr.eclipse.core.builder.WarningCleanerBuilder;
+import com.javadude.antxr.eclipse.smapinstaller.SMapInstallerBuilder;
 
 /**
  * An eclipse nature that represents a project that contains ANTXR grammars
@@ -56,7 +53,7 @@ public class AntxrNature implements IProjectNature {
      * Create an instance of the nature
      */
     public AntxrNature() {
-        DEBUG = AntxrCorePlugin.isDebug(DEBUG_OPTION);
+        AntxrNature.DEBUG = AntxrCorePlugin.isDebug(AntxrNature.DEBUG_OPTION);
     }
 
     public IProject getProject() {
@@ -68,7 +65,7 @@ public class AntxrNature implements IProjectNature {
     }
 
     public void configure() throws CoreException {
-        if (DEBUG) {
+        if (AntxrNature.DEBUG) {
             System.out.println("configuring ANTXR nature");
         }
         IProject project = getProject();
@@ -173,7 +170,7 @@ public class AntxrNature implements IProjectNature {
     }
 
     public void deconfigure() throws CoreException {
-        if (DEBUG) {
+        if (AntxrNature.DEBUG) {
             System.out.println("deconfiguring ANTXR nature");
         }
         IProject project = getProject();
