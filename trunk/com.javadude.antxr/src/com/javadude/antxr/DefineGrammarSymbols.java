@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -293,10 +286,10 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
         if (grammar.exportVocab == null && grammar.importVocab == null) {
             grammar.exportVocab = grammar.getClassName();
             // Can we get initial vocab from default shared vocab?
-            if (tokenManagers.containsKey(DEFAULT_TOKENMANAGER_NAME)) {
+            if (tokenManagers.containsKey(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME)) {
                 // Use the already-defined token manager
-                grammar.exportVocab = DEFAULT_TOKENMANAGER_NAME;
-                TokenManager tm = tokenManagers.get(DEFAULT_TOKENMANAGER_NAME);
+                grammar.exportVocab = DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME;
+                TokenManager tm = tokenManagers.get(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME);
                 // System.out.println("No tokenVocabulary for '" + grammar.getClassName() + "', using default '" + tm.getName() + "'");
                 grammar.setTokenManager(tm);
                 return;
@@ -308,7 +301,7 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
             // Add the token manager to the list of token managers
             tokenManagers.put(grammar.exportVocab, tm);
             // no default vocab, so make this the default vocab
-            tokenManagers.put(DEFAULT_TOKENMANAGER_NAME, tm);
+            tokenManagers.put(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME, tm);
             return;
         }
 
@@ -355,8 +348,8 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
             grammar.setTokenManager(tm);
 
             // set default vocab if none
-            if (!tokenManagers.containsKey(DEFAULT_TOKENMANAGER_NAME)) {
-                tokenManagers.put(DEFAULT_TOKENMANAGER_NAME, tm);
+            if (!tokenManagers.containsKey(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME)) {
+                tokenManagers.put(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME, tm);
             }
 
             return;
@@ -379,8 +372,8 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
             // Add the token manager to the list of token managers
             tokenManagers.put(grammar.exportVocab, tm);
             // set default vocab if none
-            if (!tokenManagers.containsKey(DEFAULT_TOKENMANAGER_NAME)) {
-                tokenManagers.put(DEFAULT_TOKENMANAGER_NAME, tm);
+            if (!tokenManagers.containsKey(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME)) {
+                tokenManagers.put(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME, tm);
             }
             return;
         }
@@ -418,8 +411,8 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
             grammar.setTokenManager(tm);
 
             // set default vocab if none
-            if (!tokenManagers.containsKey(DEFAULT_TOKENMANAGER_NAME)) {
-                tokenManagers.put(DEFAULT_TOKENMANAGER_NAME, tm);
+            if (!tokenManagers.containsKey(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME)) {
+                tokenManagers.put(DefineGrammarSymbols.DEFAULT_TOKENMANAGER_NAME, tm);
             }
 
             return;

@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -59,7 +52,7 @@ public class MismatchedCharException extends RecognitionException {
     // Expected range / not range
     public MismatchedCharException(char c, char lower, char upper_, boolean matchNot, CharScanner scanner_) {
         super("Mismatched char", scanner_.getFilename(), scanner_.getLine(), scanner_.getColumn());
-        mismatchType = matchNot ? NOT_RANGE : RANGE;
+        mismatchType = matchNot ? MismatchedCharException.NOT_RANGE : MismatchedCharException.RANGE;
         foundChar = c;
         expecting = lower;
         upper = upper_;
@@ -69,7 +62,7 @@ public class MismatchedCharException extends RecognitionException {
     // Expected token / not token
     public MismatchedCharException(char c, char expecting_, boolean matchNot, CharScanner scanner_) {
         super("Mismatched char", scanner_.getFilename(), scanner_.getLine(), scanner_.getColumn());
-        mismatchType = matchNot ? NOT_CHAR : CHAR;
+        mismatchType = matchNot ? MismatchedCharException.NOT_CHAR : MismatchedCharException.CHAR;
         foundChar = c;
         expecting = expecting_;
         scanner = scanner_;
@@ -78,7 +71,7 @@ public class MismatchedCharException extends RecognitionException {
     // Expected BitSet / not BitSet
     public MismatchedCharException(char c, BitSet set_, boolean matchNot, CharScanner scanner_) {
         super("Mismatched char", scanner_.getFilename(), scanner_.getLine(), scanner_.getColumn());
-        mismatchType = matchNot ? NOT_SET : SET;
+        mismatchType = matchNot ? MismatchedCharException.NOT_SET : MismatchedCharException.SET;
         foundChar = c;
         set = set_;
         scanner = scanner_;
@@ -104,7 +97,7 @@ public class MismatchedCharException extends RecognitionException {
             case RANGE:
             case NOT_RANGE:
                 sb.append("expecting token ");
-                if (mismatchType == NOT_RANGE) {
+                if (mismatchType == MismatchedCharException.NOT_RANGE) {
                     sb.append("NOT ");
                 }
                 sb.append("in range: ");
@@ -116,7 +109,7 @@ public class MismatchedCharException extends RecognitionException {
                 break;
             case SET:
             case NOT_SET:
-                sb.append("expecting " + (mismatchType == NOT_SET ? "NOT " : "") + "one of (");
+                sb.append("expecting " + (mismatchType == MismatchedCharException.NOT_SET ? "NOT " : "") + "one of (");
                 int[] elems = set.toArray();
                 for (int i = 0; i < elems.length; i++) {
                     appendCharName(sb, elems[i]);

@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -336,26 +329,26 @@ public abstract class BaseAST implements AST, Serializable {
     }
 
     public static void setVerboseStringConversion(boolean verbose, String[] names) {
-        verboseStringConversion = verbose;
-        tokenNames = names;
+        BaseAST.verboseStringConversion = verbose;
+        BaseAST.tokenNames = names;
     }
 
     /** Return an array of strings that maps token ID to it's text. @since 2.7.3 */
     public static String[] getTokenNames() {
-        return tokenNames;
+        return BaseAST.tokenNames;
     }
 
     @Override
     public String toString() {
         StringBuffer b = new StringBuffer();
         // if verbose and type name not same as text (keyword probably)
-        if (verboseStringConversion &&
-            !getText().equalsIgnoreCase(tokenNames[getType()]) &&
-            !getText().equalsIgnoreCase(StringUtils.stripFrontBack(tokenNames[getType()], "\"", "\""))) {
+        if (BaseAST.verboseStringConversion &&
+            !getText().equalsIgnoreCase(BaseAST.tokenNames[getType()]) &&
+            !getText().equalsIgnoreCase(StringUtils.stripFrontBack(BaseAST.tokenNames[getType()], "\"", "\""))) {
             b.append('[');
             b.append(getText());
             b.append(",<");
-            b.append(tokenNames[getType()]);
+            b.append(BaseAST.tokenNames[getType()]);
             b.append(">]");
             return b.toString();
         }
@@ -487,7 +480,7 @@ public abstract class BaseAST implements AST, Serializable {
         StringBuffer buf = new StringBuffer(100);
         buf.append("<");
         buf.append(getClass().getName() + " ");
-        buf.append("text=\"" + encode(getText()) + "\" type=\"" +
+        buf.append("text=\"" + BaseAST.encode(getText()) + "\" type=\"" +
                    getType() + "\"/>");
         out.write(buf.toString());
     }
@@ -497,7 +490,7 @@ public abstract class BaseAST implements AST, Serializable {
         StringBuffer buf = new StringBuffer(100);
         buf.append("<");
         buf.append(getClass().getName() + " ");
-        buf.append("text=\"" + encode(getText()) + "\" type=\"" +
+        buf.append("text=\"" + BaseAST.encode(getText()) + "\" type=\"" +
                    getType() + "\">\n");
         out.write(buf.toString());
     }

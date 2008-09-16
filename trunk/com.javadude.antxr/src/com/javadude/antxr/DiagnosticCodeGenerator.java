@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -148,8 +141,8 @@ public class DiagnosticCodeGenerator extends CodeGenerator {
     @Override
     public void gen(LexerGrammar g) throws IOException {
         setGrammar(g);
-        antxrTool.reportProgress("Generating " + grammar.getClassName() + TokenTypesFileExt);
-        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + TokenTypesFileExt);
+        antxrTool.reportProgress("Generating " + grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
+        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
         //SAS: changed for proper text file io
 
         tabs = 0;
@@ -251,8 +244,8 @@ public class DiagnosticCodeGenerator extends CodeGenerator {
     public void gen(ParserGrammar g) throws IOException {
         setGrammar(g);
         // Open the output stream for the parser and set the currentOutput
-        antxrTool.reportProgress("Generating " + grammar.getClassName() + TokenTypesFileExt);
-        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + TokenTypesFileExt);
+        antxrTool.reportProgress("Generating " + grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
+        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
         //SAS: changed for proper text file io
 
         tabs = 0;
@@ -398,8 +391,8 @@ public class DiagnosticCodeGenerator extends CodeGenerator {
     public void gen(TreeWalkerGrammar g) throws IOException {
         setGrammar(g);
         // Open the output stream for the parser and set the currentOutput
-        antxrTool.reportProgress("Generating " + grammar.getClassName() + TokenTypesFileExt);
-        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + TokenTypesFileExt);
+        antxrTool.reportProgress("Generating " + grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
+        currentOutput = antxrTool.openOutputFile(grammar.getClassName() + CodeGenerator.TokenTypesFileExt);
         //SAS: changed for proper text file io
 
         tabs = 0;
@@ -808,8 +801,8 @@ public class DiagnosticCodeGenerator extends CodeGenerator {
     /** Generate the token types TXT file */
     protected void genTokenTypes(TokenManager tm) throws IOException {
         // Open the token output TXT file and set the currentOutput stream
-        antxrTool.reportProgress("Generating " + tm.getName() + TokenTypesFileSuffix + TokenTypesFileExt);
-        currentOutput = antxrTool.openOutputFile(tm.getName() + TokenTypesFileSuffix + TokenTypesFileExt);
+        antxrTool.reportProgress("Generating " + tm.getName() + CodeGenerator.TokenTypesFileSuffix + CodeGenerator.TokenTypesFileExt);
+        currentOutput = antxrTool.openOutputFile(tm.getName() + CodeGenerator.TokenTypesFileSuffix + CodeGenerator.TokenTypesFileExt);
         //SAS: changed for proper text file io
         tabs = 0;
 

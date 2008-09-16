@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr.collections.impl;
 
@@ -49,14 +42,14 @@ public class BitSet implements Cloneable {
      * same as (i & (nbits-1)).  Since mod is slow, we use a
      * precomputed mod mask to do the mod instead.
      */
-    protected final static int MOD_MASK = BITS - 1;
+    protected final static int MOD_MASK = BitSet.BITS - 1;
 
     /** The actual data bits */
     protected long bits[];
 
     /** Construct a bitset of size one word (64 bits) */
     public BitSet() {
-        this(BITS);
+        this(BitSet.BITS);
     }
 
     /** Construction from a static array of longs */
@@ -68,19 +61,19 @@ public class BitSet implements Cloneable {
      * @param nbits The size of the bitset in bits
      */
     public BitSet(int nbits) {
-        bits = new long[((nbits - 1) >> LOG_BITS) + 1];
+        bits = new long[((nbits - 1) >> BitSet.LOG_BITS) + 1];
     }
 
     /** or this element into this set (grow as necessary to accommodate) */
     public void add(int el) {
         //System.out.println("add("+el+")");
-        int n = wordNumber(el);
+        int n = BitSet.wordNumber(el);
         //System.out.println("word number is "+n);
         //System.out.println("bits.length "+bits.length);
         if (n >= bits.length) {
             growToInclude(el);
         }
-        bits[n] |= bitMask(el);
+        bits[n] |= BitSet.bitMask(el);
     }
 
     public BitSet and(BitSet a) {
@@ -101,7 +94,7 @@ public class BitSet implements Cloneable {
     }
 
     private final static long bitMask(int bitNumber) {
-        int bitPosition = bitNumber & MOD_MASK; // bitNumber mod BITS
+        int bitPosition = bitNumber & BitSet.MOD_MASK; // bitNumber mod BITS
         return 1L << bitPosition;
     }
 
@@ -112,11 +105,11 @@ public class BitSet implements Cloneable {
     }
 
     public void clear(int el) {
-        int n = wordNumber(el);
+        int n = BitSet.wordNumber(el);
         if (n >= bits.length) {	// grow as necessary to accommodate
             growToInclude(el);
         }
-        bits[n] &= ~bitMask(el);
+        bits[n] &= ~BitSet.bitMask(el);
     }
 
     @Override
@@ -138,7 +131,7 @@ public class BitSet implements Cloneable {
         for (int i = bits.length - 1; i >= 0; i--) {
             long word = bits[i];
             if (word != 0L) {
-                for (int bit = BITS - 1; bit >= 0; bit--) {
+                for (int bit = BitSet.BITS - 1; bit >= 0; bit--) {
                     if ((word & (1L << bit)) != 0) {
                         deg++;
                     }
@@ -223,11 +216,11 @@ public class BitSet implements Cloneable {
     }
 
     public boolean member(int el) {
-        int n = wordNumber(el);
+        int n = BitSet.wordNumber(el);
         if (n >= bits.length) {
             return false;
         }
-        return (bits[n] & bitMask(el)) != 0;
+        return (bits[n] & BitSet.bitMask(el)) != 0;
     }
 
     public boolean nil() {
@@ -261,13 +254,13 @@ public class BitSet implements Cloneable {
         // make sure that we have room for maxBit
         growToInclude(maxBit);
         for (int i = minBit; i <= maxBit; i++) {
-            int n = wordNumber(i);
-            bits[n] ^= bitMask(i);
+            int n = BitSet.wordNumber(i);
+            bits[n] ^= BitSet.bitMask(i);
         }
     }
 
     private final int numWordsToHold(int el) {
-        return (el >> LOG_BITS) + 1;
+        return (el >> BitSet.LOG_BITS) + 1;
     }
 
     public static BitSet of(int el) {
@@ -296,11 +289,11 @@ public class BitSet implements Cloneable {
 
     // remove this element from this set
     public void remove(int el) {
-        int n = wordNumber(el);
+        int n = BitSet.wordNumber(el);
         if (n >= bits.length) {
             growToInclude(el);
         }
-        bits[n] &= ~bitMask(el);
+        bits[n] &= ~BitSet.bitMask(el);
     }
 
     /**
@@ -315,7 +308,7 @@ public class BitSet implements Cloneable {
     }
 
     public int size() {
-        return bits.length << LOG_BITS; // num words * bits per word
+        return bits.length << BitSet.LOG_BITS; // num words * bits per word
     }
 
     /** return how much space is being used by the bits array not
@@ -349,7 +342,7 @@ public class BitSet implements Cloneable {
     public int[] toArray() {
         int[] elems = new int[degree()];
         int en = 0;
-        for (int i = 0; i < (bits.length << LOG_BITS); i++) {
+        for (int i = 0; i < (bits.length << BitSet.LOG_BITS); i++) {
             if (member(i)) {
                 elems[en++] = i;
             }
@@ -372,7 +365,7 @@ public class BitSet implements Cloneable {
      */
     public String toString(String separator) {
         String str = "";
-        for (int i = 0; i < (bits.length << LOG_BITS); i++) {
+        for (int i = 0; i < (bits.length << BitSet.LOG_BITS); i++) {
             if (member(i)) {
                 if (str.length() > 0) {
                     str += separator;
@@ -391,7 +384,7 @@ public class BitSet implements Cloneable {
     public String toString(String separator, CharFormatter formatter) {
         String str = "";
 
-        for (int i = 0; i < (bits.length << LOG_BITS); i++) {
+        for (int i = 0; i < (bits.length << BitSet.LOG_BITS); i++) {
             if (member(i)) {
                 if (str.length() > 0) {
                     str += separator;
@@ -413,7 +406,7 @@ public class BitSet implements Cloneable {
             return toString(separator);
         }
         String str = "";
-        for (int i = 0; i < (bits.length << LOG_BITS); i++) {
+        for (int i = 0; i < (bits.length << BitSet.LOG_BITS); i++) {
             if (member(i)) {
                 if (str.length() > 0) {
                     str += separator;
@@ -506,6 +499,6 @@ public class BitSet implements Cloneable {
     }
 
     private final static int wordNumber(int bit) {
-        return bit >> LOG_BITS; // bit / BITS
+        return bit >> BitSet.LOG_BITS; // bit / BITS
     }
 }
