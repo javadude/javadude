@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.core;
 
@@ -21,9 +18,6 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
-
-import com.javadude.antxr.eclipse.core.properties.SettingsPersister;
-import com.javadude.common.PluginUtil;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -37,6 +31,9 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 import org.osgi.framework.BundleContext;
+
+import com.javadude.antxr.eclipse.core.properties.SettingsPersister;
+import com.javadude.common.PluginUtil;
 
 /**
  * Central access point for the ANTXR Core plug-in
@@ -64,7 +61,7 @@ public class AntxrCorePlugin extends Plugin {
     public static final String PLUGIN_ID = "com.javadude.antxr.eclipse.core";
 
     /** The name of the source mapping markers */
-    public static final String SOURCE_MAPPING_MARKER = PLUGIN_ID + ".sourceMapMarker";
+    public static final String SOURCE_MAPPING_MARKER = AntxrCorePlugin.PLUGIN_ID + ".sourceMapMarker";
 
     /** The name of the source mapping grammar line attribute */
     public static final String GRAMMAR_LINE_ATTRIBUTE = "grammarLine";
@@ -74,29 +71,29 @@ public class AntxrCorePlugin extends Plugin {
 
     /** Name of the property holding the output path for generated files */
     public static final QualifiedName OLD_OUTPUT_PROPERTY =
-                                new QualifiedName(PLUGIN_ID, "AntxrOutput");
+                                new QualifiedName(AntxrCorePlugin.PLUGIN_ID, "AntxrOutput");
 
     /** Name of the property holding a list of paths to super grammar files
      * (delimited by ';') */
     public static final QualifiedName OLD_SUPER_GRAMMARS_PROPERTY =
-                            new QualifiedName(PLUGIN_ID, "AntxrSuperGrammars");
+                            new QualifiedName(AntxrCorePlugin.PLUGIN_ID, "AntxrSuperGrammars");
 
 
     /** Singleton instance of this plugin */
     private static AntxrCorePlugin plugin;
 
-    private static final String RESOURCE_NAME = PLUGIN_ID + ".messages";
+    private static final String RESOURCE_NAME = AntxrCorePlugin.PLUGIN_ID + ".messages";
     private ResourceBundle fResourceBundle;
 
     /**
      *
      */
     public AntxrCorePlugin() {
-        plugin = this;
+        AntxrCorePlugin.plugin = this;
         try {
-            fResourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);
+            fResourceBundle = ResourceBundle.getBundle(AntxrCorePlugin.RESOURCE_NAME);
         } catch (MissingResourceException e) {
-            log(e);
+            AntxrCorePlugin.log(e);
             fResourceBundle = null;
         }
     }
@@ -118,7 +115,7 @@ public class AntxrCorePlugin extends Plugin {
             }
         }
         if (!found) {
-            if (isDebug()) {
+            if (AntxrCorePlugin.isDebug()) {
                 System.out.println("Adding '*.antxr' to JDT builder's " +
                                    "resource filter (" + filter + ")");
             }
@@ -132,7 +129,7 @@ public class AntxrCorePlugin extends Plugin {
      * @return the shared instance
      */
     public static AntxrCorePlugin getDefault() {
-        return plugin;
+        return AntxrCorePlugin.plugin;
     }
 
     /**
@@ -156,7 +153,7 @@ public class AntxrCorePlugin extends Plugin {
      * @param aStatus The status information to log
      */
     public static void log(IStatus aStatus) {
-        getDefault().getLog().log(aStatus);
+        AntxrCorePlugin.getDefault().getLog().log(aStatus);
     }
 
     /**
@@ -164,8 +161,8 @@ public class AntxrCorePlugin extends Plugin {
      * @param aThrowable The exception to log
      */
     public static void log(Throwable aThrowable) {
-        log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
-                        getMessage("AntxrCorePlugin.internal_error"),
+        AntxrCorePlugin.log(new Status(IStatus.ERROR, AntxrCorePlugin.PLUGIN_ID, IStatus.OK,
+                        AntxrCorePlugin.getMessage("AntxrCorePlugin.internal_error"),
                         aThrowable));
     }
 
@@ -174,7 +171,7 @@ public class AntxrCorePlugin extends Plugin {
      * @param aMessage the error message to log
      */
     public static void logErrorMessage(String aMessage) {
-        log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, aMessage,
+        AntxrCorePlugin.log(new Status(IStatus.ERROR, AntxrCorePlugin.PLUGIN_ID, IStatus.OK, aMessage,
             null));
     }
 
@@ -185,12 +182,12 @@ public class AntxrCorePlugin extends Plugin {
      */
     public static void logErrorStatus(String aMessage, IStatus aStatus) {
         if (aStatus == null) {
-            logErrorMessage(aMessage);
+            AntxrCorePlugin.logErrorMessage(aMessage);
         } else {
-            MultiStatus multi = new MultiStatus(PLUGIN_ID, IStatus.OK,
+            MultiStatus multi = new MultiStatus(AntxrCorePlugin.PLUGIN_ID, IStatus.OK,
                                                 aMessage, null);
             multi.add(aStatus);
-            log(multi);
+            AntxrCorePlugin.log(multi);
         }
     }
 
@@ -199,7 +196,7 @@ public class AntxrCorePlugin extends Plugin {
      * @return true if in debug mode; false otherwise
      */
     public static boolean isDebug() {
-        return getDefault().isDebugging();
+        return AntxrCorePlugin.getDefault().isDebugging();
     }
 
     /**
@@ -209,7 +206,7 @@ public class AntxrCorePlugin extends Plugin {
      */
     public static boolean isDebug(String anOption) {
         boolean debug;
-        if (isDebug()) {
+        if (AntxrCorePlugin.isDebug()) {
             String value = Platform.getDebugOption(anOption);
             debug = (value != null && value.equalsIgnoreCase("true") ?
                      true : false);
@@ -226,12 +223,12 @@ public class AntxrCorePlugin extends Plugin {
      */
     public static String getMessage(String aKey) {
         String bundleString;
-        ResourceBundle bundle = getDefault().getResourceBundle();
+        ResourceBundle bundle = AntxrCorePlugin.getDefault().getResourceBundle();
         if (bundle != null) {
             try {
                 bundleString = bundle.getString(aKey);
             } catch (MissingResourceException e) {
-                log(e);
+                AntxrCorePlugin.log(e);
                 bundleString = "!" + aKey + "!";
             }
         } else {
@@ -247,7 +244,7 @@ public class AntxrCorePlugin extends Plugin {
      * @return The formatted message
      */
     public static String getFormattedMessage(String aKey, String anArg) {
-        return getFormattedMessage(aKey, new String[] { anArg });
+        return AntxrCorePlugin.getFormattedMessage(aKey, new String[] { anArg });
     }
 
     /**
@@ -257,7 +254,7 @@ public class AntxrCorePlugin extends Plugin {
      * @return The formatted message
      */
     public static String getFormattedMessage(String aKey, String[] anArgs) {
-        return MessageFormat.format(getMessage(aKey), (Object[]) anArgs);
+        return MessageFormat.format(AntxrCorePlugin.getMessage(aKey), (Object[]) anArgs);
     }
 
     /**
@@ -305,9 +302,9 @@ public class AntxrCorePlugin extends Plugin {
         }
     }
     public static PluginUtil getUtil() {
-        if (util_ == null) {
-            util_ = new PluginUtil(getDefault().getBundle().getSymbolicName(), getDefault().getLog());
+        if (AntxrCorePlugin.util_ == null) {
+            AntxrCorePlugin.util_ = new PluginUtil(AntxrCorePlugin.getDefault().getBundle().getSymbolicName(), AntxrCorePlugin.getDefault().getLog());
         }
-        return util_;
+        return AntxrCorePlugin.util_;
     }
 }

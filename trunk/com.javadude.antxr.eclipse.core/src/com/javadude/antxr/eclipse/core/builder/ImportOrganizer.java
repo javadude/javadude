@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.core.builder;
 
@@ -45,7 +42,7 @@ public class ImportOrganizer {
 //				} catch (CoreException e) {
 //					AntxrCorePlugin.log(e);
 //					String message= ActionMessages.getFormattedString("OrganizeImportsAction.multi.error.unexpected", e.getStatus().getMessage()); //$NON-NLS-1$
-//					status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));					
+//					status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
 //				} catch (OrganizeImportError e) {
 //					String message= ActionMessages.getFormattedString("OrganizeImportsAction.multi.error.unresolvable", cuLocation); //$NON-NLS-1$
 //					status.add(new Status(IStatus.INFO, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
@@ -58,7 +55,7 @@ public class ImportOrganizer {
 //		Display.getDefault().syncExec(runnable);
 //	}
 //
-//	
+//
 //	/**
 //	 * Organize imports on generated compilation units
 //	 * @param compilationUnitFiles The compilation units to process
@@ -69,9 +66,9 @@ public class ImportOrganizer {
 //	public void organizeImports(List compilationUnitFiles, MultiStatus status, IProgressMonitor monitor) throws OperationCanceledException {
 //		if (monitor == null) {
 //			monitor= new NullProgressMonitor();
-//		}	
+//		}
 //		monitor.setTaskName(ActionMessages.getString("OrganizeImportsAction.multi.op.description")); //$NON-NLS-1$
-//	
+//
 //		monitor.beginTask("", compilationUnitFiles.size()); //$NON-NLS-1$
 //		try {
 //			IChooseImportQuery query= new IChooseImportQuery() {
@@ -80,7 +77,7 @@ public class ImportOrganizer {
 //				}
 //			};
 //			IJavaProject lastProject= null;
-//			
+//
 //			for (Iterator i = compilationUnitFiles.iterator(); i
 //					.hasNext();) {
 //				IFile file = (IFile)i.next();
@@ -91,9 +88,9 @@ public class ImportOrganizer {
 //					}
 //					CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(lastProject);
 //
-//					
+//
 //					String cuLocation= cu.getPath().makeRelative().toString();
-//					
+//
 //					monitor.subTask(cuLocation);
 //
 //					try {
@@ -102,7 +99,7 @@ public class ImportOrganizer {
 //							ITextFileBuffer textFileBuffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(cu.getPath());
 //							save= textFileBuffer != null && !textFileBuffer.isDirty(); // save when not dirty
 //						}
-//						
+//
 //						OrganizeImportsOperation op= new OrganizeImportsOperation(cu, settings.importOrder, settings.importThreshold, settings.importIgnoreLowercase, save, true, query);
 //						runInSync(op, cuLocation, status, monitor);
 //
@@ -110,11 +107,11 @@ public class ImportOrganizer {
 //						if (parseError != null) {
 //							String message= ActionMessages.getFormattedString("OrganizeImportsAction.multi.error.parse", cuLocation); //$NON-NLS-1$
 //							status.add(new Status(IStatus.INFO, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
-//						} 	
+//						}
 //					} catch (CoreException e) {
 //						AntxrCorePlugin.log(e);
 //						String message= ActionMessages.getFormattedString("OrganizeImportsAction.multi.error.unexpected", e.getStatus().getMessage()); //$NON-NLS-1$
-//						status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));					
+//						status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
 //					}
 //
 //					if (monitor.isCanceled()) {
@@ -125,5 +122,5 @@ public class ImportOrganizer {
 //		} finally {
 //			monitor.done();
 //		}
-//	}	
+//	}
 }

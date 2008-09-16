@@ -1,17 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
+ * Copyright (c) 2008 Scott Stanchfield, based on ANTLR-Eclipse plugin
+ *   by Torsten Juergeleit.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Contributors
+ *    Torsten Juergeleit - original ANTLR Eclipse plugin
+ *    Scott Stanchfield - modifications for ANTXR
  *******************************************************************************/
 package com.javadude.antxr.eclipse.core.parser;
 
@@ -37,7 +34,7 @@ public class Block extends AbstractModel {
 	    									"Preamble", "Comment", "Action",
 	    									"Exception" };
 	private int fType;
-	
+
 	/**
 	 * Define a block
 	 * @param aParent the parent block
@@ -46,12 +43,12 @@ public class Block extends AbstractModel {
 	 * @param anEndLine the end line
 	 */
 	public Block(IModel aParent, int aType, int aStartLine, int anEndLine) {
-	    super(TYPES[aType], aParent);
+	    super(Block.TYPES[aType], aParent);
 	    fType = aType;
 	    setStartLine(aStartLine);
 	    setEndLine(anEndLine);
 	}
-	
+
 	/** {@inheritDoc} */
 	public boolean hasChildren() {
 	    return false;
@@ -59,20 +56,20 @@ public class Block extends AbstractModel {
 
 	/** {@inheritDoc} */
 	public Object[] getChildren() {
-	    return NO_CHILDREN;
+	    return IModel.NO_CHILDREN;
 	}
-	
+
 	/** {@inheritDoc} */
 	public String getUniqueID() {
 		return ((ISegment)getParent()).getUniqueID() + "/Block:" +
-				TYPES[fType];
+				Block.TYPES[fType];
 	}
 
 	/** {@inheritDoc} */
 	public boolean accept(ISegmentVisitor aVisitor) {
 		return aVisitor.visit(this);
 	}
-	
+
 	/**
 	 * Get the type of block
 	 * @return the block type
@@ -80,7 +77,7 @@ public class Block extends AbstractModel {
 	public int getType() {
 	    return fType;
 	}
-	
+
 	/** {@inheritDoc} */
 	public String toString() {
 	    return getUniqueID() + " [" + getStartLine() + ":" +
