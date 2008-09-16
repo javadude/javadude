@@ -3,7 +3,7 @@
 	<property name="apt.generated.source" value="generated" />
 	<property name="classes" value="javac-out" />
 	<property name="source" value="src" />
-	<property name="annotation.jar" value="C:\eclipse34\javadude-workspace\com.javadude.annotation\bin" />
+	<property name="annotation.jar" value="C:\eclipse34\javadude-workspace\com.javadude.annotation\javadude-annotation-2.1.6.jar" />
 	<property name="velocity.jar" value="C:\eclipse34\javadude-workspace\com.javadude.annotation\lib\velocity-dep-1.5.jar" />
 	<target name="build">
 		<mkdir dir="${apt.generated.source}"/>
