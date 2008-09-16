@@ -1,17 +1,9 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package com.javadude.workingsets;
 
@@ -62,11 +54,11 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 								case IResourceDelta.CHANGED: // natures change or project opened/closed
 									if ((delta.getResource() instanceof IProject) && (delta.getFlags() & IResourceDelta.OPEN) != 0) {
 										project = (IProject) delta.getResource();
-										
+
 									} else if (".project".equals(delta.getResource().getName())) {
 										// natures could have changed -- might need to update the working sets
 										project = delta.getResource().getProject();
-									}						
+									}
 									if (project != null) {
 										Set<IWorkingSet> setsContainingProject = setsContainingProject(project);
 										// add to appropriate working sets
@@ -96,7 +88,7 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 					Activator.getUtil().error(2, "Error walking delta", e);
 				}
 			}
-			
+
 			private void removeFromWorkingSet(IWorkingSet workingSet, IProject project) {
 				IAdaptable[] elements = workingSet.getElements();
 				if (elements.length == 0) {
@@ -118,7 +110,7 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 			}
 			private Set<IWorkingSet> setsContainingProject(IProject project) {
 				Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
-				for (IWorkingSet workingSet : workingSets_.values()) {
+				for (IWorkingSet workingSet : NatureWorkingSetUpdater.workingSets_.values()) {
 					IAdaptable[] elements = workingSet.getElements();
 					for (IAdaptable element : elements) {
 	                    if (element.equals(project)) {
@@ -132,9 +124,9 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 				if (!project.isOpen()) {
 					return;
 				}
-				for (Map.Entry<String, IWorkingSet> entry : workingSets_.entrySet()) {
+				for (Map.Entry<String, IWorkingSet> entry : NatureWorkingSetUpdater.workingSets_.entrySet()) {
 					try {
-						if (projectHasNature(project, entry.getKey())) {
+						if (NatureWorkingSetUpdater.projectHasNature(project, entry.getKey())) {
 							// add project to working set
 							IWorkingSet workingSet = entry.getValue();
 							if (setsContainingProject != null) {
@@ -153,7 +145,7 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 				}
 			}});
 	}
-		
+
 	public static boolean projectHasNature(IProject project, String natureList) throws CoreException {
 		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
 		while (stringTokenizer.hasMoreTokens()) {
@@ -166,31 +158,31 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 	}
 	public NatureWorkingSetUpdater() {
 		// assign working sets based on reading projects in workspace
-		
+
 	}
 
 	private String natureId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
 		return id.substring("Nature: ".length());
 	}
-	
+
 	@Override
 	public void add(IWorkingSet workingSet) {
-		workingSets_.put(natureId(workingSet), workingSet);
+		NatureWorkingSetUpdater.workingSets_.put(natureId(workingSet), workingSet);
 	}
 
 	@Override
 	public boolean contains(IWorkingSet workingSet) {
-		return workingSets_.values().contains(workingSet);
+		return NatureWorkingSetUpdater.workingSets_.values().contains(workingSet);
 	}
 
 	@Override
 	public void dispose() {
-		workingSets_.clear();
+		NatureWorkingSetUpdater.workingSets_.clear();
 	}
 
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
-		return workingSets_.remove(natureId(workingSet)) != null;
+		return NatureWorkingSetUpdater.workingSets_.remove(natureId(workingSet)) != null;
 	}
 }
