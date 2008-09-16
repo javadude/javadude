@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -103,7 +96,7 @@ public abstract class CodeGenerator {
      * greater than or equal to this number of non-predicated LL(1) alternates.
      * This is modified by the grammar option "codeGenMakeSwitchThreshold"
      */
-    protected int makeSwitchThreshold = DEFAULT_MAKE_SWITCH_THRESHOLD;
+    protected int makeSwitchThreshold = CodeGenerator.DEFAULT_MAKE_SWITCH_THRESHOLD;
 
     /** This is a hint for the language-specific code generator.
      * A bitset membership test will be generated instead of an
@@ -111,7 +104,7 @@ public abstract class CodeGenerator {
      * degree greater than or equal to this value.
      * This is modified by the grammar option "codeGenBitsetTestThreshold"
      */
-    protected int bitsetTestThreshold = DEFAULT_BITSET_TEST_THRESHOLD;
+    protected int bitsetTestThreshold = CodeGenerator.DEFAULT_BITSET_TEST_THRESHOLD;
 
     public static String TokenTypesFileSuffix = "TokenTypes";
     public static String TokenTypesFileExt = ".txt";
@@ -380,7 +373,7 @@ public abstract class CodeGenerator {
     /** Generate the token types as a text file for persistence across shared lexer/parser */
     protected void genTokenInterchange(TokenManager tm) throws IOException {
         // Open the token output Java file and set the currentOutput stream
-        String fName = tm.getName() + TokenTypesFileSuffix + TokenTypesFileExt;
+        String fName = tm.getName() + CodeGenerator.TokenTypesFileSuffix + CodeGenerator.TokenTypesFileExt;
         currentOutput = antxrTool.openOutputFile(fName);
 
         println("// $ANTXR " + Tool.version + ": " +
@@ -601,8 +594,8 @@ public abstract class CodeGenerator {
         currentOutput = null;
         grammar = null;
         DEBUG_CODE_GENERATOR = false;
-        makeSwitchThreshold = DEFAULT_MAKE_SWITCH_THRESHOLD;
-        bitsetTestThreshold = DEFAULT_BITSET_TEST_THRESHOLD;
+        makeSwitchThreshold = CodeGenerator.DEFAULT_MAKE_SWITCH_THRESHOLD;
+        bitsetTestThreshold = CodeGenerator.DEFAULT_BITSET_TEST_THRESHOLD;
     }
 
     public static String reverseLexerRuleName(String id) {

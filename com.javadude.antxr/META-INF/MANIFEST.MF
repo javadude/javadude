@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Antxr Plug-in
 Bundle-SymbolicName: com.javadude.antxr
-Bundle-Version: 2.1.3
+Bundle-Version: 2.1.4
 Bundle-Vendor: JavaDude.com
 Export-Package: com.javadude.antxr,
  com.javadude.antxr.actions.java,
  com.javadude.antxr.collections,
  com.javadude.antxr.collections.impl,
- com.javadude.antxr.debug,
  com.javadude.antxr.debug.misc,
  com.javadude.antxr.preprocessor,
  com.javadude.antxr.scanner,

@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -152,7 +145,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
         if (atom.not) {
             _print("~");
         }
-        _print(HTMLEncode(atom.atomText) + " ");
+        _print(DocBookCodeGenerator.HTMLEncode(atom.atomText) + " ");
     }
 
     /** Generate code for the given grammar element.
@@ -185,7 +178,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
 
         // print javadoc comment if any
         if (grammar.comment != null) {
-            _println(HTMLEncode(grammar.comment));
+            _println(DocBookCodeGenerator.HTMLEncode(grammar.comment));
         }
 
         println("<para>Definition of lexer " + grammar.getClassName() + ", which is a subclass of " + grammar.getSuperClass() + ".</para>");
@@ -263,7 +256,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
 
         // print javadoc comment if any
         if (grammar.comment != null) {
-            _println(HTMLEncode(grammar.comment));
+            _println(DocBookCodeGenerator.HTMLEncode(grammar.comment));
         }
 
         println("<para>Definition of parser " + grammar.getClassName() + ", which is a subclass of " + grammar.getSuperClass() + ".</para>");
@@ -293,7 +286,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
     public void gen(RuleRefElement rr) {
 
         // Generate the actual rule description
-        _print("<link linkend=\"" + QuoteForId(rr.targetRule) + "\">");
+        _print("<link linkend=\"" + DocBookCodeGenerator.QuoteForId(rr.targetRule) + "\">");
         _print(rr.targetRule);
         _print("</link>");
         // RK: Leave out args..
@@ -311,7 +304,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
         if (atom.not) {
             _print("~");
         }
-        _print(HTMLEncode(atom.atomText));
+        _print(DocBookCodeGenerator.HTMLEncode(atom.atomText));
         _print(" ");
     }
 
@@ -368,7 +361,7 @@ public class DocBookCodeGenerator extends CodeGenerator {
 
         // print javadoc comment if any
         if (grammar.comment != null) {
-            _println(HTMLEncode(grammar.comment));
+            _println(DocBookCodeGenerator.HTMLEncode(grammar.comment));
         }
 
         println("<para>Definition of tree parser " + grammar.getClassName() + ", which is a subclass of " + grammar.getSuperClass() + ".</para>");
@@ -669,10 +662,10 @@ public class DocBookCodeGenerator extends CodeGenerator {
             }
         }
 
-        println("<section id=\"" + QuoteForId(s.getId()) + "\">");
+        println("<section id=\"" + DocBookCodeGenerator.QuoteForId(s.getId()) + "\">");
         println("<title>" + s.getId() + "</title>");
         if (s.comment != null) {
-            _println("<para>" + HTMLEncode(s.comment) + "</para>");
+            _println("<para>" + DocBookCodeGenerator.HTMLEncode(s.comment) + "</para>");
         }
         println("<para>");
 
@@ -722,8 +715,8 @@ public class DocBookCodeGenerator extends CodeGenerator {
     /** Generate the token types TXT file */
     protected void genTokenTypes(TokenManager tm) throws IOException {
         // Open the token output TXT file and set the currentOutput stream
-        antxrTool.reportProgress("Generating " + tm.getName() + TokenTypesFileSuffix + TokenTypesFileExt);
-        currentOutput = antxrTool.openOutputFile(tm.getName() + TokenTypesFileSuffix + TokenTypesFileExt);
+        antxrTool.reportProgress("Generating " + tm.getName() + CodeGenerator.TokenTypesFileSuffix + CodeGenerator.TokenTypesFileExt);
+        currentOutput = antxrTool.openOutputFile(tm.getName() + CodeGenerator.TokenTypesFileSuffix + CodeGenerator.TokenTypesFileExt);
         //SAS: changed for proper text file io
         tabs = 0;
 

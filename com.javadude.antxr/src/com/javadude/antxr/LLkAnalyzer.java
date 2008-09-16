@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -145,8 +138,8 @@ public class LLkAnalyzer implements LLkGrammarAnalyzer {
                         Alternative aj = blk.getAlternativeAt(j);
                         if (haveAmbiguity) {
                             det = false;
-                            ai.lookaheadDepth = NONDETERMINISTIC;
-                            aj.lookaheadDepth = NONDETERMINISTIC;
+                            ai.lookaheadDepth = GrammarAnalyzer.NONDETERMINISTIC;
+                            aj.lookaheadDepth = GrammarAnalyzer.NONDETERMINISTIC;
 
                             /* if ith alt starts with a syntactic predicate, computing the
                              * lookahead is still done for code generation, but messages
@@ -337,8 +330,8 @@ public class LLkAnalyzer implements LLkGrammarAnalyzer {
 
             if (haveAmbiguity) {
                 det = false;
-                alt.lookaheadDepth = NONDETERMINISTIC;
-                blk.exitLookaheadDepth = NONDETERMINISTIC;
+                alt.lookaheadDepth = GrammarAnalyzer.NONDETERMINISTIC;
+                blk.exitLookaheadDepth = GrammarAnalyzer.NONDETERMINISTIC;
                 Alternative ambigAlt = blk.getAlternativeAt(currentBlock.alti);
 
                 /* If the user specified warnWhenFollowAmbig=false, then we
@@ -376,7 +369,7 @@ public class LLkAnalyzer implements LLkGrammarAnalyzer {
                     // be > 1 actually) then must warn them that
                     // loop may terminate incorrectly.
                     // For example, ('a'..'d')+ ("ad"|"cb")
-                    if (!lookaheadEquivForApproxAndFullAnalysis(blk.exitCache, grammar.maxk)) {
+                    if (!LLkAnalyzer.lookaheadEquivForApproxAndFullAnalysis(blk.exitCache, grammar.maxk)) {
                         tool.warning(new String[]{
                             "nongreedy block may exit incorrectly due",
                             "\tto limitations of linear approximate lookahead (first k-1 sets",

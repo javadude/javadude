@@ -1,21 +1,14 @@
 /*******************************************************************************
- *  Copyright 2008 Scott Stanchfield.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2008 Scott Stanchfield.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *   Based on the ANTLR parser generator by Terence Parr, http://antlr.org
  *   Ric Klaren <klaren@cs.utwente.nl>
+ *   Scott Stanchfield - Modifications for XML Parsing
  *******************************************************************************/
 package com.javadude.antxr;
 
@@ -42,7 +35,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public static final int CONTINUE_LAST_MAPPING = -888;
 
     private JavaCodeGeneratorPrintWriterManager printWriterManager;
-    private int defaultLine = NO_MAPPING;
+    private int defaultLine = JavaCodeGenerator.NO_MAPPING;
 
     protected int syntacticPredLevel = 0;
 
@@ -116,11 +109,11 @@ public class JavaCodeGenerator extends CodeGenerator {
         println(code, defaultLine);
     }
     public void println(String code, int sourceStartLine) {
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().startSingleSourceLineMapping(sourceStartLine);
         }
         super.println(code);
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().endMapping();
         }
     }
@@ -130,11 +123,11 @@ public class JavaCodeGenerator extends CodeGenerator {
         print(code, defaultLine);
     }
     protected void print(String code, int sourceStartLine) {
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().startMapping(sourceStartLine);
         }
         super.print(code);
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().endMapping();
         }
     }
@@ -144,11 +137,11 @@ public class JavaCodeGenerator extends CodeGenerator {
         _print(code, defaultLine);
     }
     protected void _print(String code, int sourceStartLine) {
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().startMapping(sourceStartLine);
         }
         super._print(code);
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().endMapping();
         }
     }
@@ -158,11 +151,11 @@ public class JavaCodeGenerator extends CodeGenerator {
         _println(code, defaultLine);
     }
     protected void _println(String code, int sourceStartLine) {
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().startMapping(sourceStartLine);
         }
         super._println(code);
-        if (sourceStartLine > 0 || sourceStartLine == CONTINUE_LAST_MAPPING) {
+        if (sourceStartLine > 0 || sourceStartLine == JavaCodeGenerator.CONTINUE_LAST_MAPPING) {
             getPrintWriterManager().endMapping();
         }
     }
@@ -268,7 +261,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 // Somebody did a "#rule=", reset internal currentAST.root
                     println("currentAST.root = " + tInfo.refRuleRoot + ";");
                 // reset the child pointer too to be last sibling in sibling list
-                println("currentAST.child = " + tInfo.refRuleRoot + "!=null &&" + tInfo.refRuleRoot + ".getFirstChild()!=null ?", NO_MAPPING);
+                println("currentAST.child = " + tInfo.refRuleRoot + "!=null &&" + tInfo.refRuleRoot + ".getFirstChild()!=null ?", JavaCodeGenerator.NO_MAPPING);
                 tabs++;
                     println(tInfo.refRuleRoot + ".getFirstChild() : " + tInfo.refRuleRoot + ";");
                 tabs--;
@@ -277,7 +270,7 @@ public class JavaCodeGenerator extends CodeGenerator {
 
             if (grammar.hasSyntacticPredicate) {
                 tabs--;
-                println("}", NO_MAPPING);
+                println("}", JavaCodeGenerator.NO_MAPPING);
             }
         }
         } finally {
@@ -293,7 +286,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         if (DEBUG_CODE_GENERATOR) {
             System.out.println("gen(" + blk + ")");
         }
-        println("{", NO_MAPPING);
+        println("{", JavaCodeGenerator.NO_MAPPING);
         genBlockPreamble(blk);
         genBlockInitAction(blk);
 
@@ -308,7 +301,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         JavaBlockFinishingInfo howToFinish = genCommonBlock(blk, true);
         genBlockFinish(howToFinish, throwNoViable, blk.getLine());
 
-        println("}", NO_MAPPING);
+        println("}", JavaCodeGenerator.NO_MAPPING);
 
         // Restore previous AST generation
         currentASTResult = saveCurrentASTResult;
@@ -382,7 +375,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public void gen(LexerGrammar g) throws IOException {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
         // If debugging, create a new sempred vector for this grammar
         if (g.debuggingOutput) {
             semPreds = new ArrayList<String>();
@@ -410,7 +403,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 defaultLine = behavior.getHeaderActionLine("");
                 println(behavior.getHeaderAction(""));
             } finally {
-                defaultLine = NO_MAPPING;
+                defaultLine = JavaCodeGenerator.NO_MAPPING;
             }
 
         // Generate header specific to lexer Java file
@@ -472,7 +465,7 @@ public class JavaCodeGenerator extends CodeGenerator {
 
             print(prefix+" ");
             print("class " + grammar.getClassName() + " extends " + sup);
-            println(" implements " + grammar.tokenManager.getName() + TokenTypesFileSuffix + ", TokenStream");
+            println(" implements " + grammar.tokenManager.getName() + CodeGenerator.TokenTypesFileSuffix + ", TokenStream");
         Token tsuffix = grammar.options.get("classHeaderSuffix");
         if (tsuffix != null) {
             String suffix = StringUtils.stripFrontBack(tsuffix.getText(), "\"", "\"");
@@ -618,7 +611,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         }
         String label;
         String cnt;
-        println("{", NO_MAPPING);
+        println("{", JavaCodeGenerator.NO_MAPPING);
         genBlockPreamble(blk);
         if (blk.getLabel() != null) {
             cnt = "_cnt_" + blk.getLabel();
@@ -682,8 +675,8 @@ public class JavaCodeGenerator extends CodeGenerator {
             String predictExit =
                 getLookaheadTestExpression(blk.exitCache,
                                            nonGreedyExitDepth);
-            println("// nongreedy exit test", NO_MAPPING);
-            println("if ( " + cnt + ">=1 && " + predictExit + ") break " + label + ";", CONTINUE_LAST_MAPPING);
+            println("// nongreedy exit test", JavaCodeGenerator.NO_MAPPING);
+            println("if ( " + cnt + ">=1 && " + predictExit + ") break " + label + ";", JavaCodeGenerator.CONTINUE_LAST_MAPPING);
         }
 
         JavaBlockFinishingInfo howToFinish = genCommonBlock(blk, false);
@@ -710,7 +703,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public void gen(ParserGrammar g) throws IOException {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
         // if debugging, set up a new vector to keep track of sempred
         //   strings for this grammar
         if (g.debuggingOutput) {
@@ -737,7 +730,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 defaultLine = behavior.getHeaderActionLine("");
                 println(behavior.getHeaderAction(""));
             } finally {
-                defaultLine = NO_MAPPING;
+                defaultLine = JavaCodeGenerator.NO_MAPPING;
             }
 
         // Generate header for the parser
@@ -800,7 +793,7 @@ public class JavaCodeGenerator extends CodeGenerator {
 
             print(prefix+" ");
             print("class " + grammar.getClassName() + " extends " + sup);
-            println("       implements " + grammar.tokenManager.getName() + TokenTypesFileSuffix);
+            println("       implements " + grammar.tokenManager.getName() + CodeGenerator.TokenTypesFileSuffix);
 
         Token tsuffix = grammar.options.get("classHeaderSuffix");
         if (tsuffix != null) {
@@ -1202,7 +1195,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public void gen(TreeWalkerGrammar g) throws IOException {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
             // SAS: debugging stuff removed for now...
         setGrammar(g);
         if (!(grammar instanceof TreeWalkerGrammar)) {
@@ -1223,7 +1216,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 defaultLine = behavior.getHeaderActionLine("");
                 println(behavior.getHeaderAction(""));
             } finally {
-                defaultLine = NO_MAPPING;
+                defaultLine = JavaCodeGenerator.NO_MAPPING;
             }
 
         // Generate header for the parser
@@ -1270,7 +1263,7 @@ public class JavaCodeGenerator extends CodeGenerator {
 
             print(prefix+" ");
             print("class " + grammar.getClassName() + " extends " + sup);
-            println("       implements " + grammar.tokenManager.getName() + TokenTypesFileSuffix);
+            println("       implements " + grammar.tokenManager.getName() + CodeGenerator.TokenTypesFileSuffix);
         Token tsuffix = grammar.options.get("classHeaderSuffix");
         if (tsuffix != null) {
             String suffix = StringUtils.stripFrontBack(tsuffix.getText(), "\"", "\"");
@@ -1484,7 +1477,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                     // println("if ( inputState.guessing==0 ) {");
                     // tabs++;
                 }
-                println(rblk.getRuleName() + "_AST = (" + labeledElementASTType + ")currentAST.root;", CONTINUE_LAST_MAPPING);
+                println(rblk.getRuleName() + "_AST = (" + labeledElementASTType + ")currentAST.root;", JavaCodeGenerator.CONTINUE_LAST_MAPPING);
                 if (grammar.hasSyntacticPredicate) {
                     // --tabs;
                     // println("}");
@@ -1500,7 +1493,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         if (alt.exceptionSpec != null) {
             // close try block
             tabs--;
-            println("}", NO_MAPPING);
+            println("}", JavaCodeGenerator.NO_MAPPING);
             genErrorHandler(alt.exceptionSpec);
         }
 
@@ -1523,7 +1516,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     protected void genBitsets(List<BitSet> bitsetList,
                               int maxVocabulary
                               ) {
-        println("", NO_MAPPING);
+        println("", JavaCodeGenerator.NO_MAPPING);
         for (int i = 0; i < bitsetList.size(); i++) {
             BitSet p = bitsetList.get(i);
             // Ensure that generated BitSet is large enough for vocabulary
@@ -1547,13 +1540,13 @@ public class JavaCodeGenerator extends CodeGenerator {
     private void genBitSet(BitSet p, int id) {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
         // initialization data
         println(
                 "private static final long[] mk" + getBitsetName(id) + "() {"
         );
         int n = p.lengthInLongWords();
-        if ( n<BITSET_OPTIMIZE_INIT_THRESHOLD ) {
+        if ( n<CodeGenerator.BITSET_OPTIMIZE_INIT_THRESHOLD ) {
                 println("\tlong[] data = { " + p.toStringOfWords() + "};");
         }
         else {
@@ -1873,7 +1866,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         int nLL1 = 0;
         for (int i = 0; i < blk.getAlternatives().size(); i++) {
             Alternative a = blk.getAlternativeAt(i);
-            if (suitableForCaseExpression(a)) {
+            if (JavaCodeGenerator.suitableForCaseExpression(a)) {
                 nLL1++;
             }
         }
@@ -1892,7 +1885,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 Alternative alt = blk.getAlternativeAt(i);
                 // ignore any non-LL(1) alts, predicated alts,
                 // or end-of-token alts for case expressions
-                if (!suitableForCaseExpression(alt)) {
+                if (!JavaCodeGenerator.suitableForCaseExpression(alt)) {
                     continue;
                 }
                 Lookahead p = alt.cache[1];
@@ -1906,9 +1899,9 @@ public class JavaCodeGenerator extends CodeGenerator {
                     println("{", alt.head.getLine());
                     tabs++;
                     genAlt(alt, blk);
-                        println("break;", NO_MAPPING);
+                        println("break;", JavaCodeGenerator.NO_MAPPING);
                     tabs--;
-                        println("}", NO_MAPPING);
+                        println("}", JavaCodeGenerator.NO_MAPPING);
                 }
             }
                 println("default:");
@@ -1942,7 +1935,7 @@ public class JavaCodeGenerator extends CodeGenerator {
                 // of.  Specifically, LL(1) alts with no preds
                 // that do not have end-of-token in their prediction set
                 // and that are not giant unicode sets.
-                if (createdLL1Switch && suitableForCaseExpression(alt)) {
+                if (createdLL1Switch && JavaCodeGenerator.suitableForCaseExpression(alt)) {
                     if (DEBUG_CODE_GENERATOR) {
                         System.out.println("ignoring alt because it was in the switch");
                     }
@@ -1986,8 +1979,8 @@ public class JavaCodeGenerator extends CodeGenerator {
                         defaultLine = alt.head.getLine();
                 // Was it a big unicode range that forced unsuitability
                 // for a case expression?
-                if (alt.cache[1].fset.degree() > caseSizeThreshold &&
-                    suitableForCaseExpression(alt)) {
+                if (alt.cache[1].fset.degree() > JavaCodeGenerator.caseSizeThreshold &&
+                    JavaCodeGenerator.suitableForCaseExpression(alt)) {
                     if (nIF == 0) {
                                 println("if " + e + " {");
                     }
@@ -2113,7 +2106,7 @@ public class JavaCodeGenerator extends CodeGenerator {
             a.lookaheadDepth == 1 &&
             a.semPred == null &&
             !a.cache[1].containsEpsilon() &&
-            a.cache[1].fset.degree() <= caseSizeThreshold;
+            a.cache[1].fset.degree() <= JavaCodeGenerator.caseSizeThreshold;
     }
 
     /** Generate code to link an element reference into the AST
@@ -2386,8 +2379,8 @@ public class JavaCodeGenerator extends CodeGenerator {
         println("// $ANTXR " + Tool.version + ": " +
                 "\"" + antxrTool.fileMinusPath(antxrTool.grammarFile) + "\"" +
                 " -> " +
-                "\"" + grammar.getClassName() + ".java\"$", NO_MAPPING);
-        println("// GENERATED CODE - DO NOT EDIT!", NO_MAPPING);
+                "\"" + grammar.getClassName() + ".java\"$", JavaCodeGenerator.NO_MAPPING);
+        println("// GENERATED CODE - DO NOT EDIT!", JavaCodeGenerator.NO_MAPPING);
     }
 
     private void genLiteralsTest() {
@@ -2443,7 +2436,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         }
 
             print(atom.not ? "matchNot(" : "match(");
-        _print(astArgs, NO_MAPPING);
+        _print(astArgs, JavaCodeGenerator.NO_MAPPING);
 
         // print out what to match
         if (atom.atomText.equals("EOF")) {
@@ -2484,7 +2477,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public void genNextToken() {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
         // Are there any public rules?  If not, then just generate a
         // fake nextToken().
         boolean hasPublicRules = false;
@@ -2843,7 +2836,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         // Initialize AST variables
         if (grammar instanceof TreeWalkerGrammar) {
             // "Input" value for rule
-        println(labeledElementASTType + " " + s.getId() + "_AST_in = (_t == ASTNULL) ? null : (" + labeledElementASTType + ")_t;", NO_MAPPING);
+        println(labeledElementASTType + " " + s.getId() + "_AST_in = (_t == ASTNULL) ? null : (" + labeledElementASTType + ")_t;", JavaCodeGenerator.NO_MAPPING);
         }
         if (grammar.buildAST) {
             // Parser member used to pass AST returns from rule invocations
@@ -3097,11 +3090,11 @@ public class JavaCodeGenerator extends CodeGenerator {
      *  expressions.  The debugger will reference them by number only
      */
     protected void genSemPredMap() {
-        println("private String _semPredNames[] = {", NO_MAPPING);
+        println("private String _semPredNames[] = {", JavaCodeGenerator.NO_MAPPING);
         for (String semPred : semPreds) {
-            println("\"" + semPred + "\",", NO_MAPPING);
+            println("\"" + semPred + "\",", JavaCodeGenerator.NO_MAPPING);
         }
-        println("};", NO_MAPPING);
+        println("};", JavaCodeGenerator.NO_MAPPING);
     }
 
     protected void genSynPred(SynPredBlock blk, String lookaheadExpr) {
@@ -3193,7 +3186,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     public void genTokenStrings() {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
         // Generate a string for each token.  This creates a static
         // array of Strings indexed by token type.
             println("");
@@ -3235,7 +3228,7 @@ public class JavaCodeGenerator extends CodeGenerator {
     protected void genTokenASTNodeMap() {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
             println("");
             println("protected void buildTokenTypeASTClassMap() {");
         // Generate a map.put("T","TNode") for each token
@@ -3277,11 +3270,11 @@ public class JavaCodeGenerator extends CodeGenerator {
     protected void genTokenTypes(TokenManager tm) throws IOException {
         int oldDefaultLine = defaultLine;
         try {
-            defaultLine = NO_MAPPING;
+            defaultLine = JavaCodeGenerator.NO_MAPPING;
             // Open the token output Java file and set the currentOutput stream
             // SAS: file open was moved to a method so a subclass can override
             //      This was mainly for the VAJ interface
-            currentOutput = getPrintWriterManager().setupOutput(antxrTool, tm.getName() + TokenTypesFileSuffix);
+            currentOutput = getPrintWriterManager().setupOutput(antxrTool, tm.getName() + CodeGenerator.TokenTypesFileSuffix);
 
         tabs = 0;
 
@@ -3292,13 +3285,13 @@ public class JavaCodeGenerator extends CodeGenerator {
                 defaultLine = behavior.getHeaderActionLine("");
                 println(behavior.getHeaderAction(""));
             } finally {
-                defaultLine = NO_MAPPING;
+                defaultLine = JavaCodeGenerator.NO_MAPPING;
             }
 
         // Encapsulate the definitions in an interface.  This can be done
         // because they are all constants.
             println("@SuppressWarnings(\"all\")");
-            println("public interface " + tm.getName() + TokenTypesFileSuffix + " {");
+            println("public interface " + tm.getName() + CodeGenerator.TokenTypesFileSuffix + " {");
         tabs++;
 
         // Generate a definition for each token type
@@ -3508,7 +3501,7 @@ public class JavaCodeGenerator extends CodeGenerator {
 
         // Generate a range expression if possible
         int[] elems = p.toArray();
-        if (elementsAreRange(elems)) {
+        if (CodeGenerator.elementsAreRange(elems)) {
             return getRangeExpression(k, elems);
         }
 
@@ -3547,7 +3540,7 @@ public class JavaCodeGenerator extends CodeGenerator {
      * @return String containing test expression.
      */
     public String getRangeExpression(int k, int[] elems) {
-        if (!elementsAreRange(elems)) {
+        if (!CodeGenerator.elementsAreRange(elems)) {
             antxrTool.fatalError("panic: getRangeExpression called with non-range");
         }
         int begin = elems[0];
@@ -3685,7 +3678,7 @@ public class JavaCodeGenerator extends CodeGenerator {
         // map, and input variable is name_in
         String s = treeVariableMap.get(id);
         if (s != null) {
-            if (s == NONUNIQUE) {
+            if (s == JavaCodeGenerator.NONUNIQUE) {
                 // There is more than one element with this id
                 antxrTool.error("Ambiguous reference to AST element "+id+
                                 " in rule "+currentRule.getRuleName());
@@ -3750,7 +3743,7 @@ public class JavaCodeGenerator extends CodeGenerator {
             if (treeVariableMap.get(elName) != null) {
                 // Name is already in the map -- mark it as duplicate
                 treeVariableMap.remove(elName);
-                treeVariableMap.put(elName, NONUNIQUE);
+                treeVariableMap.put(elName, JavaCodeGenerator.NONUNIQUE);
             }
             else {
                 treeVariableMap.put(elName, name);
