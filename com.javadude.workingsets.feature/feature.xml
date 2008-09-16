@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.workingsets.feature"
       label="JavaDude Automated Working Sets Feature"
-      version="1.0.7"
+      version="1.0.8"
       provider-name="JavaDude.com">
 
    <description url="http://javadude.com/tools/workingsets">
