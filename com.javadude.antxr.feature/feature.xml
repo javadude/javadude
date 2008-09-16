@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.antxr.feature"
       label="ANTXR Feature"
-      version="2.1.4"
+      version="2.1.5"
       provider-name="JavaDude.com">
 
    <description url="http://javadude.com/tools/antxr">
