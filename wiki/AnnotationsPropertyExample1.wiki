@@ -1,4 +1,4 @@
-[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
+!JavaDude Tools->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Basic Property Example 1=
 
 This is a simple property example. It demonstrates three properties:
@@ -132,4 +132,4 @@ public abstract class PersonGen  {
 }
 }}}
 
-[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
+!JavaDude Tools->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
