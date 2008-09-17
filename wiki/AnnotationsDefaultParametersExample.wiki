@@ -1,4 +1,4 @@
-[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
+JavaDude Tools->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Default Parameters Example=
 
 C++-like default parameter values are now easy to implement in Java!
@@ -87,4 +87,4 @@ public abstract class DefaultParameterExampleGen  {
 }
 }}}
 
-[JavaDudeTools JavaDude Tools]->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
+JavaDude Tools->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
