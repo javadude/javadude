@@ -10,6 +10,26 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 || Interface Extraction || an interface will be generated for all public methods in a class, or just those that are explicitly tagged for export. ||
 || Default Method Parameters || method overloads are generated to provide default parameter values ||
 
+==License==
+===JavaDude Annotations and Annotation Processor===
+The annotations and annotation processor are only required at build time; there is no runtime component.
+
+Copyright (c) 2008 Scott Stanchfield.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+===Apache Velocity===
+Velocity is required for the annotation processor to generate code, and is provided as a separate download.
+
+Apache Velocity
+
+Copyright (C) 2000-2007 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
 
 ==Documentation==
 (Work in progress... might be a while...)
