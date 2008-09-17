@@ -1,3 +1,0 @@
-=!JavaDude Tools=
-
- * [Annotations Annotations]
