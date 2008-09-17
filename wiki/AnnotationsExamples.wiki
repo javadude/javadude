@@ -1,4 +1,4 @@
-[JavaDudeTools JavaDude Tools]->[Annotations Annotations]
+JavaDude Tools->[Annotations Annotations]
 =!JavaDude Annotations Examples=
 
    * [AnnotationsPropertyExample1 Simple Property Example]
