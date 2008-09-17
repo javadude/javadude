@@ -1,4 +1,6 @@
-=@Bean Annotation=
+!JavaDude Tools->[Annotations Annotations]
+=Annotations Quick Reference=
+==@Bean Annotation==
 {{{
 import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
@@ -157,7 +159,7 @@ public class Sample extends SampleGen {
 }
 }}}
 
-=@!ExtractInterface Annotation=
+==@!ExtractInterface Annotation==
 {{{
 package com.javadude.annotation.example;
  
@@ -188,3 +190,4 @@ public class AnotherSample extends AnotherSampleGen {
         //   which methods to add to the generated interface
 }
 }}}
+!JavaDude Tools->[Annotations Annotations]
