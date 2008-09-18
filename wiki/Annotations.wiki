@@ -78,6 +78,8 @@ You'll need to download both [http://javadude.googlecode.com/svn/trunk/com.javad
 
 Sample ant build script:
 
+**NOTE: The apt task in ant 1.7.1 seems to not work well here... Please use ant 1.7.0 for now**
+
 {{{
 <project name="foo" default="build">
     <property environment="env"/>
