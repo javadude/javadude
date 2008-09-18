@@ -11,7 +11,7 @@ The !JavaDude Annotations are Java 5/6 annotations and annotation processors tha
 || Default Method Parameters || method overloads are generated to provide default parameter values ||
 
 ==License==
-===JavaDude Annotations and Annotation Processor===
+===!JavaDude Annotations and Annotation Processor===
 The annotations and annotation processor are only required at build time; there is no runtime component.
 
 Copyright (c) 2008 Scott Stanchfield.
