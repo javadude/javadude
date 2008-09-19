@@ -15,4 +15,5 @@
         <folder path="/com.javadude.antxr/lib"/>
         <javaElement handleIdentifier="=com.javadude.antxr/src"/>
     </selectedElements>
+    <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
 </jardesc>
