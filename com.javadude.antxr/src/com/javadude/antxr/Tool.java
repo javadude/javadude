@@ -357,7 +357,7 @@ public class Tool {
     }
 
     public static void main(String[] args) {
-        System.err.println("ANTXR Parser Generator   Version 0.9.0   Copyright (c) 2005, Scott Stanchfield, JavaDude.com");
+//        System.err.println("ANTXR Parser Generator   Version 0.9.0   Copyright (c) 2005, Scott Stanchfield, JavaDude.com");
 
         try {
             boolean showHelp = false;
