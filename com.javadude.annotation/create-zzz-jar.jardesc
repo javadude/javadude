@@ -13,14 +13,13 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/com.javadude.annotation/plugin.xml"/>
         <folder path="/com.javadude.annotation/doc"/>
-        <folder path="/com.javadude.annotation/templates"/>
         <file path="/com.javadude.annotation/.project"/>
         <file path="/com.javadude.annotation/.options"/>
         <folder path="/com.javadude.annotation/META-INF"/>
         <folder path="/com.javadude.annotation/lib"/>
-        <file path="/com.javadude.annotation/LICENSE-2.0.htm"/>
-        <javaElement handleIdentifier="=com.javadude.annotation/src"/>
         <file path="/com.javadude.annotation/NOTICE.txt"/>
+        <javaElement handleIdentifier="=com.javadude.annotation/src"/>
+        <file path="/com.javadude.annotation/epl1.0.html"/>
         <file path="/com.javadude.annotation/build.properties"/>
         <file path="/com.javadude.annotation/.classpath"/>
         <file path="/com.javadude.annotation/create-zzz-jar.jardesc"/>
