@@ -111,6 +111,21 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
     }
+    ${property.writerAccess}${property.extraMethodKeywords}boolean remove${property.upperName}(${property.type} value) {
+        if (value == null) throw new IllegalArgumentException("Cannot remove null from ${property.name}");
+        boolean result = ${property.pluralName}_.remove(value);
+#if (${property.isBound()})
+        getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
+#end
+        return result;
+    }
+    ${property.writerAccess}${property.extraMethodKeywords}${property.type} remove${property.upperName}(int i) {
+        ${property.type} result = ${property.pluralName}_.remove(i);
+#if (${property.isBound()})
+        getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
+#end
+        return result;
+    }
     ${property.writerAccess}${property.extraMethodKeywords}void add${property.upperName}(int i, ${property.type} value) {
         if (value == null) throw new IllegalArgumentException("Cannot add null to ${property.name}");
         ${property.pluralName}_.add(i, value);
@@ -126,7 +141,7 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
     }
 #end
 
-## define list properties
+## define set properties
 #elseif (${property.kind.isSet()})
     private ${property.extraFieldKeywords}final java.util.Set<${property.type}> ${property.pluralName}_ = new java.util.HashSet<${property.type}>();
 #if (${property.isReadable()})
@@ -144,6 +159,14 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end
+    }
+    ${property.writerAccess}${property.extraMethodKeywords}boolean remove${property.upperName}(${property.type} value) {
+        if (value == null) throw new IllegalArgumentException("Cannot remove null from ${property.name}");
+        boolean result = ${property.pluralName}_.remove(value);
+#if (${property.isBound()})
+        getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
+#end
+	        return result;
     }
     ${property.writerAccess}${property.extraMethodKeywords}void clear${property.upperPluralName}() {
         ${property.pluralName}_.clear();
@@ -179,6 +202,14 @@ ${data.classAccess}abstract class ${data.className}Gen ${data.extendsClause}${da
 #if (${property.isBound()})
         getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
 #end    
+    }
+    ${property.writerAccess}${property.extraMethodKeywords}${property.type} remove${property.upperName}(${property.keyType} key) {
+        if (key == null) throw new IllegalArgumentException("Cannot remove null key from ${property.name}");
+        ${property.type} result = ${property.pluralName}_.remove(key);
+#if (${property.isBound()})
+        getPropertyChangeSupport().firePropertyChange("${property.pluralName}", null, ${property.pluralName}_);
+#end    
+        return result;
     }
     ${property.writerAccess}${property.extraMethodKeywords}void clear${property.upperPluralName}() {
         ${property.pluralName}_.clear();
