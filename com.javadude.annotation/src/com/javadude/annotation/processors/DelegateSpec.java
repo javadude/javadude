@@ -16,6 +16,7 @@ import com.javadude.annotation.Property;
 
 @Bean(overrideParamString=true,
 	  superclass=Listener.class,
+	  createPropertyMap=true,
 	  properties = {
 		@Property(name="accessor"),
 		@Property(name="instantiateType"),

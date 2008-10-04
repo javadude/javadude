@@ -13,6 +13,7 @@ package com.javadude.annotation.processors;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,13 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 
 import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
@@ -50,6 +44,8 @@ import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.MirroredTypeException;
 import com.sun.mirror.type.ReferenceType;
 
+import org.apache.velocity.app.Velocity;
+
 // does not support standard indexed properties
 // does not support constrained properties
 
@@ -57,9 +53,16 @@ import com.sun.mirror.type.ReferenceType;
 // TODO delegation + extractInterface -> must allow superinterfaces to be specified for generated interface
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
+    private static final Set<String> NUMBER_TYPES = new HashSet<String>();
     private static final Set<String> METHODS_TO_SKIP = new HashSet<String>();
     private static final Map<String, String> PRIMITIVE_TYPE_INT_CONVERSIONS = new HashMap<String, String>();
     static {
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("byte");
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("short");
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("int");
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("long");
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("float");
+    	BeanAnnotationProcessor.NUMBER_TYPES.add("double");
         BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("char", "");
         BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("byte", "");
         BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("int", "");
@@ -170,8 +173,25 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
                 Bean bean = declaration.getAnnotation(Bean.class);
                 Data data = new Data();
-                data.setBean(bean);
-                data.setSuperClass(selectType(declaration, "@Bean", bean, "superclass", "superclassString", null, false));
+                data.setDate(new Date());
+                data.setSpacesForLeadingTabs(bean.spacesForLeadingTabs());
+                String superClass = selectType(declaration, "@Bean", bean, "superclass", "superclassString", null, false);
+                if (superClass == null) {
+                	data.setExtendsClause("");
+                } else {
+                	data.setExtendsClause("extends " + superClass);
+                }
+                data.setCloneable(bean.cloneable());
+                if (data.isCloneable()) {
+                	data.setCloneableClause(" implements java.lang.Cloneable");
+                } else {
+                	data.setCloneableClause("");
+                }
+
+            	data.setYear(Calendar.getInstance().get(Calendar.YEAR));
+            	data.setEqualsShouldCheckSuperEquals(bean.equalsShouldCheckSuperEquals());
+                data.setSuperConstructorSuperCall(bean.superConstructorSuperCall());
+                data.setSuperConstructorArgs(bean.superConstructorArgs());
 
                 data.setParamStringOverridden(bean.overrideParamString());
                 data.setClassAccess(classDeclaration.getModifiers().contains(Modifier.PUBLIC) ? "public " : "");
@@ -238,6 +258,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 								}
 								Method method = new Method();
 								method.setName(methodName);
+						        method.setUpperName(Utils.upperFirstChar(methodName));
 								method.setReturnType(returnType);
 								method.setThrowsClause(throwsClause);
 								method.setArgDecls(argDecl);
@@ -254,10 +275,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 						}
 						Method method = new Method();
 						method.setName(methodName);
+				        method.setUpperName(Utils.upperFirstChar(methodName));
 						method.setReturnType(returnType);
 						method.setThrowsClause(throwsClause);
 						method.setAccess(access);
 						method.setAbstract(true);
+			            method.setQualifiers("abstract ");
+			            method.setSymbolAfterDecl(";");
 						method.setArgDecls(argDecl);
 						data.addDefaultMethod(method);
 					}
@@ -315,11 +339,18 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         }
                         PropertySpec propertySpec = new PropertySpec();
                         propertySpec.setKind(property.kind());
+                        propertySpec.setUnmodPrefix(property.kind().getPrefix());
+                        propertySpec.setUnmodSuffix(property.kind().getSuffix());
                         propertySpec.setOmitFromToString(property.omitFromToString());
                         data.addProperty(propertySpec);
                     	String type = selectType(declaration, "@Property", property, "type", "typeString", "java.lang.String", true);
                         if (type == null) {
                             return;
+                        }
+                        if ("boolean".equals(type)) {
+                            propertySpec.setIsOrGet("is");
+                        } else {
+                        	propertySpec.setIsOrGet("get");
                         }
                         propertySpec.setType(type);
 
@@ -333,8 +364,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                             }
                             propertySpec.setKeyType(keyType);
                             propertySpec.setPluralName(plural);
+                            propertySpec.setUpperPluralName(Utils.upperFirstChar(plural));
+
                         } else if (property.kind().isList() || property.kind().isSet()) {
                             propertySpec.setPluralName(plural);
+                            propertySpec.setUpperPluralName(Utils.upperFirstChar(plural));
                         } else {
                             String intConversion = BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.get(type);
                             propertySpec.setPrimitive(intConversion != null);
@@ -349,6 +383,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         }
 
                         propertySpec.setName(property.name());
+                        propertySpec.setUpperName(Utils.upperFirstChar(property.name()));
+
                         propertySpec.setBound(property.bound());
                         Access reader = property.reader();
                         Access writer = property.writer();
@@ -399,6 +435,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                             return;
                         }
 						listener.setName(type);
+				        int i = type.lastIndexOf('.');
+				        if (i == -1) {
+				        	listener.setNameWithoutPackage(type);
+				        } else {
+				        	listener.setNameWithoutPackage(type.substring(i + 1));
+				        }
+						listener.setLowerName(Utils.lowerFirstChar(listener.getNameWithoutPackage()));
                         defineListenerOrDelegate(false, listener, packageDeclaration, "listener interface", "eventsets", packageName);
                     }
                 }
@@ -480,37 +523,38 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 Velocity.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 //              Velocity.setProperty("class.resource.loader.modificationCheckInterval", "1");
 //              Velocity.setProperty("class.resource.loader.cache", "false");
-                Velocity.init();
-
-                VelocityContext context = new VelocityContext();
-                context.put("data", data);
-                context.put("date", new Date().toString());
-
-                Template template = null;
-
-                try {
-                    template = Velocity.getTemplate("bean.vm");
-                } catch (ResourceNotFoundException e) {
-                    env_.getMessager().printError(declaration.getPosition(),
-                            "Could not find template: " + e.getMessage());
-                    return;
-                } catch (ParseErrorException e) {
-                    env_.getMessager().printError(declaration.getPosition(),
-                            "Error parsing template: " + e.getMessage());
-                    return;
-                } catch (MethodInvocationException e) {
-                    env_.getMessager().printError(declaration.getPosition(),
-                            "Error invoking something during template processing: " + e.getMessage());
-                    return;
-                } catch (Exception e) {
-                    env_.getMessager().printError(declaration.getPosition(),
-                            "Error during template processing: " + e.getMessage());
-                    return;
-                }
+//                Velocity.init();
+//
+//                VelocityContext context = new VelocityContext();
+//                context.put("data", data);
+//                context.put("date", new Date().toString());
+//
+//                Template template = null;
+//
+//                try {
+//                    template = Velocity.getTemplate("bean.vm");
+//                } catch (ResourceNotFoundException e) {
+//                    env_.getMessager().printError(declaration.getPosition(),
+//                            "Could not find template: " + e.getMessage());
+//                    return;
+//                } catch (ParseErrorException e) {
+//                    env_.getMessager().printError(declaration.getPosition(),
+//                            "Error parsing template: " + e.getMessage());
+//                    return;
+//                } catch (MethodInvocationException e) {
+//                    env_.getMessager().printError(declaration.getPosition(),
+//                            "Error invoking something during template processing: " + e.getMessage());
+//                    return;
+//                } catch (Exception e) {
+//                    env_.getMessager().printError(declaration.getPosition(),
+//                            "Error during template processing: " + e.getMessage());
+//                    return;
+//                }
 
                 Filer f = env_.getFiler();
                 PrintWriter pw = f.createSourceFile(classDeclaration.getQualifiedName() + "Gen");
-                template.merge(context, pw);
+                new Generator(pw, data).generate();
+//                template.merge(context, pw);
                 pw.close();
             } catch (ThreadDeath e) {
                 throw e;
@@ -562,11 +606,32 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 continue;
             }
             Method method = new Method();
-            listener.getMethods().add(method);
+            listener.addMethod(method);
             method.setName(methodDeclaration.getSimpleName());
+            method.setUpperName(Utils.upperFirstChar(methodDeclaration.getSimpleName()));
             method.setReturnType(Utils.getTypeName(methodDeclaration.getReturnType()));
+            if ("void".equals(method.getReturnType())) {
+            	method.setReturnOrNot("");
+            } else {
+            	method.setReturnOrNot("return ");
+            }
+
+            method.setSymbolAfterDecl(" {");
+            method.setQualifiers("");
             String argDecls = "";
             String args = "";
+
+            if ("void".equals(method.getReturnType())) {
+            	method.setNullBody("// null object implementation; do nothing");
+            } else if ("boolean".equals(method.getReturnType())) {
+            	method.setNullBody("return false; // null object implementation");
+            } else if ("char".equals(method.getReturnType())) {
+            	method.setNullBody("return ' '; // null object implementation");
+            } else if (BeanAnnotationProcessor.NUMBER_TYPES.contains(method.getReturnType())) {
+            	method.setNullBody("return 0; // null object implementation");
+            } else {
+            	method.setNullBody("return null; // null object implementation");
+            }
 
             Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
             for (ParameterDeclaration parameterDeclaration : parameters) {

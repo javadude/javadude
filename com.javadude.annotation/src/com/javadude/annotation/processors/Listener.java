@@ -10,33 +10,17 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.javadude.annotation.Bean;
 import com.javadude.annotation.Property;
+import com.javadude.annotation.PropertyKind;
 
-@Bean(properties = {
+@Bean(createPropertyMap=true,
+	properties = {
 		@Property(name="name"),
+		@Property(name="nameWithoutPackage"),
 		@Property(name="lowerName"),
+		@Property(name="method", type=Method.class, kind=PropertyKind.LIST),
 		@Property(name="overriding", type=boolean.class)
 })
 public class Listener extends ListenerGen {
-    private List<Method> methods_ = new ArrayList<Method>();
-    @Override
-    public void setName(String name) {
-    	super.setName(name);
-        setLowerName(Utils.lowerFirstChar(getNameWithoutPackage()));
-    }
-
-    public List<Method> getMethods() {
-        return methods_;
-    }
-    public String getNameWithoutPackage() {
-        int i = getName().lastIndexOf('.');
-        if (i == -1) {
-            return getName();
-        }
-        return getName().substring(i + 1);
-    }
 }
