@@ -76,6 +76,11 @@ public @interface Bean {
     boolean cloneable() default false;
 
     /**
+     * If non-zero, use this many spaces for each leading tab.
+     */
+    int spacesForLeadingTabs() default 0;
+
+    /**
      * If true, the superclass will add {@link Override} to the generated paramString method and include
      *   the contents of its superclass' paramString() method.
      */

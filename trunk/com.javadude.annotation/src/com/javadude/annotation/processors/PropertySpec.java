@@ -15,7 +15,8 @@ import com.javadude.annotation.Property;
 import com.javadude.annotation.PropertyKind;
 
 
-@Bean(properties = {
+@Bean(createPropertyMap=true,
+	properties = {
 		@Property(name="name"),
 		@Property(name="upperName"),
 		@Property(name="writerAccess"),
@@ -31,35 +32,13 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="upperPluralName"),
 		@Property(name="baseType"),
 		@Property(name="keyType"),
+		@Property(name="isOrGet"),
 		@Property(name="extraMethodKeywords"),
+		@Property(name="unmodPrefix"),
+		@Property(name="unmodSuffix"),
 		@Property(name="extraFieldKeywords"),
 		@Property(name="omitFromToString", type=boolean.class),
 		@Property(name="kind", type=PropertyKind.class)
 })
 public class PropertySpec extends PropertySpecGen {
-    @Override
-    public void setName(String name) {
-        super.setName(name);
-        setUpperName(Utils.upperFirstChar(name));
-    }
-    public String isGet() {
-        if ("boolean".equals(getType())) {
-            return "is";
-        }
-        return "get";
-    }
-    public String getUnmodPrefix() {
-        return getKind().getPrefix();
-    }
-    public String getUnmodSuffix() {
-    	return getKind().getSuffix();
-    }
-    @Override
-    public void setPluralName(String pluralName) {
-        super.setPluralName(pluralName);
-        setUpperPluralName(Utils.upperFirstChar(pluralName));
-    }
-    @Override
-    public boolean isPrimitive() { return false; }
-
 }

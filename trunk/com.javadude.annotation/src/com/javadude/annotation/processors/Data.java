@@ -10,19 +10,27 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import java.util.Calendar;
+import java.util.Date;
 
-import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
 import com.javadude.annotation.Property;
 import com.javadude.annotation.PropertyKind;
 
-@Bean(properties = {
-		@Property(name="bean", type=Bean.class, reader=Access.PROTECTED),
+@Bean(createPropertyMap=true,
+	properties = {
 		@Property(name="packageName"),
 		@Property(name="className"),
+		@Property(name="date", type=Date.class),
 		@Property(name="classAccess"),
+		@Property(name="extendsClause"),
+		@Property(name="cloneable", type=boolean.class),
+		@Property(name="spacesForLeadingTabs", type=int.class),
+		@Property(name="cloneableClause"),
 		@Property(name="atLeastOneBound", type=boolean.class),
+		@Property(name="equalsShouldCheckSuperEquals", type=boolean.class),
+		@Property(name="superConstructorSuperCall"),
+		@Property(name="superConstructorArgs"),
+		@Property(name="year", type=int.class),
 		@Property(name="paramStringOverridden", type=boolean.class),
 		@Property(name="defineSimpleEqualsAndHashCode", type=boolean.class),
 		@Property(name="createPropertyMap", type=boolean.class),
@@ -33,28 +41,4 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="nullImplementation", type=Listener.class, kind=PropertyKind.LIST)
 })
 public class Data extends DataGen {
-	private String superClass_;
-
-	public void setSuperClass(String superClass) {
-    	superClass_ = superClass;
-    }
-	public int getYear() { return Calendar.getInstance().get(Calendar.YEAR); }
-    public String getExtendsClause() {
-        if (superClass_ == null) {
-            return "";
-        }
-        return "extends " + superClass_;
-    }
-    public boolean isCloneable() {
-        return getBean().cloneable();
-    }
-    public String getCloneableClause() {
-        if (isCloneable()) {
-            return " implements java.lang.Cloneable";
-        }
-        return "";
-    }
-    public boolean isEqualsShouldCheckSuperEquals() { return getBean().equalsShouldCheckSuperEquals(); }
-    public String getSuperConstructorSuperCall() { return getBean().superConstructorSuperCall(); }
-    public String getSuperConstructorArgs() { return getBean().superConstructorArgs(); }
 }
