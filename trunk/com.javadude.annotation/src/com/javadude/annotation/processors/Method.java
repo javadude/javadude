@@ -16,17 +16,14 @@ import com.javadude.annotation.Property;
 @Bean(createPropertyMap=true,
 	properties = {
 		@Property(name="name"),
-		@Property(name="upperName"),
 		@Property(name="args"),
 		@Property(name="argDecls"),
 		@Property(name="returnType"),
-		@Property(name="returnOrNot"),
 		@Property(name="throwsClause"),
 		@Property(name="access"),
-		@Property(name="qualifiers"),
 		@Property(name="nullBody"),
 		@Property(name="symbolAfterDecl"),
 		@Property(name="abstract", type=boolean.class)
 })
-public class Method extends MethodGen {
+public class Method extends MethodGen implements Pushable {
 }

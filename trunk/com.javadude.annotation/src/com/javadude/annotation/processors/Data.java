@@ -22,10 +22,9 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="className"),
 		@Property(name="date", type=Date.class),
 		@Property(name="classAccess"),
-		@Property(name="extendsClause"),
+		@Property(name="superclass"),
 		@Property(name="cloneable", type=boolean.class),
 		@Property(name="spacesForLeadingTabs", type=int.class),
-		@Property(name="cloneableClause"),
 		@Property(name="atLeastOneBound", type=boolean.class),
 		@Property(name="equalsShouldCheckSuperEquals", type=boolean.class),
 		@Property(name="superConstructorSuperCall"),
@@ -34,11 +33,13 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="paramStringOverridden", type=boolean.class),
 		@Property(name="defineSimpleEqualsAndHashCode", type=boolean.class),
 		@Property(name="createPropertyMap", type=boolean.class),
+		@Property(name="createPropertyMapCallsSuper", type=boolean.class),
+		@Property(name="createPropertyMapNeedsOverride", type=boolean.class),
 		@Property(name="property", plural="properties", type=PropertySpec.class, kind=PropertyKind.LIST),
-		@Property(name="listener", type=Listener.class, kind=PropertyKind.LIST),
+		@Property(name="observer", type=Type.class, kind=PropertyKind.LIST),
 		@Property(name="defaultMethod", type=Method.class, kind=PropertyKind.LIST),
 		@Property(name="delegate", type=DelegateSpec.class, kind=PropertyKind.LIST),
-		@Property(name="nullImplementation", type=Listener.class, kind=PropertyKind.LIST)
+		@Property(name="nullImplementation", type=Type.class, kind=PropertyKind.LIST)
 })
-public class Data extends DataGen {
+public class Data extends DataGen implements Pushable {
 }

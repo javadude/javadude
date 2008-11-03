@@ -12,6 +12,5 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/velocity-dep-1.5.jar" sourcepath="com.javadude.annotationsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

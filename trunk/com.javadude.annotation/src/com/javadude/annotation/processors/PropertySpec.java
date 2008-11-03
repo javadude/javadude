@@ -18,7 +18,6 @@ import com.javadude.annotation.PropertyKind;
 @Bean(createPropertyMap=true,
 	properties = {
 		@Property(name="name"),
-		@Property(name="upperName"),
 		@Property(name="writerAccess"),
 		@Property(name="readerAccess"),
 		@Property(name="type"),
@@ -29,10 +28,7 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="bound", type=boolean.class),
 		@Property(name="primitive", type=boolean.class),
 		@Property(name="pluralName"),
-		@Property(name="upperPluralName"),
-		@Property(name="baseType"),
 		@Property(name="keyType"),
-		@Property(name="isOrGet"),
 		@Property(name="extraMethodKeywords"),
 		@Property(name="unmodPrefix"),
 		@Property(name="unmodSuffix"),
@@ -40,5 +36,5 @@ import com.javadude.annotation.PropertyKind;
 		@Property(name="omitFromToString", type=boolean.class),
 		@Property(name="kind", type=PropertyKind.class)
 })
-public class PropertySpec extends PropertySpecGen {
+public class PropertySpec extends PropertySpecGen implements Pushable {
 }

@@ -17,10 +17,8 @@ import com.javadude.annotation.PropertyKind;
 @Bean(createPropertyMap=true,
 	properties = {
 		@Property(name="name"),
-		@Property(name="nameWithoutPackage"),
-		@Property(name="lowerName"),
 		@Property(name="method", type=Method.class, kind=PropertyKind.LIST),
 		@Property(name="overriding", type=boolean.class)
 })
-public class Listener extends ListenerGen {
+public class Type extends TypeGen implements Pushable {
 }

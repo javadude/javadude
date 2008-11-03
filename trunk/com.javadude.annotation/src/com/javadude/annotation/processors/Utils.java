@@ -31,10 +31,12 @@ public class Utils {
     private Utils() {
         // do nothing
     }
-    public static String upperFirstChar(String name) {
+    public static String upperFirstChar(Object value) {
+    	String name = value.toString();
         return Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
-    public static String lowerFirstChar(String name) {
+    public static String lowerFirstChar(Object value) {
+    	String name = value.toString();
         return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
     public static String getTypeName(TypeMirror type) {

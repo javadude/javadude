@@ -105,6 +105,17 @@ public @interface Bean {
     boolean createPropertyMap() default false;
 
     /**
+     * If true, the generated createPropertyMap() will call super.createPropertyMap().
+     */
+    boolean createPropertyMapCallsSuper() default false;
+
+    /**
+     * If true, and createPropertyMap() is true, the generated createPropertyMap() method
+     *   will be annotated @Override.
+     */
+    boolean createPropertyMapNeedsOverride() default false;
+
+    /**
      * A list of {@link Property} annotations that define properties to be generated in the generated
      *   superclass.
      */
