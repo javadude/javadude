@@ -16,6 +16,15 @@ public class Symbols {
 	public void pushScope() {
 		values_.push(new HashMap<String, Object>());
 	}
+	public void pushScope(String key, Object value) {
+		pushScope();
+		put(key, value);
+	}
+	public void pushScope(String key, Object value, String key2, Object value2) {
+		pushScope();
+		put(key, value);
+		put(key2, value2);
+	}
 	public void pushScope(Map<String, Object> newScope) {
 		values_.push(Collections.unmodifiableMap(newScope));
 	}
@@ -28,9 +37,34 @@ public class Symbols {
 			key = key.substring(3);
 			num--;
 		}
+		boolean upper = false;
+		boolean lower = false;
+		boolean stripPackage = false;
+		if (key.startsWith("stripPackage:")) {
+			key = key.substring(13);
+			stripPackage = true;
+		}
+		if (key.startsWith("upper:")) {
+			upper = true;
+			key = key.substring(6);
+		} else if (key.startsWith("lower:")) {
+			lower = true;
+			key = key.substring(6);
+		}
 		while (num >= 0) {
 			Object value = values_.get(num).get(key);
 			if (value != null) {
+				if (stripPackage){
+					value = Utils.upperFirstChar(value);
+			        int i = ((String) value).lastIndexOf('.');
+			        if (i != -1) {
+			        	value = ((String) value).substring(i + 1);
+			        }
+				}
+				if (upper)
+					value = Utils.upperFirstChar(value);
+				if (lower)
+					value = Utils.lowerFirstChar(value);
 				return value;
 			}
 			num--;

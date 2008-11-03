@@ -91,7 +91,7 @@ public @interface Property {
     PropertyKind kind() default PropertyKind.SIMPLE;
 
     /**
-     * If true, this property will not be included in the generated toString() method. This is useful
+     * If true, this property's value will not be included in the generated toString() method. This is useful
      *   to avoid cyclic toString() definitions.
      */
     boolean omitFromToString() default false;
