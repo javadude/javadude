@@ -33,8 +33,8 @@ public class Symbols {
 	}
 	public Object get(String key) {
 		int num = values_.size() - 1;
-		while (key.startsWith("up:")) {
-			key = key.substring(3);
+		while (key.startsWith("parent:")) {
+			key = key.substring(7);
 			num--;
 		}
 		boolean upper = false;
@@ -55,7 +55,6 @@ public class Symbols {
 			Object value = values_.get(num).get(key);
 			if (value != null) {
 				if (stripPackage){
-					value = Utils.upperFirstChar(value);
 			        int i = ((String) value).lastIndexOf('.');
 			        if (i != -1) {
 			        	value = ((String) value).substring(i + 1);
