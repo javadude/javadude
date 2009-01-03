@@ -98,9 +98,4 @@ public @interface Delegate {
      * Exactly one of instantiateAs or instantiateAsString must be specified.
      */
     String instantiateAsString() default "";
-
-    /**
-     * If true, @Override will be added to each generated method.
-     */
-    boolean addOverrides() default false;
 }
