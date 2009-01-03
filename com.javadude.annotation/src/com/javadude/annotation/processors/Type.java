@@ -10,15 +10,11 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import com.javadude.annotation.Bean;
-import com.javadude.annotation.Property;
-import com.javadude.annotation.PropertyKind;
 
-@Bean(createPropertyMap=true,
-	properties = {
-		@Property(name="name"),
-		@Property(name="method", type=Method.class, kind=PropertyKind.LIST),
-		@Property(name="overriding", type=boolean.class)
-})
+//@Bean(createPropertyMap=true,
+//	properties = {
+//		@Property(name="name"),
+//		@Property(name="method", type=Method.class, kind=PropertyKind.LIST)
+//})
 public class Type extends TypeGen implements Pushable {
 }

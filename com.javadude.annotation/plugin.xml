@@ -6,10 +6,5 @@
          <factory class="com.javadude.annotation.processors.BeanAnnotationProcessorFactory" />
          <factory class="com.javadude.annotation.processors.ExtractInterfaceAnnotationProcessorFactory" />
       </factories>
-      <java6processors>
-         <java6processor
-               class="com.javadude.annotation.Processor1">
-         </java6processor>
-      </java6processors>
    </extension>
 </plugin>

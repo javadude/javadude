@@ -26,9 +26,4 @@ public @interface NullObject {
      * Exactly one of type or typeString must be specified.
      */
     String typeString() default "";
-
-    /**
-     * If true, @Override will be added to all generated methods.
-     */
-    boolean addOverrides() default false;
 }

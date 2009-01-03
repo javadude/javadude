@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -29,6 +29,9 @@ import com.javadude.annotation.Delegate;
 import com.javadude.annotation.NullObject;
 import com.javadude.annotation.Observer;
 import com.javadude.annotation.Property;
+import com.javadude.annotation.processors.template.ExpressionException;
+import com.javadude.annotation.processors.template.Processor;
+import com.javadude.annotation.processors.template.TemplateReader;
 import com.sun.mirror.apt.AnnotationProcessor;
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 import com.sun.mirror.apt.Filer;
@@ -51,31 +54,26 @@ import com.sun.mirror.type.ReferenceType;
 // TODO delegation + extractInterface -> must allow superinterfaces to be specified for generated interface
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
-    private static final Set<String> NUMBER_TYPES = new HashSet<String>();
-    private static final Set<String> METHODS_TO_SKIP = new HashSet<String>();
-    private static final Map<String, String> PRIMITIVE_TYPE_INT_CONVERSIONS = new HashMap<String, String>();
+	private static final Set<String> createSet(String... items) {
+		Set<String> set = new HashSet<String>();
+		for (String item : items) {
+			set.add(item);
+		}
+		return set;
+	}
+    private static final Set<String> METHODS_TO_SKIP = BeanAnnotationProcessor.createSet("equals", "hashCode", "toString", "wait", "notify", "notifyAll");
+    private static final Set<String> PRIMITIVE_TYPES = BeanAnnotationProcessor.createSet("byte", "short", "int", "long", "float", "double", "char", "boolean");
+    private static final FileReader fileReader;
+    private static final Processor template;
+
     static {
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("byte");
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("short");
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("int");
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("long");
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("float");
-    	BeanAnnotationProcessor.NUMBER_TYPES.add("double");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("char", "");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("byte", "");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("int", "");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("short", "");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("long", "(int) ");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("float", "(int) ");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("double", "(int) ");
-        BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.put("boolean", "X");
-        // TODO add parameters and only skip those methods that match those parameters...
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("equals");
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("hashCode");
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("toString");
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("wait");
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("notify");
-        BeanAnnotationProcessor.METHODS_TO_SKIP.add("notifyAll");
+    	try {
+			fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
+			template = new TemplateReader().readTemplate(BeanAnnotationProcessor.fileReader);
+		} catch (FileNotFoundException e) {
+			throw new ExceptionInInitializerError(e);
+		}
+        // TODO add parameters to METHODS_TO_SKIP and only skip those methods that match those parameters...
     }
     private static final Class<?>[] EMPTY_PARAMS = {};
     private static final Object[] EMPTY_ARGS = {};
@@ -173,6 +171,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 Data data = new Data();
                 data.setDate(new Date());
                 data.setSpacesForLeadingTabs(bean.spacesForLeadingTabs());
+                data.setDefinePropertyNameConstants(bean.definePropertyNameConstants());
+                data.setExtendPropertyNameConstants(bean.extendPropertyNameConstants());
                 data.setSuperclass(selectType(declaration, "@Bean", bean, "superclass", "superclassString", null, false));
                 data.setCloneable(bean.cloneable());
 
@@ -181,11 +181,25 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 data.setSuperConstructorSuperCall("".equals(bean.superConstructorSuperCall()) ? null : bean.superConstructorSuperCall());
                 data.setSuperConstructorArgs(bean.superConstructorArgs());
 
-                data.setParamStringOverridden(bean.overrideParamString());
                 data.setClassAccess(classDeclaration.getModifiers().contains(Modifier.PUBLIC) ? "public " : "");
                 data.setClassName(classDeclaration.getSimpleName());
                 String packageName = packageDeclaration.getQualifiedName();
                 data.setPackageName(packageName);
+
+                // validate the property interface definition flags
+                if (data.isDefinePropertyNameConstants()) {
+                	if (data.isExtendPropertyNameConstants()) {
+                		if (data.getSuperclass() == null) {
+                			env_.getMessager().printError(declaration.getPosition(),
+                					classDeclaration.getQualifiedName() + " cannot specify extendPropertyNameConstants=true without a superclass");
+                			return;
+                		}
+                	}
+                } else if (data.isExtendPropertyNameConstants()) {
+                	env_.getMessager().printError(declaration.getPosition(),
+                			classDeclaration.getQualifiedName() + " cannot specify extendPropertyNameConstants=true if definePropertyNameConstants=false");
+                	return;
+                }
 
                 // find any methods that have default parameters
                 Collection<MethodDeclaration> methodsToCheck = classDeclaration.getMethods();
@@ -275,6 +289,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
                 Set<String> propertyNames = new HashSet<String>();
                 boolean atLeastOneBound = false;
+                boolean atLeastOneLongOrDouble = false;
+                boolean atLeastOneObject = false;
                 if (bean.properties() != null) {
                     for (Property property : bean.properties()) {
                         if (property == null) {
@@ -332,6 +348,9 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         if (type == null) {
                             return;
                         }
+                        if ("double".equals(type) || "long".equals(type))
+                        	atLeastOneLongOrDouble = true;
+
                         propertySpec.setType(type);
 
                         // evil hack to get the type, which is a Class
@@ -348,20 +367,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         } else if (property.kind().isList() || property.kind().isSet()) {
                             propertySpec.setPluralName(plural);
                         } else {
-                            String intConversion = BeanAnnotationProcessor.PRIMITIVE_TYPE_INT_CONVERSIONS.get(type);
-                            propertySpec.setPrimitive(intConversion != null);
-                            if ("X".equals(intConversion)) {
-                                intConversion = '(' + property.name() + "_ ? 1 : 0)";
-                            } else if (intConversion != null) {
-                                intConversion = intConversion + property.name() + '_';
-                            } else {
-                                intConversion = property.name() + "_.hashCode()";
-                            }
-                            propertySpec.setIntConversion(intConversion);
+                            propertySpec.setPrimitive(BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(type));
                         }
 
                         propertySpec.setName(property.name());
 
+                        if (!propertySpec.isPrimitive())
+                        	atLeastOneObject = true;
                         propertySpec.setBound(property.bound());
                         Access reader = property.reader();
                         Access writer = property.writer();
@@ -405,7 +417,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                             continue;
                         }
                         Type type = new Type();
-                        type.setOverriding(observer.addOverrides());
                         data.addObserver(type);
                     	String typeName = selectType(declaration, "@Observer", observer, "type", "typeString", null, true);
                         if (typeName == null) {
@@ -427,7 +438,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         	return;
                         }
                         listener.setName(type);
-                        listener.setOverriding(nullObject.addOverrides());
                         data.addNullImplementation(listener);
                         defineListenerOrDelegate(true, listener, classDeclaration, "null implementation class/interface", "nullImplementationName", packageName);
                     }
@@ -456,7 +466,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                                         "Must specify either accessor or property for @Delegate");
                             }
                             DelegateSpec delegateSpec = new DelegateSpec();
-                            delegateSpec.setOverriding(delegate.addOverrides());
                             delegateSpec.setAccessor(accessor);
                             data.addDelegate(delegateSpec);
                         	String type = selectType(declaration, "@Delegate", delegate, "type", "typeString", null, true);
@@ -485,23 +494,28 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 }
 
                 data.setAtLeastOneBound(atLeastOneBound);
+                data.setAtLeastOneLongOrDouble(atLeastOneLongOrDouble);
+                data.setAtLeastOneObject(atLeastOneObject);
                 data.setDefineSimpleEqualsAndHashCode(bean.defineSimpleEqualsAndHashCode());
                 data.setCreatePropertyMap(bean.createPropertyMap());
                 data.setCreatePropertyMapCallsSuper(bean.createPropertyMapCallsSuper());
-                data.setCreatePropertyMapNeedsOverride(bean.createPropertyMapNeedsOverride());
 
                 Filer f = env_.getFiler();
                 PrintWriter pw = f.createSourceFile(classDeclaration.getQualifiedName() + "Gen");
-                new Generator(pw, data).generate();
+
+        		BeanAnnotationProcessor.template.process(new Symbols(data.createPropertyMap()), pw, -1);
+//                new Generator(pw, data).generate();
                 pw.close();
             } catch (ThreadDeath e) {
                 throw e;
+            } catch (ExpressionException e) {
+                env_.getMessager().printError(declaration.getPosition(), "@Bean generator error: " + e.getMessage());
             } catch (Throwable t) {
             	StringWriter stringWriter = new StringWriter();
             	PrintWriter printWriter = new PrintWriter(stringWriter);
             	t.printStackTrace(printWriter);
             	printWriter.close();
-                env_.getMessager().printError(declaration.getPosition(), "Unexpected exception: " + stringWriter.toString());
+            	env_.getMessager().printError(declaration.getPosition(), "Unexpected exception: " + stringWriter.toString());
             }
         }
     }
@@ -558,7 +572,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
             	method.setNullBody("return false; // null object implementation");
             } else if ("char".equals(method.getReturnType())) {
             	method.setNullBody("return ' '; // null object implementation");
-            } else if (BeanAnnotationProcessor.NUMBER_TYPES.contains(method.getReturnType())) {
+            } else if (BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(method.getReturnType())) {
             	method.setNullBody("return 0; // null object implementation");
             } else {
             	method.setNullBody("return null; // null object implementation");

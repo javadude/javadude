@@ -76,15 +76,21 @@ public @interface Bean {
     boolean cloneable() default false;
 
     /**
+     * If true, the generated superclass will define an inner interface PropertyNames containing
+     *   all the property names in the class.
+     */
+    boolean definePropertyNameConstants() default false;
+
+    /**
+     * If true, the property name interface will extend the superclass'
+     *   PropertyNames interface.
+     */
+    boolean extendPropertyNameConstants() default false;
+
+    /**
      * If non-zero, use this many spaces for each leading tab.
      */
     int spacesForLeadingTabs() default 0;
-
-    /**
-     * If true, the superclass will add {@link Override} to the generated paramString method and include
-     *   the contents of its superclass' paramString() method.
-     */
-    boolean overrideParamString() default false;
 
     /**
      * If true, the generated superclass will include a simple equals() and hashCode() method.
@@ -108,12 +114,6 @@ public @interface Bean {
      * If true, the generated createPropertyMap() will call super.createPropertyMap().
      */
     boolean createPropertyMapCallsSuper() default false;
-
-    /**
-     * If true, and createPropertyMap() is true, the generated createPropertyMap() method
-     *   will be annotated @Override.
-     */
-    boolean createPropertyMapNeedsOverride() default false;
 
     /**
      * A list of {@link Property} annotations that define properties to be generated in the generated
