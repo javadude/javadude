@@ -73,10 +73,8 @@ public enum Access {
                 return "public ";
             case PROTECTED:
                 return "protected ";
-            case PACKAGE:
-                return "";
             default:
-            	throw new IllegalArgumentException("Cannot ask for the modifier for Access." + this);
+                return "";
         }
     }
 

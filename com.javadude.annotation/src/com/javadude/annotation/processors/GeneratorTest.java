@@ -414,8 +414,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix(null);
-		propertySpec.setUnmodSuffix(null);
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -501,8 +499,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix(null);
-		propertySpec.setUnmodSuffix(null);
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -606,8 +602,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix(null);
-		propertySpec.setUnmodSuffix(null);
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -712,8 +706,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("");
-		propertySpec.setUnmodSuffix("");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -822,8 +814,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("");
-		propertySpec.setUnmodSuffix("");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -953,8 +943,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("Collections.unmodifiableList(");
-		propertySpec.setUnmodSuffix(")");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -1084,8 +1072,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("Collections.unmodifiableList(");
-		propertySpec.setUnmodSuffix(")");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -1202,8 +1188,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("");
-		propertySpec.setUnmodSuffix("");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -1320,8 +1304,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("");
-		propertySpec.setUnmodSuffix("");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 
@@ -1445,8 +1427,6 @@ public class GeneratorTest {
 		propertySpec.setReadable(true);
 		propertySpec.setReaderAccess("public ");
 		propertySpec.setType("java.lang.String");
-		propertySpec.setUnmodPrefix("Collections.unmodifiableMap(");
-		propertySpec.setUnmodSuffix(")");
 		propertySpec.setWriteable(true);
 		propertySpec.setWriterAccess("public ");
 

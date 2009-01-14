@@ -26,8 +26,6 @@ package com.javadude.annotation.processors;
 //		@Property(name="pluralName"),
 //		@Property(name="keyType"),
 //		@Property(name="extraMethodKeywords"),
-//		@Property(name="unmodPrefix"),
-//		@Property(name="unmodSuffix"),
 //		@Property(name="extraFieldKeywords"),
 //		@Property(name="omitFromToString", type=boolean.class),
 //		@Property(name="kind", type=PropertyKind.class),

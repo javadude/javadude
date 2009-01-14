@@ -14,6 +14,7 @@ package com.javadude.annotation.processors;
 //@Bean(createPropertyMap=true,
 //	properties = {
 //		@Property(name="packageName"),
+//		@Property(name="firstPropertyName"),
 //		@Property(name="className"),
 //		@Property(name="date", type=Date.class),
 //		@Property(name="classAccess"),
@@ -22,7 +23,7 @@ package com.javadude.annotation.processors;
 //		@Property(name="spacesForLeadingTabs", type=int.class),
 //		@Property(name="atLeastOneBound", type=boolean.class),
 //		@Property(name="atLeastOneObject", type=boolean.class),
-//		@Property(name="atLeastOneLongOrDouble", type=boolean.class),
+//		@Property(name="atLeastOneDouble", type=boolean.class),
 //		@Property(name="definePropertyNameConstants", type=boolean.class),
 //		@Property(name="extendPropertyNameConstants", type=boolean.class),
 //		@Property(name="equalsShouldCheckSuperEquals", type=boolean.class),

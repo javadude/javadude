@@ -99,7 +99,9 @@ public class TemplateReader {
 					boolean inVariable = false;
 					int start = 0;
 //					System.out.println("line:" + lineText);
+					lineText = lineText.replace("/**", "[##").replace("**/", "##]");
 					lineText = lineText.replace("/*", "").replace("*/", "");
+					lineText = lineText.replace("[##", "/**").replace("##]", "**/");
 
 					// trim trailing spaces
 					i = lineText.length() - 1;

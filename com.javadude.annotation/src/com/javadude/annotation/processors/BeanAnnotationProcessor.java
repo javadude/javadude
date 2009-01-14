@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -30,7 +29,6 @@ import com.javadude.annotation.NullObject;
 import com.javadude.annotation.Observer;
 import com.javadude.annotation.Property;
 import com.javadude.annotation.processors.template.ExpressionException;
-import com.javadude.annotation.processors.template.Processor;
 import com.javadude.annotation.processors.template.TemplateReader;
 import com.sun.mirror.apt.AnnotationProcessor;
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
@@ -63,18 +61,18 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 	}
     private static final Set<String> METHODS_TO_SKIP = BeanAnnotationProcessor.createSet("equals", "hashCode", "toString", "wait", "notify", "notifyAll");
     private static final Set<String> PRIMITIVE_TYPES = BeanAnnotationProcessor.createSet("byte", "short", "int", "long", "float", "double", "char", "boolean");
-    private static final FileReader fileReader;
-    private static final Processor template;
-
-    static {
-    	try {
-			fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
-			template = new TemplateReader().readTemplate(BeanAnnotationProcessor.fileReader);
-		} catch (FileNotFoundException e) {
-			throw new ExceptionInInitializerError(e);
-		}
-        // TODO add parameters to METHODS_TO_SKIP and only skip those methods that match those parameters...
-    }
+//    private static final FileReader fileReader;
+//    private static final Processor template;
+//
+//    static {
+//    	try {
+//			fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
+//			template = new TemplateReader().readTemplate(BeanAnnotationProcessor.fileReader);
+//		} catch (FileNotFoundException e) {
+//			throw new ExceptionInInitializerError(e);
+//		}
+//        // TODO add parameters to METHODS_TO_SKIP and only skip those methods that match those parameters...
+//    }
     private static final Class<?>[] EMPTY_PARAMS = {};
     private static final Object[] EMPTY_ARGS = {};
     private final AnnotationProcessorEnvironment env_;
@@ -286,16 +284,18 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					}
 				}
 
-
+                String firstPropertyName = null;
                 Set<String> propertyNames = new HashSet<String>();
                 boolean atLeastOneBound = false;
-                boolean atLeastOneLongOrDouble = false;
+                boolean atLeastOneDouble = false;
                 boolean atLeastOneObject = false;
                 if (bean.properties() != null) {
                     for (Property property : bean.properties()) {
                         if (property == null) {
                             continue;
                         }
+                        if (firstPropertyName == null)
+                        	firstPropertyName = property.name();
                         if (propertyNames.contains(property.name())) {
                             env_.getMessager().printError(
                                     declaration.getPosition(),
@@ -340,16 +340,14 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         }
                         PropertySpec propertySpec = new PropertySpec();
                         propertySpec.setKind(property.kind());
-                        propertySpec.setUnmodPrefix(property.kind().getPrefix());
-                        propertySpec.setUnmodSuffix(property.kind().getSuffix());
                         propertySpec.setOmitFromToString(property.omitFromToString());
                         data.addProperty(propertySpec);
                     	String type = selectType(declaration, "@Property", property, "type", "typeString", "java.lang.String", true);
                         if (type == null) {
                             return;
                         }
-                        if ("double".equals(type) || "long".equals(type))
-                        	atLeastOneLongOrDouble = true;
+                        if ("double".equals(type))
+                        	atLeastOneDouble = true;
 
                         propertySpec.setType(type);
 
@@ -359,15 +357,25 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         	propertySpec.setKind(property.kind());
                         	String keyType = selectType(declaration, "@Property", property, "keyType", "keyTypeString", "java.lang.String", false);
                             if (keyType == null) {
+                            	env_.getMessager().printError(declaration.getPosition(),
+                            			"keytype cannot be null for map property " + property.name() + " in @Property");
 	                            return;
                             }
                             propertySpec.setKeyType(keyType);
                             propertySpec.setPluralName(plural);
 
-                        } else if (property.kind().isList() || property.kind().isSet()) {
-                            propertySpec.setPluralName(plural);
                         } else {
-                            propertySpec.setPrimitive(BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(type));
+                        	String keyType = selectType(declaration, "@Property", property, "keyType", "keyTypeString", null, false);
+                        	if (keyType != null) {
+                        		env_.getMessager().printError(declaration.getPosition(),
+                        				"keytype can only be specified for map properties; property " + property.name() + " is not a map");
+                        		return;
+                        	}
+                        	if (property.kind().isList() || property.kind().isSet()) {
+	                            propertySpec.setPluralName(plural);
+	                        } else {
+	                            propertySpec.setPrimitive(BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(type));
+	                        }
                         }
 
                         propertySpec.setName(property.name());
@@ -393,6 +401,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         propertySpec.setReadable(reader.exists());
                         propertySpec.setWriteable(writer.exists());
                         propertySpec.setNotNull(property.notNull());
+                        if (propertySpec.isNotNull() && propertySpec.isPrimitive()) {
+                            env_.getMessager().printError(declaration.getPosition(),
+                                                          "Cannot specify notNull for primitive-typed property " + propertySpec.getName() + " in @Property");
+                            return;
+                        }
                         String extraFieldKeywords = "";
                         String extraMethodKeywords = "";
                         if (property.isStatic()) {
@@ -409,6 +422,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                         propertySpec.setExtraFieldKeywords(extraFieldKeywords);
                         propertySpec.setExtraMethodKeywords(extraMethodKeywords);
                     }
+                    data.setFirstPropertyName(firstPropertyName);
                 }
 
                 if (bean.observers() != null) {
@@ -494,7 +508,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 }
 
                 data.setAtLeastOneBound(atLeastOneBound);
-                data.setAtLeastOneLongOrDouble(atLeastOneLongOrDouble);
+                data.setAtLeastOneDouble(atLeastOneDouble);
                 data.setAtLeastOneObject(atLeastOneObject);
                 data.setDefineSimpleEqualsAndHashCode(bean.defineSimpleEqualsAndHashCode());
                 data.setCreatePropertyMap(bean.createPropertyMap());
@@ -503,7 +517,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
                 Filer f = env_.getFiler();
                 PrintWriter pw = f.createSourceFile(classDeclaration.getQualifiedName() + "Gen");
 
-        		BeanAnnotationProcessor.template.process(new Symbols(data.createPropertyMap()), pw, -1);
+                // TODO - SWITCH TO "READ-ONCE" VERSION BELOW
+                FileReader fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
+                new TemplateReader().readTemplate(fileReader).process(new Symbols(data.createPropertyMap()), pw, -1);
+
+//        		BeanAnnotationProcessor.template.process(new Symbols(data.createPropertyMap()), pw, -1);
 //                new Generator(pw, data).generate();
                 pw.close();
             } catch (ThreadDeath e) {
@@ -569,13 +587,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
             if ("void".equals(method.getReturnType())) {
             	method.setNullBody("// null object implementation; do nothing");
             } else if ("boolean".equals(method.getReturnType())) {
-            	method.setNullBody("return false; // null object implementation");
+            	method.setNullBody("false; // null object implementation");
             } else if ("char".equals(method.getReturnType())) {
-            	method.setNullBody("return ' '; // null object implementation");
+            	method.setNullBody("' '; // null object implementation");
             } else if (BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(method.getReturnType())) {
-            	method.setNullBody("return 0; // null object implementation");
+            	method.setNullBody("0; // null object implementation");
             } else {
-            	method.setNullBody("return null; // null object implementation");
+            	method.setNullBody("null; // null object implementation");
             }
 
             Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
