@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>An annotation that sets a default value for a method parameter.
+ * <p>An annotation that sets a default value for a method parameter.</p>
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PARAMETER)
