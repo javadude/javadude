@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Workingsets Plug-in
 Bundle-SymbolicName: com.javadude.workingsets;singleton:=true
-Bundle-Version: 1.0.8
+Bundle-Version: 1.1.0
 Bundle-Activator: com.javadude.workingsets.Activator
 Bundle-Vendor: JavaDude.com
 Require-Bundle: org.eclipse.ui,

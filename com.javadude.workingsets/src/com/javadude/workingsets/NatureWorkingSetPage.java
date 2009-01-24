@@ -8,17 +8,19 @@
 package com.javadude.workingsets;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -36,6 +38,8 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
 public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private IWorkingSet workingSet_;
+	private String natureId_ = null;
+	private Text workingSetLabelText_ = null;
 
 	public NatureWorkingSetPage() {
 		super("com.hcrest.classpath.natureWorkingSetPage", "Enter nature to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
@@ -49,85 +53,51 @@ public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	}
 
 	@Override
+	public IWorkingSet getSelection() {
+		return workingSet_;
+	}
+
+	public void setSelection(IWorkingSet workingSet) {
+		Assert.isNotNull(workingSet, "Working set must not be null");
+		workingSet_ = workingSet;
+		if (getContainer() != null && getShell() != null && workingSetLabelText_ != null) {
+			natureId_ = workingSet.getName().substring(8);
+			workingSetLabelText_.setText(workingSet.getLabel());
+		}
+	}
+
+	@Override
 	public void finish() {
-		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
-		// TODO get list of all server core elements in workspace and init it
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
-		String natureId = natureIdText_.getText();
 		try {
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId)) {
+	            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId_)) {
 	            	projects.add(project);
 	            }
 			}
 		} catch (CoreException e) {
 			Activator.getUtil().error(42, "Error checking natures", e);
 		}
-		workingSet_ = workingSetManager.createWorkingSet("Nature: " + natureId, projects.toArray(new IAdaptable[projects.size()]));
+
+		if (workingSet_ == null) {
+			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
+			workingSet_= workingSetManager.createWorkingSet("Nature: " + natureId_, projects.toArray(new IAdaptable[projects.size()]));
+			workingSet_.setId("com.javadude.workingsets.NatureWorkingSetPage");
+		} else {
+			workingSet_.setName("Nature: " + natureId_);
+			workingSet_.setElements(projects.toArray(new IAdaptable[projects.size()]));
+		}
 		workingSet_.setLabel(workingSetLabelText_.getText());
 	}
 
-	@Override
-	public IWorkingSet getSelection() {
-		return workingSet_;
-	}
-
-	@Override
-	public void setSelection(IWorkingSet workingSet) {
-		workingSet_ = workingSet;
-	}
-
-	private Text natureIdText_ = null;
-	private Text workingSetLabelText_ = null;
 
 	private void dialogChanged() {
-		String natureId = natureIdText_.getText();
-		if ("".equals(natureId.trim())) {
-			updateStatus("Nature must be specified");
-			return;
-		}
-		String label = workingSetLabelText_.getText();
-		if ("".equals(label.trim())) {
+		if ("".equals(workingSetLabelText_.getText().trim())) {
 			updateStatus("Label must be specified");
 			return;
 		}
-
-		// check if any projects have the nature
-		Set<String> natures = new HashSet<String>();
-		StringTokenizer stringTokenizer = new StringTokenizer(natureId, ", ");
-		while (stringTokenizer.hasMoreTokens()) {
-			String nature = stringTokenizer.nextToken();
-			natures.add(nature);
-		}
-	projects:
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			try {
-	            if (project.isOpen()) {
-	            	for (Iterator<String> i = natures.iterator(); i.hasNext();) {
-	                    String nature = i.next();
-	                    if (project.hasNature(nature)) {
-	                    	i.remove();
-	                    	if (natures.isEmpty()) {
-	                    		break projects;
-	                    	}
-	                    }
-					}
-	            }
-            } catch (CoreException e) {
-	            Activator.getUtil().error(22, "Error checking nature", e);
-            }
-		}
-		if (!natures.isEmpty()) {
-			String natureString = "";
-			for (String nature : natures) {
-	            natureString += "," + nature;
-            }
-			natureString = natureString.substring(1);
-			if (natures.size() > 1) {
-				updateStatus("Natures (" + natureString + ") are not used in any open projects");
-			} else {
-				updateStatus("Nature '" + natureString + "' is not used in any open projects");
-			}
+		if (natureId_ == null) {
+			updateStatus("At least one nature must be selected");
 			return;
 		}
 
@@ -145,23 +115,16 @@ public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage 
 		container.setLayout(layout);
 		layout.numColumns = 2;
 		layout.verticalSpacing = 9;
+
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Nature:");
-
-		natureIdText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		natureIdText_.setLayoutData(gd);
-		natureIdText_.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
-
-		label = new Label(container, SWT.NULL);
 		label.setText("Working Set Label:");
 
 		workingSetLabelText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		if (workingSet_ != null) {
+			workingSetLabelText_.setText(workingSet_.getLabel());
+			natureId_ = workingSet_.getName().substring(8);
+		}
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		workingSetLabelText_.setLayoutData(gd);
 		workingSetLabelText_.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -169,14 +132,37 @@ public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage 
 			}
 		});
 
-// TBD -- browse all available natures
-//		Button button = new Button(container, SWT.PUSH);
-//		button.setText("Browse...");
-//		button.addSelectionListener(new SelectionAdapter() {
-//			public void widgetSelected(SelectionEvent e) {
-//				handleBrowse();
-//			}
-//		});
+		label = new Label(container, SWT.NULL);
+		label.setText("Registered Natures:");
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.CHECK;
+		final CheckboxTableViewer table = CheckboxTableViewer.newCheckList(container, style);
+		List<String> natures = new ArrayList<String>();
+		for (IProjectNatureDescriptor nature : ResourcesPlugin.getWorkspace().getNatureDescriptors()) {
+			natures.add(nature.getNatureId());
+		}
+		Collections.sort(natures);
+		for (String nature : natures) {
+			table.add(nature);
+		}
+		if (natureId_ != null) {
+			String[] split = natureId_.split("[,\\s]");
+			for (String nature : split) {
+				table.setChecked(nature, true);
+			}
+		}
+		table.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		table.addCheckStateListener(new ICheckStateListener() {
+			@Override public void checkStateChanged(CheckStateChangedEvent event) {
+				natureId_ = null;
+				for (Object o : table.getCheckedElements()) {
+					if (natureId_ == null)
+						natureId_ = (String) o;
+					else
+						natureId_ += ',' + (String) o;
+				}
+				dialogChanged();
+			} });
 		dialogChanged();
 		setControl(container);
 	}

@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
 public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
-	private static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
+	static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
 	static {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
@@ -156,19 +156,15 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 		}
 		return false;
 	}
-	public NatureWorkingSetUpdater() {
-		// assign working sets based on reading projects in workspace
 
-	}
-
-	private String natureId(IWorkingSet workingSet) {
+	public static String natureId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
 		return id.substring("Nature: ".length());
 	}
 
 	@Override
 	public void add(IWorkingSet workingSet) {
-		NatureWorkingSetUpdater.workingSets_.put(natureId(workingSet), workingSet);
+		NatureWorkingSetUpdater.workingSets_.put(NatureWorkingSetUpdater.natureId(workingSet), workingSet);
 	}
 
 	@Override
@@ -183,6 +179,6 @@ public class NatureWorkingSetUpdater implements IWorkingSetUpdater {
 
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
-		return NatureWorkingSetUpdater.workingSets_.remove(natureId(workingSet)) != null;
+		return NatureWorkingSetUpdater.workingSets_.remove(NatureWorkingSetUpdater.natureId(workingSet)) != null;
 	}
 }
