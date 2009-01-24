@@ -14,32 +14,20 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.IWorkingSetPage;
 
-public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage {
-
-	private IWorkingSet workingSet_;
+public class NatureWorkingSetPage extends BaseWorkingSetPage {
 	private String natureId_ = null;
-	private Text workingSetLabelText_ = null;
 
 	public NatureWorkingSetPage() {
 		super("com.hcrest.classpath.natureWorkingSetPage", "Enter nature to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
@@ -47,96 +35,16 @@ public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	public NatureWorkingSetPage(String pageName) {
 		super(pageName);
 	}
-
 	public NatureWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 	}
 
-	@Override
-	public IWorkingSet getSelection() {
-		return workingSet_;
-	}
-
-	public void setSelection(IWorkingSet workingSet) {
-		Assert.isNotNull(workingSet, "Working set must not be null");
-		workingSet_ = workingSet;
-		if (getContainer() != null && getShell() != null && workingSetLabelText_ != null) {
-			natureId_ = workingSet.getName().substring(8);
-			workingSetLabelText_.setText(workingSet.getLabel());
-		}
-	}
-
-	@Override
-	public void finish() {
-		List<IAdaptable> projects = new ArrayList<IAdaptable>();
-		try {
-			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId_)) {
-	            	projects.add(project);
-	            }
-			}
-		} catch (CoreException e) {
-			Activator.getUtil().error(42, "Error checking natures", e);
-		}
-
-		if (workingSet_ == null) {
-			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
-			workingSet_= workingSetManager.createWorkingSet("Nature: " + natureId_, projects.toArray(new IAdaptable[projects.size()]));
-			workingSet_.setId("com.javadude.workingsets.NatureWorkingSetPage");
-		} else {
-			workingSet_.setName("Nature: " + natureId_);
-			workingSet_.setElements(projects.toArray(new IAdaptable[projects.size()]));
-		}
-		workingSet_.setLabel(workingSetLabelText_.getText());
-	}
-
-
-	private void dialogChanged() {
-		if ("".equals(workingSetLabelText_.getText().trim())) {
-			updateStatus("Label must be specified");
-			return;
-		}
-		if (natureId_ == null) {
-			updateStatus("At least one nature must be selected");
-			return;
-		}
-
-		updateStatus(null);
-	}
-	private void updateStatus(String message) {
-		setErrorMessage(message);
-		setPageComplete(message == null);
-	}
-
-	@Override
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		container.setLayout(layout);
-		layout.numColumns = 2;
-		layout.verticalSpacing = 9;
-
-		Label label = new Label(container, SWT.NULL);
-		label.setText("Working Set Label:");
-
-		workingSetLabelText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
-		if (workingSet_ != null) {
-			workingSetLabelText_.setText(workingSet_.getLabel());
-			natureId_ = workingSet_.getName().substring(8);
-		}
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		workingSetLabelText_.setLayoutData(gd);
-		workingSetLabelText_.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
-
-		label = new Label(container, SWT.NULL);
+	@Override protected void createFields(Composite parent) {
+		Label label = new Label(parent, SWT.NULL);
 		label.setText("Registered Natures:");
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true));
 		int style = SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION | SWT.CHECK;
-		final CheckboxTableViewer table = CheckboxTableViewer.newCheckList(container, style);
+		final CheckboxTableViewer table = CheckboxTableViewer.newCheckList(parent, style);
 		List<String> natures = new ArrayList<String>();
 		for (IProjectNatureDescriptor nature : ResourcesPlugin.getWorkspace().getNatureDescriptors()) {
 			natures.add(nature.getNatureId());
@@ -163,7 +71,30 @@ public class NatureWorkingSetPage extends WizardPage implements IWorkingSetPage 
 				}
 				dialogChanged();
 			} });
-		dialogChanged();
-		setControl(container);
+	}
+	@Override protected List<IAdaptable> getMatchingProjects() {
+		List<IAdaptable> projects = new ArrayList<IAdaptable>();
+		try {
+			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+	            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId_)) {
+	            	projects.add(project);
+	            }
+			}
+		} catch (CoreException e) {
+			Activator.getUtil().error(42, "Error checking natures", e);
+		}
+		return projects;
+	}
+	@Override protected String getWorkingSetName() { return "Nature: " + natureId_; }
+	@Override protected String getWorkingSetId() { return "com.javadude.workingsets.NatureWorkingSetPage"; }
+	@Override protected void initFields(IWorkingSet workingSet) {
+		natureId_ = workingSet.getName().substring(8);
+	}
+	@Override protected boolean validate() {
+		if (natureId_ == null) {
+			updateStatus("At least one nature must be selected");
+			return false;
+		}
+		return true;
 	}
 }

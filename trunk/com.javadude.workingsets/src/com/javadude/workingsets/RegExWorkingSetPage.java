@@ -10,28 +10,28 @@ package com.javadude.workingsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.jface.text.FindReplaceDocumentAdapterContentProposalProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.IWorkingSetPage;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-public class RegExWorkingSetPage extends WizardPage implements IWorkingSetPage {
-
-	private IWorkingSet workingSet_;
+public class RegExWorkingSetPage extends BaseWorkingSetPage {
+	private Text regexText_ = null;
+	private org.eclipse.swt.widgets.List matches_;
 
 	public RegExWorkingSetPage() {
 		super("com.hcrest.classpath.regexWorkingSetPage", "Enter project regular expression to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
@@ -39,15 +39,55 @@ public class RegExWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public RegExWorkingSetPage(String pageName) {
 		super(pageName);
 	}
-
 	public RegExWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 	}
 
-	@Override
-	public void finish() {
-		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
-		// TODO get list of all server core elements in workspace and init it
+	@Override protected void createFields(Composite parent) {
+		Label label = new Label(parent, SWT.NULL);
+		label.setText("Project Name Regular Expression:");
+
+		regexText_ = new Text(parent, SWT.BORDER | SWT.SINGLE);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		regexText_.setLayoutData(gd);
+		regexText_.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				dialogChanged();
+				filter();
+			}
+		});
+		TextContentAdapter contentAdapter= new TextContentAdapter();
+		FindReplaceDocumentAdapterContentProposalProvider findProposer= new FindReplaceDocumentAdapterContentProposalProvider(true);
+		ContentAssistCommandAdapter contentAssistCommandAdapter = new ContentAssistCommandAdapter(
+				regexText_,
+				contentAdapter,
+				findProposer,
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS,
+				new char[] {'\\', '[', '('},
+				true);
+		contentAssistCommandAdapter.setEnabled(true);
+		label = new Label(parent, SWT.NULL);
+		label.setText("Matching projects:");
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true));
+		matches_ = new org.eclipse.swt.widgets.List(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		matches_.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		filter();
+	}
+	private void filter() {
+		matches_.removeAll();
+		try {
+			Pattern pattern = Pattern.compile(regexText_.getText());
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			for (IProject project : projects) {
+				if (pattern.matcher(project.getName()).matches()) {
+					matches_.add(project.getName());
+				}
+			}
+		} catch (PatternSyntaxException e) {
+			return;
+		}
+	}
+	@Override protected List<IAdaptable> getMatchingProjects() {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		String regex = regexText_.getText();
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
@@ -55,81 +95,29 @@ public class RegExWorkingSetPage extends WizardPage implements IWorkingSetPage {
             	projects.add(project);
             }
 		}
-		workingSet_ = workingSetManager.createWorkingSet("RegEx: " + regex, projects.toArray(new IAdaptable[projects.size()]));
-		workingSet_.setLabel(workingSetLabelText_.getText());
+		return projects;
 	}
-
-	@Override
-	public IWorkingSet getSelection() {
-		return workingSet_;
+	@Override protected String getWorkingSetId() { return "com.javadude.workingsets.RegExWorkingSetPage"; }
+	@Override protected String getWorkingSetName() {
+		return "RegEx: " + regexText_.getText();
 	}
-
-	@Override
-	public void setSelection(IWorkingSet workingSet) {
-		workingSet_ = workingSet;
+	@Override protected void initFields(IWorkingSet workingSet) {
+		regexText_.setText(workingSet.getName().substring(7));
 	}
-
-	private Text regexText_ = null;
-	private Text workingSetLabelText_ = null;
-
-	private void dialogChanged() {
+	@Override protected boolean validate() {
 		String regex = regexText_.getText();
 		if ("".equals(regex.trim())) {
 			updateStatus("Regular expression must be specified");
-			return;
+			return false;
 		}
-		String label = workingSetLabelText_.getText();
-		if ("".equals(label.trim())) {
-			updateStatus("Label must be specified");
-			return;
+		try {
+			Pattern.compile(regexText_.getText());
+		} catch (PatternSyntaxException e) {
+			String message = e.getMessage().split("[\n\r]")[0];
+			updateStatus("Regular expression syntax: " + message);
+			return false;
 		}
-		updateStatus(null);
-	}
-	private void updateStatus(String message) {
-		setErrorMessage(message);
-		setPageComplete(message == null);
-	}
 
-	@Override
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout();
-		container.setLayout(layout);
-		layout.numColumns = 2;
-		layout.verticalSpacing = 9;
-		Label label = new Label(container, SWT.NULL);
-		label.setText("Project Name Regular Expression:");
-
-		regexText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		regexText_.setLayoutData(gd);
-		regexText_.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
-
-		label = new Label(container, SWT.NULL);
-		label.setText("Working Set Label:");
-
-		workingSetLabelText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		workingSetLabelText_.setLayoutData(gd);
-		workingSetLabelText_.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
-
-// TBD -- browse all available natures
-//		Button button = new Button(container, SWT.PUSH);
-//		button.setText("Browse...");
-//		button.addSelectionListener(new SelectionAdapter() {
-//			public void widgetSelected(SelectionEvent e) {
-//				handleBrowse();
-//			}
-//		});
-		dialogChanged();
-		setControl(container);
+		return true;
 	}
 }
