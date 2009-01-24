@@ -38,6 +38,7 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 		super(pageName, title, titleImage);
 	}
 
+	public IWorkingSet getWorkingSet() { return workingSet_; }
 	@Override
 	public IWorkingSet getSelection() {
 		return workingSet_;
