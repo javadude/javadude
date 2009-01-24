@@ -40,6 +40,8 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 	}
 
 	@Override protected void createFields(Composite parent) {
+		if (getWorkingSet() != null)
+			natureId_ = getWorkingSet().getName().substring(8);
 		Label label = new Label(parent, SWT.NULL);
 		label.setText("Registered Natures:");
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true));
@@ -76,7 +78,7 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		try {
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId_)) {
+	            if (project.isOpen() && BaseWorkingSetUpdater.projectHasNature(project, natureId_)) {
 	            	projects.add(project);
 	            }
 			}
