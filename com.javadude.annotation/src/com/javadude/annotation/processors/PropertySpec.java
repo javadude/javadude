@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-//@Bean(createPropertyMap=true,
+//@Bean(superclass=BasePushable.class,createPropertyMap=true,
 //	properties = {
 //		@Property(name="name"),
 //		@Property(name="writerAccess"),
@@ -30,57 +30,57 @@ package com.javadude.annotation.processors;
 //	}
 //)
 public class PropertySpec extends PropertySpecGen implements Pushable {
-//	public boolean isSimple() {
-//		return getKind().isSimple();
-//	}
-//	public boolean isList() {
-//		return getKind().isList();
-//	}
-//	public boolean isSet() {
-//		return getKind().isSet();
-//	}
-//	public boolean isMap() {
-//		return getKind().isMap();
-//	}
-//	public boolean isBoolean() {
-//		return "boolean".equals(getType());
-//	}
-//	public boolean isShort() {
-//		return "short".equals(getType());
-//	}
-//	public boolean isDouble() {
-//		return "double".equals(getType());
-//	}
-//	public boolean isLong() {
-//		return "long".equals(getType());
-//	}
-//	public boolean isInt() {
-//		return "int".equals(getType());
-//	}
-//	public boolean isChar() {
-//		return "char".equals(getType());
-//	}
-//	public boolean isByte() {
-//		return "byte".equals(getType());
-//	}
-//	public boolean isFloat() {
-//		return "float".equals(getType());
-//	}
-//	@Override
-//	public Map<String, Object> createPropertyMap() {
-//		Map<String, Object> map = super.createPropertyMap();
-//		map.put("simple", isSimple());
-//		map.put("list", isSimple());
-//		map.put("set", isSimple());
-//		map.put("map", isSimple());
-//		map.put("boolean", isSimple());
-//		map.put("short", isSimple());
-//		map.put("double", isSimple());
-//		map.put("long", isSimple());
-//		map.put("int", isSimple());
-//		map.put("char", isSimple());
-//		map.put("byte", isSimple());
-//		map.put("float", isSimple());
-//		return map;
-//	}
+	//	public boolean isSimple() {
+	//		return getKind().isSimple();
+	//	}
+	//	public boolean isList() {
+	//		return getKind().isList();
+	//	}
+	//	public boolean isSet() {
+	//		return getKind().isSet();
+	//	}
+	//	public boolean isMap() {
+	//		return getKind().isMap();
+	//	}
+	//	public boolean isBoolean() {
+	//		return "boolean".equals(getType());
+	//	}
+	//	public boolean isShort() {
+	//		return "short".equals(getType());
+	//	}
+	//	public boolean isDouble() {
+	//		return "double".equals(getType());
+	//	}
+	//	public boolean isLong() {
+	//		return "long".equals(getType());
+	//	}
+	//	public boolean isInt() {
+	//		return "int".equals(getType());
+	//	}
+	//	public boolean isChar() {
+	//		return "char".equals(getType());
+	//	}
+	//	public boolean isByte() {
+	//		return "byte".equals(getType());
+	//	}
+	//	public boolean isFloat() {
+	//		return "float".equals(getType());
+	//	}
+	//	@Override
+	//	public Map<String, Object> createPropertyMap() {
+	//		Map<String, Object> map = super.createPropertyMap();
+	//		map.put("simple", isSimple());
+	//		map.put("list", isSimple());
+	//		map.put("set", isSimple());
+	//		map.put("map", isSimple());
+	//		map.put("boolean", isSimple());
+	//		map.put("short", isSimple());
+	//		map.put("double", isSimple());
+	//		map.put("long", isSimple());
+	//		map.put("int", isSimple());
+	//		map.put("char", isSimple());
+	//		map.put("byte", isSimple());
+	//		map.put("float", isSimple());
+	//		return map;
+	//	}
 }

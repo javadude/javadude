@@ -52,69 +52,8 @@ public @interface Bean {
 	 *		annotating and this class.</p>
 	 * <p>You must specify the class constant for the class
 	 * 		(eg: Foo.class)</p>
-	 * <p>Only one of superclass or superclassString may be
-	 * 		specified</p>
-	 * @see #superclassString()
 	 */
     Class<?> superclass() default Void.class;
-
-    /**
-     * <p>Defines the class you would like to extend.  The generated
-	 *		superclass will be inserted between the class you are
-	 *		annotating and this class.</p>
-     * <p>If this superclass is in the same package as the annotated
-     *		class, you only need to specify its name. If the
-     *		superclass is in a different package, you must fully
-     *		qualify it.</p>
-     * <p>Only one of superclass or superclassString may be
-     * 		specified</p>
-     * @see #superclass()
-     */
-    String superclassString() default "";
-
-    /**
-     * <p>Specifies the constructor arguments in the generated
-     * 		superclass.</p>
-     * <p>This is only useful/necessary if you specified superclass or
-     *   superclassString (the "specified superclass") and there
-     *   is not a no-arg constructor in that specified superclass.
-     *   These parameters can be passed to the specified superclass
-     *   using the superCall attribute.</p>
-     * <p>For example:</p>
-     * <pre>@Bean(constructorArgs="String name, int age", ...)
-     * public class Foo {...}
-     * </pre>
-     * <p>will generate a constructor in the generated superclass:</p>
-     * <pre>public Foo (String name, int age) {...}
-     * </pre>
-     * @see #superclass()
-     * @see #superConstructorSuperCall()
-     */
-    String superConstructorArgs() default "";
-
-    /**
-     * <p>Arguments to the super(...) call that will be generated
-     * 		in the superclass' constructor. Used with
-     * 		constructorArgs.</p>
-     * <p>If you define a superclass or superclassString, and that
-     * 		superclass does not have a no-arg constructor, you must
-     * 		specify superCall.</p>
-     * <p>For example:</p>
-     * <pre>@Bean(
-     *     constructorArgs="String name, int age",
-     *     superCall="name, age",
-     *     ...)
-     * public class Foo {...}
-     * </pre>
-     * <p>will generate a constructor in the generated superclass:</p>
-     * <pre>public Foo (String name, int age) {
-     *     super(name, age);
-     * }
-     * </pre>
-     * @see #superclass()
-     * @see #superConstructorArgs()
-     */
-    String superConstructorSuperCall() default "";
 
     /**
      * <p>If true, the generated superclass will implement
