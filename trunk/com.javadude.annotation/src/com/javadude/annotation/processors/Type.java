@@ -11,7 +11,7 @@
 package com.javadude.annotation.processors;
 
 
-//@Bean(createPropertyMap=true,
+//@Bean(superclass=BasePushable.class,createPropertyMap=true,
 //	properties = {
 //		@Property(name="name"),
 //		@Property(name="method", type=Method.class, kind=PropertyKind.LIST)
