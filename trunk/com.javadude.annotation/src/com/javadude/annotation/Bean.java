@@ -228,7 +228,7 @@ public @interface Bean {
     Delegate[] delegates() default { };
 
     /**
-     * A list of {@link NullObject} annotations that specify creation
+     * <p>A list of {@link NullObject} annotations that specify creation
      * 		of null stub methods in the generated superclass.</p>
      * @see NullObject
      */
