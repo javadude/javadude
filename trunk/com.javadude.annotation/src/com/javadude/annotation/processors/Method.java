@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-
 //@Bean(createPropertyMap=true,
 //	properties = {
 //		@Property(name="name"),
@@ -22,7 +21,15 @@ package com.javadude.annotation.processors;
 //		@Property(name="nullBody"),
 //		@Property(name="symbolAfterDecl"),
 //		@Property(name="abstract", type=boolean.class),
-//		@Property(name="returns", type=boolean.class, delegateTo="!\"void\".equals(getReturnType())")
 //})
 public class Method extends MethodGen implements Pushable {
+//	public boolean isReturns() {
+//		return !"void".equals(getReturnType());
+//	}
+//	@Override
+//	public Map<String, Object> createPropertyMap() {
+//		Map<String, Object> map = super.createPropertyMap();
+//		map.put("returns", isReturns());
+//		return map;
+//	}
 }
