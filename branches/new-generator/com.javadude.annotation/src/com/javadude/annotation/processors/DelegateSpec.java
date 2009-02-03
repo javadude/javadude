@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
+import com.javadude.annotation.Bean;
+import com.javadude.annotation.Property;
 
-//@Bean(overrideParamString=true,
-//	  superclass=Type.class,
-//	  createPropertyMap=true,
-//	  createPropertyMapCallsSuper=true,
-//	  properties = {
-//		@Property(name="accessor")
-//})
+@Bean(superclass=Type.class,
+	  defineCreatePropertyMap=true,
+	  properties = {
+		@Property(name="accessor")
+})
 public class DelegateSpec extends DelegateSpecGen implements Pushable {
 	// nothing to add
 }

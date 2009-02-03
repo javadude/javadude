@@ -65,6 +65,8 @@ import com.sun.mirror.type.ReferenceType;
 // TODO check for addPropertyChangeListener et al - should treat it separately
 //      -- if getPropertyChangeSupport() present, can still delegate to it
 
+// TODO override paramString if defined in superclass
+
 public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private static final Set<String> createSet(String... items) {
 		Set<String> set = new HashSet<String>();

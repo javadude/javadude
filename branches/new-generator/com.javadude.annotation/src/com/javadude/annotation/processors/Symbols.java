@@ -34,7 +34,10 @@ public class Symbols {
 		put(key2, value2);
 	}
 	public void pushScope(Map<String, Object> newScope) {
-		values_.push(new HashMap<String, Object>(newScope));
+		pushScope();
+		for (Map.Entry<String, Object> entry : newScope.entrySet()) {
+			put(entry.getKey(), entry.getValue());
+		}
 	}
 	public void popScope() {
 		values_.pop();
