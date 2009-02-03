@@ -65,7 +65,7 @@ import com.sun.mirror.type.ReferenceType;
 // TODO check for addPropertyChangeListener et al - should treat it separately
 //      -- if getPropertyChangeSupport() present, can still delegate to it
 
-// TODO override paramString if defined in superclass
+// TODO override paramString if defined in superclass -- if method not found, check if the superclass annotation would define it
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private static final Set<String> createSet(String... items) {
@@ -256,6 +256,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				Data data = new Data();
 				data.setGenericDecls("");
 				boolean superclassHasPropertyChangeSupport = false;
+				boolean superclassHasParamString = false;
 
 				String classModifiers = "";
 				Collection<AnnotationMirror> annotationMirrors = classDeclaration.getAnnotationMirrors();
@@ -272,6 +273,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 							ClassDeclaration superclass = (ClassDeclaration) value.getValue();
 							data.setSuperclass(superclass.getQualifiedName());
 							superclassHasPropertyChangeSupport = checkPropertyChangeSupport(superclass);
+							superclassHasParamString = checkParamString(superclass);
 
 							Collection<TypeParameterDeclaration> formalTypeParameters2 = superclass.getFormalTypeParameters();
 							String classGenericDecls = null;
@@ -644,6 +646,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					}
 				}
 
+				data.setParamStringModifiers("protected");
+				data.setExtendParamString(superclassHasParamString);
 				data.setDefinePropertyChangeSupport(!superclassHasPropertyChangeSupport && atLeastOneBound);
 				data.setAtLeastOneDouble(atLeastOneDouble);
 				data.setAtLeastOneObject(atLeastOneObject);
@@ -683,6 +687,18 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		}
 		if (superclass.getSuperclass() != null)
 			return checkPropertyChangeSupport(superclass.getSuperclass().getDeclaration());
+		return false;
+	}
+	private boolean checkParamString(ClassDeclaration superclass) {
+		Collection<MethodDeclaration> methods = superclass.getMethods();
+		for (MethodDeclaration methodDeclaration : methods) {
+			if ("paramString".equals(methodDeclaration.getSimpleName()) &&
+					methodDeclaration.getParameters().isEmpty() &&
+					"java.lang.String".equals(methodDeclaration.getReturnType().toString()))
+				return true;
+		}
+		if (superclass.getSuperclass() != null)
+			return checkParamString(superclass.getSuperclass().getDeclaration());
 		return false;
 	}
 	private TypeDeclaration getType(Declaration declaration, String name, String packageName, String notFoundMessage) {
