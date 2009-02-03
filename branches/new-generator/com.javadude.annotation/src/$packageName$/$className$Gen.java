@@ -4,6 +4,7 @@ package $packageName$;
 class $superclass$ {								//#DUMMY
 	interface PropertyNames {}						//#DUMMY
 	public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() { return null; }	//#DUMMY
+	String paramString() {return null;}				//#DUMMY
 }													//#DUMMY
 class $name$ {										//#DUMMY
 	public $returnType$ $name_2$() { return null;}	//#DUMMY
@@ -467,8 +468,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *  }</pre>
 	 * @return the attribute string, comma-separated.
 	 **/
-	protected java.lang.String paramString() {
+	/*$paramStringModifiers$*/ java.lang.String paramString() {
 		String result = "";
+		result = super.paramString();													//? extendParamString
 		//#FOREACH properties
 		result += ',';																	//? !FIRST
 		result += "$name$=" + $name$_;													//? simple & !omitFromToString
