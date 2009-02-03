@@ -44,6 +44,8 @@ import com.sun.mirror.declaration.AnnotationValue;
 import com.sun.mirror.declaration.ClassDeclaration;
 import com.sun.mirror.declaration.ConstructorDeclaration;
 import com.sun.mirror.declaration.Declaration;
+import com.sun.mirror.declaration.ExecutableDeclaration;
+import com.sun.mirror.declaration.InterfaceDeclaration;
 import com.sun.mirror.declaration.MethodDeclaration;
 import com.sun.mirror.declaration.Modifier;
 import com.sun.mirror.declaration.PackageDeclaration;
@@ -58,6 +60,10 @@ import com.sun.mirror.type.ReferenceType;
 
 // TODO check delegation -- limit to methods exposed via property type if defined as property
 // TODO delegation + extractInterface -> must allow superinterfaces to be specified for generated interface
+
+// TODO set up generic type mapping for Delegates
+// TODO check for addPropertyChangeListener et al - should treat it separately
+//      -- if getPropertyChangeSupport() present, can still delegate to it
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private static final Set<String> createSet(String... items) {
@@ -171,6 +177,66 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			return "";
 		return list + ' ';
 	}
+	private Method setupMethod(ExecutableDeclaration declaration, boolean forceNonAbstract) {
+		Method method = new Method();
+		if (declaration instanceof ConstructorDeclaration) {
+			method.setName("<init>");
+			method.setReturnType(null);
+			method.setAbstract(false);
+			method.setNullBody(null);
+		} else {
+			MethodDeclaration methodDeclaration = (MethodDeclaration) declaration;
+			method.setName(methodDeclaration.getSimpleName());
+			method.setReturnType(methodDeclaration.getReturnType().toString());
+			if (forceNonAbstract)
+				method.setAbstract(false);
+			else
+				method.setAbstract(methodDeclaration.getModifiers().contains(Modifier.ABSTRACT));
+			if ("void".equals(method.getReturnType())) {
+				method.setNullBody("// null object implementation; do nothing");
+			} else if ("boolean".equals(method.getReturnType())) {
+				method.setNullBody("false; // null object implementation");
+			} else if ("char".equals(method.getReturnType())) {
+				method.setNullBody("' '; // null object implementation");
+			} else if (BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(method.getReturnType())) {
+				method.setNullBody("0; // null object implementation");
+			} else {
+				method.setNullBody("null; // null object implementation");
+			}
+		}
+		Collection<ReferenceType> thrownTypes = declaration.getThrownTypes();
+		if (thrownTypes.isEmpty())
+			method.setThrowsClause("");
+		else
+			method.setThrowsClause("throws " + commaSeparate(thrownTypes));
+		String genericDecls = null;
+		String argDecls = null;
+		String args = null;
+		String modifiers = "";
+		Collection<ParameterDeclaration> parameters = declaration.getParameters();
+		for (ParameterDeclaration parameterDeclaration : parameters) {
+			argDecls = addWithCommasBetween(argDecls, parameterDeclaration.getType() + " " + parameterDeclaration.getSimpleName());
+			args = addWithCommasBetween(args, parameterDeclaration.getSimpleName());
+		}
+		Collection<TypeParameterDeclaration> formalTypeParameters = declaration.getFormalTypeParameters();
+		for (TypeParameterDeclaration typeParameterDeclaration : formalTypeParameters) {
+			genericDecls = addWithCommasBetween(genericDecls, typeParameterDeclaration);
+		}
+		Collection<Modifier> modifiers2 = declaration.getModifiers();
+		for (Modifier modifier : modifiers2) {
+			if (!"abstract".equals(modifier.toString()))
+				modifiers += modifier.toString() + ' ';
+		}
+		if (genericDecls == null)
+			genericDecls = "";
+		else
+			genericDecls = '<' + genericDecls + "> ";
+		method.setModifiers(modifiers); // do not normalize; already "" or has ' ' at end
+		method.setArgDecls(normalizeList(argDecls));
+		method.setArgs(normalizeList(args));
+		method.setGenericDecls(genericDecls);
+		return method;
+	}
 	public void process() {
 		final AnnotationTypeDeclaration beanAnn = (AnnotationTypeDeclaration) env_.getTypeDeclaration(Bean.class.getName());
 
@@ -186,6 +252,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				PackageDeclaration packageDeclaration = classDeclaration.getPackage();
 
 				Data data = new Data();
+				data.setGenericDecls("");
+				boolean superclassHasPropertyChangeSupport = false;
 
 				String classModifiers = "";
 				Collection<AnnotationMirror> annotationMirrors = classDeclaration.getAnnotationMirrors();
@@ -201,6 +269,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 							}
 							ClassDeclaration superclass = (ClassDeclaration) value.getValue();
 							data.setSuperclass(superclass.getQualifiedName());
+							superclassHasPropertyChangeSupport = checkPropertyChangeSupport(superclass);
+
 							Collection<TypeParameterDeclaration> formalTypeParameters2 = superclass.getFormalTypeParameters();
 							String classGenericDecls = null;
 							for (TypeParameterDeclaration typeParameterDeclaration : formalTypeParameters2) {
@@ -217,55 +287,23 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 							}
 							Collection<ConstructorDeclaration> constructors = superclass.getConstructors();
 							for (ConstructorDeclaration constructorDeclaration : constructors) {
-								Method constructor = new Method();
-								constructor.setName("<init>");
-								constructor.setReturnType(null);
-								constructor.setAbstract(false);
-								constructor.setNullBody(null);
-								Collection<ReferenceType> thrownTypes = constructorDeclaration.getThrownTypes();
-								if (thrownTypes.isEmpty())
-									constructor.setThrowsClause("");
-								else
-									constructor.setThrowsClause("throws " + commaSeparate(thrownTypes));
-								String genericDecls = null;
-								String argDecls = null;
-								String args = null;
-								String modifiers = "";
-								Collection<ParameterDeclaration> parameters = constructorDeclaration.getParameters();
-								for (ParameterDeclaration parameterDeclaration : parameters) {
-									argDecls = addWithCommasBetween(argDecls, parameterDeclaration.getType() + " " + parameterDeclaration.getSimpleName());
-									args = addWithCommasBetween(args, parameterDeclaration.getSimpleName());
-								}
-								Collection<TypeParameterDeclaration> formalTypeParameters = constructorDeclaration.getFormalTypeParameters();
-								for (TypeParameterDeclaration typeParameterDeclaration : formalTypeParameters) {
-									genericDecls = addWithCommasBetween(genericDecls, typeParameterDeclaration);
-								}
-								Collection<Modifier> modifiers2 = constructorDeclaration.getModifiers();
-								for (Modifier modifier : modifiers2) {
-									modifiers += modifier.toString() + ' ';
-								}
-								if (genericDecls == null)
-									genericDecls = "";
-								else
-									genericDecls = '<' + genericDecls + "> ";
-								constructor.setModifiers(modifiers); // do not normalize; already "" or has ' ' at end
-								constructor.setArgDecls(normalizeList(argDecls));
-								constructor.setArgs(normalizeList(args));
-								constructor.setGenericDecls(genericDecls);
-								data.addSuperclassConstructor(constructor);
+								data.addSuperclassConstructor(setupMethod(constructorDeclaration, false));
 							}
-							if (constructors.isEmpty()) {
-								Method noArgConstructor = new Method();
-								noArgConstructor.setName("<init>");
-								noArgConstructor.setReturnType(null);
-								noArgConstructor.setAbstract(false);
-								noArgConstructor.setNullBody(null);
-								noArgConstructor.setThrowsClause("");
-								noArgConstructor.setModifiers("protected");
-								noArgConstructor.setArgDecls("");
-								noArgConstructor.setArgs("");
-								noArgConstructor.setGenericDecls("");
-								data.addSuperclassConstructor(noArgConstructor);
+
+							// if superclass has a PropertyNameConstants interface or a Bean annotation with
+							//     definePropertyNameConstants=true, we need to have our PropertyNameConstants
+							//     extend it
+							Collection<TypeDeclaration> nestedTypes = superclass.getNestedTypes();
+							for (TypeDeclaration typeDeclaration : nestedTypes) {
+								if ("PropertyNames".equals(typeDeclaration.getSimpleName()) && (typeDeclaration instanceof InterfaceDeclaration)) {
+									data.setExtendPropertyNameConstants(true);
+								}
+							}
+							if (!data.isExtendPropertyNameConstants()) {
+								// check if the superclass is annotated with Bean
+								Bean annotation = superclass.getAnnotation(Bean.class);
+								if (annotation != null)
+									data.setExtendPropertyNameConstants(annotation.definePropertyNameConstants());
 							}
 						}
 					}
@@ -299,7 +337,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				data.setDate(new Date());
 				data.setSpacesForLeadingTabs(bean.spacesForLeadingTabs());
 				data.setDefinePropertyNameConstants(bean.definePropertyNameConstants());
-				data.setExtendPropertyNameConstants(bean.extendPropertyNameConstants());
 				data.setCloneable(bean.cloneable());
 
 				data.setYear(Calendar.getInstance().get(Calendar.YEAR));
@@ -565,8 +602,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					}
 				}
 
-				if (bean.nullObjectImplementations().length > 0 && !"".equals(bean.nullObjectImplementations()[0])) {
-					for (NullObject nullObject : bean.nullObjectImplementations()) {
+				if (bean.nullObjects().length > 0 && !"".equals(bean.nullObjects()[0])) {
+					for (NullObject nullObject : bean.nullObjects()) {
 						if (nullObject == null) {
 							continue;
 						}
@@ -576,7 +613,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 							return;
 						}
 						listener.setName(type);
-						data.addNullImplementation(listener);
+						data.addNullObject(listener);
 						defineListenerOrDelegate(true, listener, classDeclaration, "null implementation class/interface", "nullImplementationName", packageName);
 					}
 				}
@@ -587,40 +624,14 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 							continue;
 						}
 						try {
-							String accessor = null;
-							if (!"".equals(delegate.property())) {
-								accessor = delegate.property() + "_";
-							}
-							if (!"".equals(delegate.accessor())) {
-								if (accessor != null) {
-									env_.getMessager().printError(declaration.getPosition(),
-									"Cannot specify both accessor and property for @Delegate");
-								} else {
-									accessor = delegate.accessor();
-								}
-							}
-							if (accessor == null) {
-								env_.getMessager().printError(declaration.getPosition(),
-								"Must specify either accessor or property for @Delegate");
-							}
 							DelegateSpec delegateSpec = new DelegateSpec();
-							delegateSpec.setAccessor(accessor);
+							delegateSpec.setAccessor(delegate.accessor());
 							data.addDelegate(delegateSpec);
 							String type = selectType(declaration, "@Delegate", delegate, "type", "typeString", null, true);
 							if (type == null) {
 								return;
 							}
 							delegateSpec.setName(type);
-
-							String instantiateType = selectType(declaration, "@Observer", delegate, "instantiateAs", "instantiateAsString", null, false);
-							if (instantiateType != null && "".equals(delegate.property())) {
-								env_.getMessager().printError(declaration.getPosition(),
-								"Must specify property for @Delegate if instantiateAs is specified");
-							}
-							delegateSpec.setInstantiateType(instantiateType);
-							if (!"".equals(delegate.property()) && !propertyNames.contains(delegate.property())) {
-								delegateSpec.setNeedToDefine(true);
-							}
 							defineListenerOrDelegate(false, delegateSpec, packageDeclaration, "delegate type", "delegates", packageName);
 
 							// TODO if property doesn't exist, define it
@@ -631,12 +642,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					}
 				}
 
-				data.setAtLeastOneBound(atLeastOneBound);
+				data.setDefinePropertyChangeSupport(!superclassHasPropertyChangeSupport && atLeastOneBound);
 				data.setAtLeastOneDouble(atLeastOneDouble);
 				data.setAtLeastOneObject(atLeastOneObject);
-				data.setDefineSimpleEqualsAndHashCode(bean.defineSimpleEqualsAndHashCode());
-				data.setCreatePropertyMap(bean.createPropertyMap());
-				data.setCreatePropertyMapCallsSuper(bean.createPropertyMapCallsSuper());
+				data.setDefineSimpleEqualsAndHashCode(bean.defineEqualsAndHashCode());
+				data.setCreatePropertyMap(bean.defineCreatePropertyMap());
 
 				Filer f = env_.getFiler();
 				PrintWriter pw = f.createSourceFile(classDeclaration.getQualifiedName() + "Gen");
@@ -660,6 +670,18 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				env_.getMessager().printError(declaration.getPosition(), "Unexpected exception: " + stringWriter.toString());
 			}
 		}
+	}
+	private boolean checkPropertyChangeSupport(ClassDeclaration superclass) {
+		Collection<MethodDeclaration> methods = superclass.getMethods();
+		for (MethodDeclaration methodDeclaration : methods) {
+			if ("getPropertyChangeSupport".equals(methodDeclaration.getSimpleName()) &&
+					methodDeclaration.getParameters().isEmpty() &&
+					"java.beans.PropertyChangeSupport".equals(methodDeclaration.getReturnType().toString()))
+				return true;
+		}
+		if (superclass.getSuperclass() != null)
+			return checkPropertyChangeSupport(superclass.getSuperclass().getDeclaration());
+		return false;
 	}
 	private TypeDeclaration getType(Declaration declaration, String name, String packageName, String notFoundMessage) {
 		TypeDeclaration typeDeclaration = env_.getTypeDeclaration(name);
@@ -699,38 +721,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			if (BeanAnnotationProcessor.METHODS_TO_SKIP.contains(methodDeclaration.getSimpleName())) {
 				continue;
 			}
-			Method method = new Method();
-			type.addMethod(method);
-			method.setName(methodDeclaration.getSimpleName());
-			method.setReturnType(Utils.getTypeName(methodDeclaration.getReturnType()));
 
-			String argDecls = "";
-			String args = "";
-
-			if ("void".equals(method.getReturnType())) {
-				method.setNullBody("// null object implementation; do nothing");
-			} else if ("boolean".equals(method.getReturnType())) {
-				method.setNullBody("false; // null object implementation");
-			} else if ("char".equals(method.getReturnType())) {
-				method.setNullBody("' '; // null object implementation");
-			} else if (BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(method.getReturnType())) {
-				method.setNullBody("0; // null object implementation");
-			} else {
-				method.setNullBody("null; // null object implementation");
-			}
-
-			Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
-			for (ParameterDeclaration parameterDeclaration : parameters) {
-				if (!"".equals(argDecls)) {
-					argDecls += ",";
-					args += ", ";
-				}
-				argDecls += Utils.getTypeName(parameterDeclaration.getType()) + ' ' + parameterDeclaration.getSimpleName();
-				args += parameterDeclaration.getSimpleName();
-			}
-			method.setArgDecls(argDecls.replaceAll(",", ", "));
-			method.setArgs(args);
-			method.setThrowsClause(getThrowsClause(methodDeclaration));
+			type.addMethod(setupMethod(methodDeclaration, true));
 		}
 	}
 

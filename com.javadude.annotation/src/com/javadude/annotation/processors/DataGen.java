@@ -85,20 +85,20 @@ import java.util.Map;
 		spacesForLeadingTabs_ = value;
 	}
 
-	private boolean atLeastOneBound_;
-	public boolean isAtLeastOneBound() {
-		return atLeastOneBound_;
-	}
-	public void setAtLeastOneBound(boolean value)  {
-		atLeastOneBound_ = value;
-	}
-
 	private boolean atLeastOneObject_;
 	public boolean isAtLeastOneObject() {
 		return atLeastOneObject_;
 	}
 	public void setAtLeastOneObject(boolean value)  {
 		atLeastOneObject_ = value;
+	}
+
+	private boolean definePropertyChangeSupport_;
+	public boolean isDefinePropertyChangeSupport() {
+		return definePropertyChangeSupport_;
+	}
+	public void setDefinePropertyChangeSupport(boolean value)  {
+		definePropertyChangeSupport_ = value;
 	}
 
 	private boolean atLeastOneDouble_;
@@ -131,22 +131,6 @@ import java.util.Map;
 	}
 	public void setEqualsShouldCheckSuperEquals(boolean value)  {
 		equalsShouldCheckSuperEquals_ = value;
-	}
-
-	private java.lang.String superConstructorSuperCall_;
-	public java.lang.String getSuperConstructorSuperCall() {
-		return superConstructorSuperCall_;
-	}
-	public void setSuperConstructorSuperCall(java.lang.String value)  {
-		superConstructorSuperCall_ = value;
-	}
-
-	private java.lang.String superConstructorArgs_;
-	public java.lang.String getSuperConstructorArgs() {
-		return superConstructorArgs_;
-	}
-	public void setSuperConstructorArgs(java.lang.String value)  {
-		superConstructorArgs_ = value;
 	}
 
 	private int year_;
@@ -291,26 +275,26 @@ import java.util.Map;
 		delegates_.clear();
 	}
 
-	private final java.util.List<com.javadude.annotation.processors.Type> nullImplementations_ = new java.util.ArrayList<com.javadude.annotation.processors.Type>();
-	public com.javadude.annotation.processors.Type getNullImplementation(int i) {
-		return nullImplementations_.get(i);
+	private final java.util.List<com.javadude.annotation.processors.Type> nullObjects_ = new java.util.ArrayList<com.javadude.annotation.processors.Type>();
+	public com.javadude.annotation.processors.Type getNullObject(int i) {
+		return nullObjects_.get(i);
 	}
-	public java.util.List<com.javadude.annotation.processors.Type> getNullImplementations() {
-		return nullImplementations_;
+	public java.util.List<com.javadude.annotation.processors.Type> getNullObjects() {
+		return nullObjects_;
 	}
-	public boolean nullImplementationsContains(com.javadude.annotation.processors.Type value) {
-		return nullImplementations_.contains(value);
+	public boolean nullObjectsContains(com.javadude.annotation.processors.Type value) {
+		return nullObjects_.contains(value);
 	}
-	public void addNullImplementation(com.javadude.annotation.processors.Type value) {
-		if (value == null) throw new IllegalArgumentException("Cannot add null to nullImplementation");
-		nullImplementations_.add(value);
+	public void addNullObject(com.javadude.annotation.processors.Type value) {
+		if (value == null) throw new IllegalArgumentException("Cannot add null to nullObject");
+		nullObjects_.add(value);
 	}
-	public void addNullImplementation(int i, com.javadude.annotation.processors.Type value) {
-		if (value == null) throw new IllegalArgumentException("Cannot add null to nullImplementation");
-		nullImplementations_.add(i, value);
+	public void addNullObject(int i, com.javadude.annotation.processors.Type value) {
+		if (value == null) throw new IllegalArgumentException("Cannot add null to nullObject");
+		nullObjects_.add(i, value);
 	}
-	public void clearNullImplementations() {
-		nullImplementations_.clear();
+	public void clearNullObjects() {
+		nullObjects_.clear();
 	}
 
 
@@ -328,12 +312,9 @@ import java.util.Map;
 		",genericDecls=" + genericDecls_ +
 		",cloneable=" + cloneable_ +
 		",spacesForLeadingTabs=" + spacesForLeadingTabs_ +
-		",atLeastOneBound=" + atLeastOneBound_ +
 		",definePropertyNameConstants=" + definePropertyNameConstants_ +
 		",extendPropertyNameConstants=" + extendPropertyNameConstants_ +
 		",equalsShouldCheckSuperEquals=" + equalsShouldCheckSuperEquals_ +
-		",superConstructorSuperCall=" + superConstructorSuperCall_ +
-		",superConstructorArgs=" + superConstructorArgs_ +
 		",year=" + year_ +
 		",defineSimpleEqualsAndHashCode=" + defineSimpleEqualsAndHashCode_ +
 		",createPropertyMap=" + createPropertyMap_ +
@@ -343,7 +324,7 @@ import java.util.Map;
 		",observers=" + observers_ +
 		",defaultMethods=" + defaultMethods_ +
 		",delegates=" + delegates_ +
-		",nullImplementations=" + nullImplementations_;
+		",nullObjects=" + nullObjects_;
 	}
 	@Override
 	public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() {
@@ -357,14 +338,12 @@ import java.util.Map;
 		map.put("genericDecls", getGenericDecls());
 		map.put("cloneable", isCloneable());
 		map.put("spacesForLeadingTabs", getSpacesForLeadingTabs());
-		map.put("atLeastOneBound", isAtLeastOneBound());
 		map.put("atLeastOneDouble", isAtLeastOneDouble());
 		map.put("atLeastOneObject", isAtLeastOneObject());
+		map.put("definePropertyChangeSupport", isDefinePropertyChangeSupport());
 		map.put("definePropertyNameConstants", isDefinePropertyNameConstants());
 		map.put("extendPropertyNameConstants", isExtendPropertyNameConstants());
 		map.put("equalsShouldCheckSuperEquals", isEqualsShouldCheckSuperEquals());
-		map.put("superConstructorSuperCall", getSuperConstructorSuperCall());
-		map.put("superConstructorArgs", getSuperConstructorArgs());
 		map.put("year", getYear());
 		map.put("defineSimpleEqualsAndHashCode", isDefineSimpleEqualsAndHashCode());
 		map.put("createPropertyMap", isCreatePropertyMap());
@@ -374,7 +353,7 @@ import java.util.Map;
 		map.put("observers", getObservers());
 		map.put("defaultMethods", getDefaultMethods());
 		map.put("delegates", getDelegates());
-		map.put("nullImplementations", getNullImplementations());
+		map.put("nullObjects", getNullObjects());
 		return map;
 	}
 }

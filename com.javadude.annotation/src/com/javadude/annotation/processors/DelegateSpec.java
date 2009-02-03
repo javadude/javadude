@@ -16,9 +16,7 @@ package com.javadude.annotation.processors;
 //	  createPropertyMap=true,
 //	  createPropertyMapCallsSuper=true,
 //	  properties = {
-//		@Property(name="accessor"),
-//		@Property(name="instantiateType"),
-//		@Property(name="needToDefine", type=boolean.class)
+//		@Property(name="accessor")
 //})
 public class DelegateSpec extends DelegateSpecGen implements Pushable {
 	// nothing to add

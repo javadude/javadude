@@ -72,16 +72,8 @@ public @interface Bean {
      * <pre>Bean bean = ...;
      * bean.addPropertyChangeListener(Bean.PropertyNames.name, ...);
      * </pre>
-     * @see #extendPropertyNameConstants()
      */
     boolean definePropertyNameConstants() default false;
-
-    /**
-     * <p>If true, the property name interface will extend the
-     * 		superclass' PropertyNames interface.</p>
-     * @see #definePropertyNameConstants()
-     */
-    boolean extendPropertyNameConstants() default false;
 
     /**
      * <p>If non-zero, the generated code will use this many spaces
@@ -90,22 +82,11 @@ public @interface Bean {
     int spacesForLeadingTabs() default 0;
 
     /**
-     * <p>If true, the superclass will add {@link Override} to the
-     * 		generated paramString method and include the contents of
-     * 		its superclass' paramString() method.</p>
-     * @deprecated This attribute no longer does anything. The
-     * 		generated superclass now has a @SuppressWarnings("all").
-     * 		You should remove this attribute.
-     */
-    @Deprecated
-    boolean overrideParamString() default false;
-
-    /**
      * <p>If true, the generated superclass will include a simple
      * 		equals() and hashCode() method.</p>
      * @see #equalsShouldCheckSuperEquals()
      */
-    boolean defineSimpleEqualsAndHashCode() default false;
+    boolean defineEqualsAndHashCode() default false;
 
     /**
      * <p>If true, the generated superclass' equals() method will
@@ -121,28 +102,8 @@ public @interface Bean {
      * 		<code>Map<String, Object><code> that contains property
      * 		name/values for properties defined via an {@link Property}
      * 		annotation inside this bean.</p>
-     * @see #createPropertyMapCallsSuper()
      */
-    boolean createPropertyMap() default false;
-
-    /**
-     * <p>If true, the generated createPropertyMap() will call
-     * 		super.createPropertyMap().</p>
-     * @see #createPropertyMap()
-     */
-    boolean createPropertyMapCallsSuper() default false;
-
-    /**
-     * <p>If true, and createPropertyMap() is true, the generated
-     * 		createPropertyMap() method will be annotated
-     * 		@Override.</p>
-     * @deprecated This attribute no longer does anything. The
-     * 		generated superclass now has a @SuppressWarnings("all").
-     * 		You should remove this attribute.
-     * @see #createPropertyMap()
-     */
-    @Deprecated
-    boolean createPropertyMapNeedsOverride() default false;
+    boolean defineCreatePropertyMap() default false;
 
     /**
      * <p>A list of {@link Property} annotations that define
@@ -171,7 +132,7 @@ public @interface Bean {
      * 		of null stub methods in the generated superclass.</p>
      * @see NullObject
      */
-    NullObject[] nullObjectImplementations() default { };
+    NullObject[] nullObjects() default { };
 
     /**
      * <p>Specifies the default access level of the setter

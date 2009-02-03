@@ -19,23 +19,6 @@ public abstract class DelegateSpecGen extends com.javadude.annotation.processors
         accessor_ = value;
     }
 
-    private java.lang.String instantiateType_;
-    public java.lang.String getInstantiateType() {
-        return instantiateType_;
-    }
-    public void setInstantiateType(java.lang.String value)  {
-        instantiateType_ = value;
-    }
-
-    private boolean needToDefine_;
-    public boolean isNeedToDefine() {
-        return needToDefine_;
-    }
-    public void setNeedToDefine(boolean value)  {
-        needToDefine_ = value;
-    }
-
-
     @Override
     public java.lang.String toString() {
         return getClass().getName() + '[' + paramString() + ']';
@@ -43,16 +26,12 @@ public abstract class DelegateSpecGen extends com.javadude.annotation.processors
     @Override
     protected java.lang.String paramString() {
         return
-               "accessor=" + accessor_ +
-               ",instantiateType=" + instantiateType_ +
-               ",needToDefine=" + needToDefine_;
+               "accessor=" + accessor_;
     }
     @Override
 	public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() {
                     java.util.Map<java.lang.String, java.lang.Object> map = super.createPropertyMap();
                     map.put("accessor", getAccessor());
-                            map.put("instantiateType", getInstantiateType());
-                            map.put("needToDefine", isNeedToDefine());
                 return map;
     }
 }

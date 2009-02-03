@@ -31,15 +31,9 @@ class $PARENT_name$ {								//#DUMMY
 		extends $superclass$/*$genericDecls$*/			//? superclass
 		implements Cloneable							//? cloneable
 {
-	//#FOREACH delegates
-	private $name$ $accessor$;								//? needToDefine
-	//#END
 	//#FOREACH superclassConstructors
 	/*$modifiers$*//*$genericDecls$*/$className$Gen(/*$argDecls$*/) /*$throwsClause$*/{
 		super(/*$args$*/);
-		//#FOREACH delegates
-		$accessor$ = new $instantiateType$();				//? instantiateType
-		//#END
 	}
 	//#END
 	//#IF cloneable
@@ -54,7 +48,7 @@ class $PARENT_name$ {								//#DUMMY
 		}
 	}
 	//#END
-	//#IF atLeastOneBound
+	//#IF definePropertyChangeSupport
 	private java.beans.PropertyChangeSupport propertyChangeSupport_ = new java.beans.PropertyChangeSupport(this);
 	protected java.beans.PropertyChangeSupport getPropertyChangeSupport() {
 		return propertyChangeSupport_;
@@ -96,7 +90,7 @@ class $PARENT_name$ {								//#DUMMY
 		getPropertyChangeSupport().removePropertyChangeListener(propertyName, listener);
 	}
 	//#END
-	//#IF definePropertyNameConstants & properties
+	//#IF definePropertyNameConstants
 	/**
 	 *	<p>An interface that holds the names of the properties defined
 	 * 	in class <code>$className$</code>. This is useful when registering for property
@@ -361,15 +355,16 @@ class $PARENT_name$ {								//#DUMMY
 	/** Delegate for $PARENT_name$.$name$($argDecls$).
 	 * 	@see $PARENT_name$.$name$($argDecls$)
 	 **/
-	/*$modifiers$*/ abstract $returnType$ $name_1$(/*$argDecls$*/)/*$throwsClause$*/;	//? abstract
-	/*$modifiers$*/ $returnType$ $name_2$(/*$argDecls$*/)/*$throwsClause$*/ {			//? !abstract
+	/*$modifiers$*/abstract $returnType$ $name_1$(/*$argDecls$*/)/*$throwsClause$*/;	//? abstract
+	/*$modifiers$*/$returnType$ $name_2$(/*$argDecls$*/)/*$throwsClause$*/ {			//? !abstract
 		$accessor$.$name_2$(/*$args$*/);												//? !abstract & !returns
 		return $accessor$.$name_2$(/*$args$*/); 										//? !abstract & returns
 	}																					//? !abstract
 	//#END foreach methods
 	//#END foreach delegates
 	private $returnType$ $nullBody$;													//#DUMMY
-	//#FOREACH nullImplementations
+	private $name$ $accessor$;															//#DUMMY
+	//#FOREACH nullObjects
 	//#FOREACH methods
 	/** Null implementation for $PARENT_name$.$name$($argDecls$).
 	 * 	@see $PARENT_name$.$name$($argDecls$)
@@ -379,7 +374,7 @@ class $PARENT_name$ {								//#DUMMY
 		return $nullBody$;																//? returns
 	}
 	//#END foreach methods
-	//#END foreach nullImplementations
+	//#END foreach observers
 	//#FOREACH observers
 	private java.util.List<$name$> $NOPACKAGE_LOWER_name$s_ = new java.util.ArrayList<$name$>();
 	/** Register a $NOPACKAGE_name$ to listener for notifications from this class.
