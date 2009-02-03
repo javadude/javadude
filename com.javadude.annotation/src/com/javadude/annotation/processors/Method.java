@@ -10,26 +10,31 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-//@Bean(createPropertyMap=true,
-//	properties = {
-//		@Property(name="name"),
-//		@Property(name="args"),
-//		@Property(name="argDecls"),
-//		@Property(name="genericDecls"),
-//		@Property(name="returnType"),
-//		@Property(name="throwsClause"),
-//		@Property(name="modifiers"),
-//		@Property(name="nullBody"),
-//		@Property(name="abstract", type=boolean.class),
-//})
+import java.util.Map;
+
+import com.javadude.annotation.Bean;
+import com.javadude.annotation.Property;
+
+@Bean(defineCreatePropertyMap=true,
+	properties = {
+		@Property(name="name"),
+		@Property(name="args"),
+		@Property(name="argDecls"),
+		@Property(name="genericDecls"),
+		@Property(name="returnType"),
+		@Property(name="throwsClause"),
+		@Property(name="modifiers"),
+		@Property(name="nullBody"),
+		@Property(name="abstract", type=boolean.class),
+})
 public class Method extends MethodGen implements Pushable {
-	//	public boolean isReturns() {
-	//		return !"void".equals(getReturnType());
-	//	}
-	//	@Override
-	//	public Map<String, Object> createPropertyMap() {
-	//		Map<String, Object> map = super.createPropertyMap();
-	//		map.put("returns", isReturns());
-	//		return map;
-	//	}
+		public boolean isReturns() {
+			return !"void".equals(getReturnType());
+		}
+		@Override
+		public Map<String, Object> createPropertyMap() {
+			Map<String, Object> map = super.createPropertyMap();
+			map.put("returns", isReturns());
+			return map;
+		}
 }
