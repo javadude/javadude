@@ -365,8 +365,22 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				}
 
 				// find any methods that have default parameters
-				Collection<MethodDeclaration> methodsToCheck = classDeclaration.getMethods();
-				methods: for (MethodDeclaration methodDeclaration : methodsToCheck) {
+				boolean error = false;
+				for (ConstructorDeclaration constructorDeclaration : classDeclaration.getConstructors()) {
+					Collection<ParameterDeclaration> parameters = constructorDeclaration.getParameters();
+					for (ParameterDeclaration parameterDeclaration : parameters) {
+						Default annotation = parameterDeclaration.getAnnotation(Default.class);
+						if (annotation != null) {
+							env_.getMessager().printError(parameterDeclaration.getPosition(),
+							"@Default is not legal in constructor parameters");
+							error = true;
+						}
+					}
+				}
+				if (error)
+					return;
+
+				methods: for (MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
 					Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
 					boolean seenDefault = false;
 					String[] names    = new String[parameters.size()];
