@@ -412,7 +412,7 @@ class $PARENT_name$ {								//#DUMMY
 	}
 	//#END foreach methods
 	//#END foreach observers
-	//#IF defineSimpleEqualsAndHashCode
+	//#IF defineEqualsAndHashCode
 	public boolean equals(java.lang.Object obj) {
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != getClass() || !super.equals(obj)) return false;	//? equalsShouldCheckSuperEquals
@@ -439,7 +439,7 @@ class $PARENT_name$ {								//#DUMMY
 	private long $name_long$_;			//#DUMMY
 	private float $name_float$_;		//#DUMMY
 	private double $name_double$_;		//#DUMMY
-	public int hashCode() {																			//? defineSimpleEqualsAndHashCode
+	public int hashCode() {
 		int result = 1;
 		long temp;																					//? atLeastOneDouble
 		//#FOREACH properties
@@ -480,7 +480,7 @@ class $PARENT_name$ {								//#DUMMY
 		//#END foreach properties
 		return result;
 	}
-	//#IF createPropertyMap
+	//#IF defineCreatePropertyMap
 	/**
 	 *	<p>Creates a Map containing the names/values of all properties defined in this
 	 *		object.</p>
@@ -490,12 +490,12 @@ class $PARENT_name$ {								//#DUMMY
 	public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() {
 		java.util.Map<java.lang.String, java.lang.Object> map =
 			new java.util.HashMap<java.lang.String, java.lang.Object>();				//? !createPropertyMapCallsSuper
-		super.createPropertyMap();													//? createPropertyMapCallsSuper
+		super.createPropertyMap();														//? createPropertyMapCallsSuper
 		//#FOREACH properties
 		map.put("$name$", $name$_);														//? readable & simple
 		map.put("$pluralName$", $pluralName_list$_);									//? readable & !simple
 		//#END foreach properties
 		return map;
 	}
-	//#END createPropertyMap
+	//#END defineCreatePropertyMap
 		}

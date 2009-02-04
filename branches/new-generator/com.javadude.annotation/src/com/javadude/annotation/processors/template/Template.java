@@ -10,7 +10,7 @@ public class Template extends CompositeProcessor {
 	}
 
 	@Override
-	public void process(Symbols symbols, Writer writer, int ignoredLine) {
-		processChildren(symbols, writer);
+	public void process(Symbols symbols, Writer writer, int ignoredLine, String padding) {
+		processChildren(symbols, writer, padding);
 	}
 }
