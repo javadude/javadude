@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -79,16 +80,14 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private static final Set<String> PRIMITIVE_TYPES = BeanAnnotationProcessor.createSet("byte", "short", "int", "long", "float", "double", "char", "boolean");
 	private static Processor template;
 	private static final boolean nestedEclipse;
+	private static final String workspace;
 
 	static {
+		workspace = System.getProperty("workspace");
 		nestedEclipse = "true".equals(System.getProperty("nested.eclipse", "false"));
 		if (!nestedEclipse) {
-			try {
-				FileReader fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
-				template = new TemplateReader().readTemplate(fileReader);
-			} catch (FileNotFoundException e) {
-				throw new ExceptionInInitializerError(e);
-			}
+			InputStream stream = BeanAnnotationProcessor.class.getResourceAsStream("/$packageName$/$className$Gen.java");
+			template = new TemplateReader().readTemplate(new InputStreamReader(stream));
 		}
 	}
 
@@ -659,7 +658,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
 				if (nestedEclipse) {
 					// debugging in eclipse -- reread the template each time
-					FileReader fileReader = new FileReader("/eclipse34/javadude-workspace/com.javadude.annotation/src/$packageName$/$className$Gen.java");
+					FileReader fileReader = new FileReader(workspace + "/com.javadude.annotation/template/$packageName$/$className$Gen.java");
 					template = new TemplateReader().readTemplate(fileReader);
 				}
 				template.process(new Symbols(data.createPropertyMap()), pw, -1);
