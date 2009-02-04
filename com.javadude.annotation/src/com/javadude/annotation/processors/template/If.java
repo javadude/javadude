@@ -12,8 +12,8 @@ public class If extends CompositeProcessor {
 	}
 
 	@Override
-	public void process(Symbols symbols, Writer writer, int ignoredLine) {
+	public void process(Symbols symbols, Writer writer, int ignoredLine, String padding) {
 		if (condition.test(symbols, ignoredLine))
-			processChildren(symbols, writer);
+			processChildren(symbols, writer, padding);
 	}
 }

@@ -14,10 +14,10 @@ public class Line extends CompositeProcessor {
 		this.condition = condition;
 	}
 
-	@Override public void process(Symbols symbols, Writer writer, int ignoredLine) {
+	@Override public void process(Symbols symbols, Writer writer, int ignoredLine, String padding) {
 		if (condition != null && !condition.test(symbols, getLine()))
 			return;
-		processChildren(symbols, writer);
+		processChildren(symbols, writer, padding);
 		try {
 			writer.write(Line.NL);
 		} catch (IOException e) {

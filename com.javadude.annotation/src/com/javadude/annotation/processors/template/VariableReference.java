@@ -12,7 +12,7 @@ public class VariableReference extends Processor {
 		this.variable = variable;
 	}
 
-	@Override public void process(Symbols symbols, Writer writer, int line) {
+	@Override public void process(Symbols symbols, Writer writer, int line, String padding) {
 		Object value = symbols.get(variable, line).toString();
 		if (value == Symbols.NULL_VALUE)
 			throw new ExpressionException("Variable '" + variable + "' has null value on line " + line);

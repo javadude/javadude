@@ -16,7 +16,7 @@ public class ForEach extends CompositeProcessor {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void process(Symbols symbols, Writer writer, int ignoredLine) {
+	public void process(Symbols symbols, Writer writer, int ignoredLine, String padding) {
 		Object value = symbols.get(expression, getLine());
 		if (value == Symbols.NULL_VALUE)
 			throw new ExpressionException("Expression '" + expression + "' has null value in FOREACH on line " + getLine());
@@ -32,7 +32,7 @@ public class ForEach extends CompositeProcessor {
 				symbols.put("LAST", !i.hasNext());
 				symbols.put("FIRST", first);
 				first = false;
-				processChildren(symbols, writer);
+				processChildren(symbols, writer, padding);
 			} finally {
 				symbols.popScope();
 			}

@@ -8,5 +8,5 @@ public abstract class Processor {
 	public Processor getNext() { return next; }
 	public void setNext(Processor next) { this.next = next; }
 	private Processor next;
-	public abstract void process(Symbols symbols, Writer writer, int line);
+	public abstract void process(Symbols symbols, Writer writer, int line, String padding);
 }
