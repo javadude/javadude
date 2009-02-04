@@ -45,7 +45,7 @@ class $PARENT_name$ {								//#DUMMY
 		try {
 			return ($className$) super.clone();
 		} catch (CloneNotSupportedException e) {
-			return null; // cannot happen
+			throw new AssertionError("This cannot happen; class is Cloneable");
 		}
 	}
 	//#END
