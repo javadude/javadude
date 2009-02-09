@@ -133,19 +133,6 @@ import java.util.Map;
 	public void setKind(com.javadude.annotation.PropertyKind value)  {
 		kind_ = value;
 	}
-	public boolean isSimple() { return getKind().isSimple(); }
-	public boolean isList() { return getKind().isList(); }
-	public boolean isSet() { return getKind().isSet(); }
-	public boolean isMap() { return getKind().isMap(); }
-	public boolean isBoolean() { return "boolean".equals(getType()); }
-	public boolean isShort() { return "short".equals(getType()); }
-	public boolean isDouble() { return "double".equals(getType()); }
-	public boolean isLong() { return "long".equals(getType()); }
-	public boolean isInt() { return "int".equals(getType()); }
-	public boolean isChar() { return "char".equals(getType()); }
-	public boolean isByte() { return "byte".equals(getType()); }
-	public boolean isFloat() { return "float".equals(getType()); }
-
 	@Override
 	public java.lang.String toString() {
 		return getClass().getName() + '[' + paramString() + ']';
@@ -186,18 +173,6 @@ import java.util.Map;
 		map.put("extraFieldKeywords", getExtraFieldKeywords());
 		map.put("omitFromToString", isOmitFromToString());
 		map.put("kind", getKind());
-		map.put("simple", isSimple());
-		map.put("list", isList());
-		map.put("set", isSet());
-		map.put("map", isMap());
-		map.put("boolean", isBoolean());
-		map.put("short", isShort());
-		map.put("double", isDouble());
-		map.put("long", isLong());
-		map.put("int", isInt());
-		map.put("char", isChar());
-		map.put("byte", isByte());
-		map.put("float", isFloat());
 		return map;
 	}
 }
