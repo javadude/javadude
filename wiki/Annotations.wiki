@@ -1,4 +1,10 @@
 =!JavaDude Annotations=
+
+==NOTE==
+I'm working on a newer version of the annotations. THE API IS CHANGING SOMEWHAT. I learned several things about how the API should feel and was able to figure out some nice things to do in the processor to get rid of the options that you needed to use to extend a superclass.
+
+I would recommend waiting for the next release before trying to use the annotations.
+
 ==Overview==
 The !JavaDude Annotations are Java 5/6 annotations and annotation processors that generate some of the tedious code you need in your day-to-day programming. Using these annotations, you can generate:
 
