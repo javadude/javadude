@@ -8,7 +8,10 @@
 package com.javadude.workingsets;
 import org.eclipse.ui.IStartup;
 
-
+/**
+ * A dummy startup class to allow us to start when eclipse starts.
+ * @author Scott Stanchfield
+ */
 public class DummyStartup implements IStartup {
 	@Override
 	public void earlyStartup() {

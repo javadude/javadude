@@ -13,6 +13,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkingSet;
 
+/**
+ * An updater for nature working sets. This defines the working set it
+ * 	and a filter that specifies which projects should be included.
+ * @author Scott Stanchfield
+ */
 public class NatureWorkingSetUpdater extends BaseWorkingSetUpdater {
 	@Override protected String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();

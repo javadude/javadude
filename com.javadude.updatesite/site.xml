@@ -12,10 +12,11 @@
    <feature url="features/com.javadude.antxr.feature_2.1.5.jar" id="com.javadude.antxr.feature" version="2.1.5">
       <category name="ANTXR"/>
    </feature>
-   <feature url="features/com.javadude.workingsets.feature_1.1.2.jar" id="com.javadude.workingsets.feature" version="1.1.2">
-      <category name="Miscellaneous"/>
+   <feature url="features/com.javadude.workingsets.feature_2.0.0.jar" id="com.javadude.workingsets.feature" version="2.0.0">
+      <category name="Dynamic Working Sets"/>
    </feature>
    <category-def name="Annotations" label="Annotations"/>
    <category-def name="Miscellaneous" label="Miscellaneous"/>
    <category-def name="ANTXR" label="ANTXR"/>
+   <category-def name="Dynamic Working Sets" label="Dynamic Working Sets"/>
 </site>

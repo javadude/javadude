@@ -29,6 +29,12 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
+/**
+ * A property page for regular-expression-based dynamic working sets.
+ * This page displays a field for the regular expression (with
+ * 	content assist, woohoo!) to filter projects for inclusion in the working set
+ * @author Scott Stanchfield
+ */
 public class RegExWorkingSetPage extends BaseWorkingSetPage {
 	private Text regexText_ = null;
 	private org.eclipse.swt.widgets.List matches_;
@@ -43,6 +49,11 @@ public class RegExWorkingSetPage extends BaseWorkingSetPage {
 		super(pageName, title, titleImage);
 	}
 
+	/**
+	 * Create the fields for the property page. This includes a list displaying
+	 * 	projects that match the regular expression (b/c regexs are a real pain
+	 * 	to get right the first time...)
+	 */
 	@Override protected void createFields(Composite parent) {
 		Label label = new Label(parent, SWT.NULL);
 		label.setText("Project Name Regular Expression:");
@@ -56,6 +67,9 @@ public class RegExWorkingSetPage extends BaseWorkingSetPage {
 				filter();
 			}
 		});
+
+		// This is cool -- I'm using the regular expression content assist from the
+		//	find/replace dialog. They made it nicely reusable!
 		TextContentAdapter contentAdapter= new TextContentAdapter();
 		FindReplaceDocumentAdapterContentProposalProvider findProposer= new FindReplaceDocumentAdapterContentProposalProvider(true);
 		ContentAssistCommandAdapter contentAssistCommandAdapter = new ContentAssistCommandAdapter(
@@ -73,6 +87,10 @@ public class RegExWorkingSetPage extends BaseWorkingSetPage {
 		matches_.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		filter();
 	}
+
+	/**
+	 * Filter the matching projects section of the property page
+	 */
 	private void filter() {
 		matches_.removeAll();
 		try {
