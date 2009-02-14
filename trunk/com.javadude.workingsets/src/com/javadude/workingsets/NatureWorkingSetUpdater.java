@@ -7,6 +7,9 @@
  *******************************************************************************/
 package com.javadude.workingsets;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
@@ -19,6 +22,8 @@ import org.eclipse.ui.IWorkingSet;
  * @author Scott Stanchfield
  */
 public class NatureWorkingSetUpdater extends BaseWorkingSetUpdater {
+	private static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
+
 	@Override protected String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
 		return id.substring("Nature: ".length());
@@ -36,5 +41,9 @@ public class NatureWorkingSetUpdater extends BaseWorkingSetUpdater {
 			}
 		}
 		return false;
+	}
+	@Override
+	protected Map<String, IWorkingSet> getAllWorkingSetsOfThisType() {
+		return workingSets_;
 	}
 }
