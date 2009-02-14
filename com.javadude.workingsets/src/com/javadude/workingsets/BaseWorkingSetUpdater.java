@@ -8,8 +8,6 @@
 package com.javadude.workingsets;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,7 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * This updater watches for changes to the workspace. In particular:
  * 	If projects are added or removed, we update the dynamic working
  *		sets to add or remove them. This includes projects that are closed.
- *	If a .project file is changed, assume its natures may hav changed, so
+ *	If a .project file is changed, assume its natures may have changed, so
  *		update nature working sets.
  *
  *	This class keeps track of all dynamic working sets that are in the
@@ -40,7 +38,6 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Scott Stanchfield
  */
 public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
-	private static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
 	public BaseWorkingSetUpdater() {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
@@ -122,7 +119,7 @@ public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 			}
 			private Set<IWorkingSet> setsContainingProject(IProject project) {
 				Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
-				for (IWorkingSet workingSet : BaseWorkingSetUpdater.workingSets_.values()) {
+				for (IWorkingSet workingSet : getAllWorkingSetsOfThisType().values()) {
 					IAdaptable[] elements = workingSet.getElements();
 					for (IAdaptable element : elements) {
 	                    if (element.equals(project)) {
@@ -136,7 +133,7 @@ public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 				if (!project.isOpen()) {
 					return;
 				}
-				for (Map.Entry<String, IWorkingSet> entry : BaseWorkingSetUpdater.workingSets_.entrySet()) {
+				for (Map.Entry<String, IWorkingSet> entry : getAllWorkingSetsOfThisType().entrySet()) {
 					if (shouldInclude(project, entry.getKey())) {
 						// add project to working set
 						IWorkingSet workingSet = entry.getValue();
@@ -156,6 +153,7 @@ public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 
 	protected abstract boolean shouldInclude(IProject project, String workingSetId);
 	protected abstract String getId(IWorkingSet workingSet);
+	protected abstract Map<String, IWorkingSet> getAllWorkingSetsOfThisType();
 
 	public static boolean projectHasNature(IProject project, String natureList) throws CoreException {
 		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
@@ -170,21 +168,21 @@ public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 
 	@Override
 	public void add(IWorkingSet workingSet) {
-		BaseWorkingSetUpdater.workingSets_.put(getId(workingSet), workingSet);
+		getAllWorkingSetsOfThisType().put(getId(workingSet), workingSet);
 	}
 
 	@Override
 	public boolean contains(IWorkingSet workingSet) {
-		return BaseWorkingSetUpdater.workingSets_.values().contains(workingSet);
+		return getAllWorkingSetsOfThisType().values().contains(workingSet);
 	}
 
 	@Override
 	public void dispose() {
-		BaseWorkingSetUpdater.workingSets_.clear();
+		getAllWorkingSetsOfThisType().clear();
 	}
 
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
-		return BaseWorkingSetUpdater.workingSets_.remove(getId(workingSet)) != null;
+		return getAllWorkingSetsOfThisType().remove(getId(workingSet)) != null;
 	}
 }
