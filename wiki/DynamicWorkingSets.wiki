@@ -85,13 +85,8 @@ At my last job, I defined a few extra project natures (in a plugin) for organiza
 Feel free to contact me at scott@javadude.com with questions or comments! Please let me know if you find this feature useful!
 
 =License=
- /*******************************************************************************
-  * Copyright (c) 2008 Scott Stanchfield.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *     Scott Stanchfield - initial API and implementation
-  *******************************************************************************/
+ Copyright (c) 2008 Scott Stanchfield.
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
