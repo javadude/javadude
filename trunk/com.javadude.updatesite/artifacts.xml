@@ -3,14 +3,14 @@
 <repository name='file:/C:/eclipse34/workspace/com.javadude.updatesite/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1232806040375'/>
+    <property name='p2.timestamp' value='1234581611843'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='79'>
+  <artifacts size='81'>
     <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.0.26'>
       <properties size='3'>
         <property name='artifact.size' value='681583'/>
@@ -96,17 +96,17 @@
         <property name='download.size' value='4838'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='1.1.0'>
-      <properties size='3'>
-        <property name='artifact.size' value='28934'/>
-        <property name='download.size' value='28934'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.0.27'>
       <properties size='3'>
         <property name='artifact.size' value='681761'/>
         <property name='download.size' value='681761'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='1.1.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='28934'/>
+        <property name='download.size' value='28934'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -116,13 +116,6 @@
         <property name='download.size' value='4822'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='com.javadude.dependencies' version='2.0.10'>
-      <properties size='3'>
-        <property name='artifact.size' value='38830'/>
-        <property name='download.size' value='38830'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.0.24'>
       <properties size='3'>
         <property name='artifact.size' value='681604'/>
@@ -130,10 +123,11 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.27'>
-      <properties size='2'>
-        <property name='artifact.size' value='4838'/>
-        <property name='download.size' value='4838'/>
+    <artifact classifier='osgi.bundle' id='com.javadude.dependencies' version='2.0.10'>
+      <properties size='3'>
+        <property name='artifact.size' value='38830'/>
+        <property name='download.size' value='38830'/>
+        <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.common' version='2.0.0'>
@@ -141,6 +135,12 @@
         <property name='artifact.size' value='11130'/>
         <property name='download.size' value='11130'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.27'>
+      <properties size='2'>
+        <property name='artifact.size' value='4838'/>
+        <property name='download.size' value='4838'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.antxr' version='2.1.3'>
@@ -156,17 +156,17 @@
         <property name='download.size' value='4837'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.antxr.feature' version='2.1.5'>
+      <properties size='2'>
+        <property name='artifact.size' value='4881'/>
+        <property name='download.size' value='4881'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='1.1.2'>
       <properties size='3'>
         <property name='artifact.size' value='26673'/>
         <property name='download.size' value='26673'/>
         <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.antxr.feature' version='2.1.5'>
-      <properties size='2'>
-        <property name='artifact.size' value='4881'/>
-        <property name='download.size' value='4881'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.1.2'>
@@ -359,17 +359,17 @@
         <property name='download.size' value='4938'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.23'>
-      <properties size='2'>
-        <property name='artifact.size' value='4837'/>
-        <property name='download.size' value='4837'/>
-      </properties>
-    </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.antxr.eclipse.core' version='2.1.2'>
       <properties size='3'>
         <property name='artifact.size' value='104508'/>
         <property name='download.size' value='104508'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.23'>
+      <properties size='2'>
+        <property name='artifact.size' value='4837'/>
+        <property name='download.size' value='4837'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.2'>
@@ -378,16 +378,16 @@
         <property name='download.size' value='4837'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.5'>
-      <properties size='2'>
-        <property name='artifact.size' value='4966'/>
-        <property name='download.size' value='4966'/>
-      </properties>
-    </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.common.feature' version='2.0.2'>
       <properties size='2'>
         <property name='artifact.size' value='4847'/>
         <property name='download.size' value='4847'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.5'>
+      <properties size='2'>
+        <property name='artifact.size' value='4966'/>
+        <property name='download.size' value='4966'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.24'>
@@ -400,6 +400,13 @@
       <properties size='3'>
         <property name='artifact.size' value='676867'/>
         <property name='download.size' value='676867'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='2.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='26688'/>
+        <property name='download.size' value='26688'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -417,16 +424,22 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.antxr.feature' version='2.1.4'>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.workingsets.feature' version='2.0.0'>
       <properties size='2'>
-        <property name='artifact.size' value='4881'/>
-        <property name='download.size' value='4881'/>
+        <property name='artifact.size' value='4949'/>
+        <property name='download.size' value='4949'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.0.29'>
       <properties size='2'>
         <property name='artifact.size' value='4837'/>
         <property name='download.size' value='4837'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.antxr.feature' version='2.1.4'>
+      <properties size='2'>
+        <property name='artifact.size' value='4881'/>
+        <property name='download.size' value='4881'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.4'>
@@ -442,11 +455,22 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.1.1'>
-      <properties size='3'>
-        <property name='artifact.size' value='676284'/>
-        <property name='download.size' value='676284'/>
-        <property name='download.contentType' value='application/zip'/>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.workingsets.feature' version='1.0.8'>
+      <properties size='2'>
+        <property name='artifact.size' value='4938'/>
+        <property name='download.size' value='4938'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.6'>
+      <properties size='2'>
+        <property name='artifact.size' value='4977'/>
+        <property name='download.size' value='4977'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.0'>
+      <properties size='2'>
+        <property name='artifact.size' value='4836'/>
+        <property name='download.size' value='4836'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.dependencies' version='2.0.7'>
@@ -456,28 +480,10 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.0'>
-      <properties size='2'>
-        <property name='artifact.size' value='4836'/>
-        <property name='download.size' value='4836'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.annotation.feature' version='2.1.6'>
-      <properties size='2'>
-        <property name='artifact.size' value='4977'/>
-        <property name='download.size' value='4977'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='com.javadude.workingsets.feature' version='1.0.8'>
-      <properties size='2'>
-        <property name='artifact.size' value='4938'/>
-        <property name='download.size' value='4938'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='1.0.6'>
+    <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.1.1'>
       <properties size='3'>
-        <property name='artifact.size' value='22680'/>
-        <property name='download.size' value='22680'/>
+        <property name='artifact.size' value='676284'/>
+        <property name='download.size' value='676284'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
@@ -488,10 +494,17 @@
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='com.javadude.workingsets' version='1.0.6'>
+      <properties size='3'>
+        <property name='artifact.size' value='22680'/>
+        <property name='download.size' value='22680'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.common.feature' version='2.0.0'>
       <properties size='2'>
-        <property name='artifact.size' value='4712'/>
-        <property name='download.size' value='4712'/>
+        <property name='artifact.size' value='4709'/>
+        <property name='download.size' value='4709'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.dependencies.feature' version='2.0.8'>
@@ -502,8 +515,8 @@
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='com.javadude.common.feature' version='2.0.0'>
       <properties size='2'>
-        <property name='artifact.size' value='4709'/>
-        <property name='download.size' value='4709'/>
+        <property name='artifact.size' value='4712'/>
+        <property name='download.size' value='4712'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='com.javadude.annotation' version='2.0.28'>

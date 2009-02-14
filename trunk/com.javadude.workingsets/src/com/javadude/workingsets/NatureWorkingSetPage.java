@@ -26,6 +26,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkingSet;
 
+/**
+ * A property page for nature-based dynamic working sets.
+ * This page displays a checklist of all natures defined in the workspace
+ * 	to filter projects for inclusion in the working set
+ * @author Scott Stanchfield
+ */
 public class NatureWorkingSetPage extends BaseWorkingSetPage {
 	private String natureId_ = null;
 
@@ -39,6 +45,9 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 		super(pageName, title, titleImage);
 	}
 
+	/**
+	 * Create the UI for the property page
+	 */
 	@Override protected void createFields(Composite parent) {
 		if (getWorkingSet() != null)
 			natureId_ = getWorkingSet().getName().substring(8);
@@ -74,6 +83,11 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 				dialogChanged();
 			} });
 	}
+
+	/**
+	 * Get all projects that are tagged with at least one of the selected
+	 * 	project natures
+	 */
 	@Override protected List<IAdaptable> getMatchingProjects() {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		try {
@@ -87,6 +101,7 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 		}
 		return projects;
 	}
+
 	@Override protected String getWorkingSetName() { return "Nature: " + natureId_; }
 	@Override protected String getWorkingSetId() { return "com.javadude.workingsets.NatureWorkingSetPage"; }
 	@Override protected void initFields(IWorkingSet workingSet) {

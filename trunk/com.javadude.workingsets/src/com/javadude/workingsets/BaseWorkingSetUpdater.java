@@ -27,6 +27,18 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
+/**
+ * Common functionality for both working set updaters.
+ * This updater watches for changes to the workspace. In particular:
+ * 	If projects are added or removed, we update the dynamic working
+ *		sets to add or remove them. This includes projects that are closed.
+ *	If a .project file is changed, assume its natures may hav changed, so
+ *		update nature working sets.
+ *
+ *	This class keeps track of all dynamic working sets that are in the
+ *		workspace, allowing us to iterate over them to update them on the fly.
+ * @author Scott Stanchfield
+ */
 public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 	private static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
 	public BaseWorkingSetUpdater() {

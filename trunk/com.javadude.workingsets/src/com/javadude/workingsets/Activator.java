@@ -15,6 +15,7 @@ import com.javadude.common.PluginUtil;
 
 /**
  * The activator class controls the plug-in life cycle
+ * @author Scott Stanchfield
  */
 public class Activator extends AbstractUIPlugin {
     private static PluginUtil util_;
@@ -25,9 +26,6 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	/**
-	 * The constructor
-	 */
 	public Activator() {
 		// do nothing
 	}
@@ -36,6 +34,7 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
 		super.start(context);
 		Activator.plugin = this;
+		// force the working set updaters to load
         Class.forName(NatureWorkingSetUpdater.class.getName());
         Class.forName(RegExWorkingSetUpdater.class.getName());
 	}

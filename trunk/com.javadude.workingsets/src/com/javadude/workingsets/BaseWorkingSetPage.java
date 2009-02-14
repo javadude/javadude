@@ -26,6 +26,10 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 
+/**
+ * Superclass for common functionality on both workset property pages.
+ * @author Scott Stanchfield
+ */
 public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private IWorkingSet workingSet_;
 	private Text workingSetLabelText_ = null;
@@ -39,41 +43,81 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 	}
 
 	public IWorkingSet getWorkingSet() { return workingSet_; }
-	@Override
-	public IWorkingSet getSelection() {
-		return workingSet_;
-	}
+	@Override public IWorkingSet getSelection() { return workingSet_; }
 
+	// hook methods for subclasses to override
+	/**
+	 * Hook method (overridden by subclasses) that allows specific field initialization
+	 * 	for each work set page.
+	 * @param workingSet the working set containing existing data to populate fields
+	 */
 	protected abstract void initFields(IWorkingSet workingSet);
+	/**
+	 * Get a list of all projects in the workspace that match the filters specified
+	 * 	to define the current working set
+	 * @return project list
+	 */
+	protected abstract List<IAdaptable> getMatchingProjects();
+
+	/**
+	 * Get the display name of this working set
+	 * @return the display name
+	 */
+	protected abstract String getWorkingSetName();
+
+	/**
+	 * Get the id of this working set
+	 * @return the working set id
+	 */
+	protected abstract String getWorkingSetId();
+
+	/**
+	 * Validate the current field values
+	 * @return true if all fields are valid; false otherwise
+	 */
+	protected abstract boolean validate();
+
+	/**
+	 * Create the controls to display on the property page
+	 * @param parent the composite into which the controls go
+	 */
+	protected abstract void createFields(Composite parent);
+
 	public void setSelection(IWorkingSet workingSet) {
 		Assert.isNotNull(workingSet, "Working set must not be null");
 		workingSet_ = workingSet;
+		// if the UI has already been set up, populate the fields
 		if (getContainer() != null && getShell() != null && workingSetLabelText_ != null) {
 			workingSetLabelText_.setText(workingSet.getLabel());
 			initFields(workingSet);
 		}
 	}
 
-	protected abstract List<IAdaptable> getMatchingProjects();
-	protected abstract String getWorkingSetName();
-	protected abstract String getWorkingSetId();
-	@Override
-	public void finish() {
+	/**
+	 * The user hit ok; update the working set with the new settings
+	 */
+	@Override public void finish() {
 		List<IAdaptable> projects = getMatchingProjects();
 
+		// if this is a new working set, create it and fill in the details
 		if (workingSet_ == null) {
 			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
 			workingSet_= workingSetManager.createWorkingSet(getWorkingSetName(), projects.toArray(new IAdaptable[projects.size()]));
 			workingSet_.setId(getWorkingSetId());
+
+		// if this is a working set update, create it and fill in the details
 		} else {
 			workingSet_.setName(getWorkingSetName());
 			workingSet_.setElements(projects.toArray(new IAdaptable[projects.size()]));
 		}
+
+		// update the display text
 		workingSet_.setLabel(workingSetLabelText_.getText());
 	}
 
-	protected abstract boolean validate();
-	protected abstract void createFields(Composite parent);
+	/**
+	 * Called whenever the data on the property page is changed
+	 */
 	protected void dialogChanged() {
 		if ("".equals(workingSetLabelText_.getText().trim())) {
 			updateStatus("Label must be specified");
@@ -84,13 +128,21 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 
 		updateStatus(null);
 	}
+
+
+	/**
+	 * Set the error status message
+	 * @param message the error to display, or null for no error
+	 */
 	protected void updateStatus(String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
 
-	@Override
-	public void createControl(Composite parent) {
+	/**
+	 * Create the controls on the page
+	 */
+	@Override public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
@@ -108,11 +160,17 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 				dialogChanged();
 			}
 		});
+
+		// call the subclass' createFields method to customize
 		createFields(container);
 		if (workingSet_ != null) {
 			workingSetLabelText_.setText(workingSet_.getLabel());
+			// if we're updating an existing working set,
+			//   initialize the fields from the existing values
 			initFields(workingSet_);
 		}
+
+		// prime the changes
 		dialogChanged();
 		setControl(container);
 	}
