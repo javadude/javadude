@@ -74,7 +74,7 @@ http://javadude.googlecode.com/svn/wiki/images/configws.gif
 
 You'll see the Configure Working Sets dialog.
 
-http://javadude.googlecode.com/svn/wiki/images/configws.gif
+http://javadude.googlecode.com/svn/wiki/images/packagexplorer.gif
 
 Check the working sets that you would like to appear in the Package Explorer and press *Ok*.
 
