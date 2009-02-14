@@ -1,4 +1,3 @@
-!JavaDude Tools->[Dynamic Working Sets]
 =Dynamic Working Sets for Eclipse.=
 
 = Introduction =
@@ -14,3 +13,5 @@ Dynamic working sets automatically manage their contents based on regular expres
 = Installation =
 
 You can grab the dynamic working sets feature at
+
+http://javadude.googlecode.com/svn/trunk/com.javadude.updatesite
