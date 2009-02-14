@@ -1,4 +1,4 @@
-#Dynamic Working Sets for Eclipse.
+=Dynamic Working Sets for Eclipse.=
 
 = Introduction =
 
