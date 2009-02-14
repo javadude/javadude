@@ -1,9 +1,16 @@
+!JavaDude Tools->[Dynamic Working Sets]
 =Dynamic Working Sets for Eclipse.=
 
 = Introduction =
 
 Working sets are a great way to organize your projects in eclipse. However, it's up to you to add/move/remove projects.
 
-Dynamic working sets automatically manage their contents based on regular expressions or project natures.
+I was working with a group, and whenever we checked different groups of projects out, we'd have to do the old "drag 'em into the working sets" dance.
 
-= Details =
+I got tired of this, and dynamic working sets were born.
+
+Dynamic working sets automatically manage their contents based on regular expressions or project natures. Nifty! The eclipse API never ceases to amaze me!
+
+= Installation =
+
+You can grab the dynamic working sets feature at
