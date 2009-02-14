@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -60,6 +61,17 @@ import com.sun.mirror.type.ReferenceType;
 // TODO delegation + extractInterface -> must allow superinterfaces to be specified for generated interface
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
+	private static Map<String, AnnotationValue> getAnnotationValues(AnnotationMirror a) {
+		Map<String, AnnotationValue> values = new HashMap<String, AnnotationValue>();
+		Map<AnnotationTypeElementDeclaration, AnnotationValue> elementValues = a.getElementValues();
+		for (AnnotationTypeElementDeclaration m : a.getAnnotationType().getDeclaration().getMethods()) {
+			AnnotationValue value = elementValues.get(m.getSimpleName());
+			if (value == null)
+				value = m.getDefaultValue();
+			values.put(m.getSimpleName(), value);
+		}
+		return values;
+	}
 	private static final Set<String> createSet(String... items) {
 		Set<String> set = new HashSet<String>();
 		for (String item : items) {
@@ -190,11 +202,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				String classModifiers = "";
 				Collection<AnnotationMirror> annotationMirrors = classDeclaration.getAnnotationMirrors();
 				for (AnnotationMirror annotationMirror : annotationMirrors) {
-					Map<AnnotationTypeElementDeclaration, AnnotationValue> elementValues = annotationMirror.getElementValues();
-					for (Entry<AnnotationTypeElementDeclaration, AnnotationValue> elementValue : elementValues.entrySet()) {
+					Map<String, AnnotationValue> annotationValues = getAnnotationValues(annotationMirror);
+					for (Entry<String, AnnotationValue> elementValue : annotationValues.entrySet()) {
 						AnnotationValue value = elementValue.getValue();
-						AnnotationTypeElementDeclaration key = elementValue.getKey();
-						if ("superclass".equals(key.getSimpleName())) {
+						String key = elementValue.getKey();
+						if ("superclass".equals(key)) {
 							if (!(value.getValue() instanceof ClassDeclaration)) {
 								error(value, "superclass must be a class");
 								return;
