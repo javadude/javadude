@@ -1,3 +1,4 @@
+#labels Featured
 =Dynamic Working Sets for Eclipse.=
 
 = Introduction =
@@ -15,3 +16,16 @@ Dynamic working sets automatically manage their contents based on regular expres
 You can grab the dynamic working sets feature at
 
 http://javadude.googlecode.com/svn/trunk/com.javadude.updatesite
+
+If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->Help Contents, and read the section under
+ 
+Workbench User Guide->Tasks->Updating Features with the update Manager->Installing new features with the update manager.
+
+Choose "JavaDude Automated Working Sets Feature" under "Dynamic Working Sets"
+
+= Use =
+
+First, we need to define a dynamic working set. I'll use the regular expression working set as an example.
+
+I really like to use the *Top Level Elements->Working Sets* option in the Package Explorer (it's off the little upside-down triangle option menu on the Package Explorer toolbar.) _Unfortunately, if this option is turned on, you can only create Java Working Sets!_. So before you create a dynamic working set, you must turn it off:
+
