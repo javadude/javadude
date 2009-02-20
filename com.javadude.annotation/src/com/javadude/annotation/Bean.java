@@ -91,10 +91,11 @@ public @interface Bean {
     /**
      * <p>If true, the generated superclass' equals() method will
      * 		first check super.equals(), and return false if its
-     * 		result is false.</p>
+     * 		result is false. The generated hashCode() method
+     * 		will call super.hashCode() and factor it into its calculation</p>
      * @see #defineSimpleEqualsAndHashCode()
      */
-    boolean equalsShouldCheckSuperEquals() default false;
+    boolean equalsAndHashCodeCallSuper() default false;
 
     /**
      * <p>If true, generate a createPropertyMap() method in the
@@ -133,20 +134,4 @@ public @interface Bean {
      * @see NullObject
      */
     NullObject[] nullObjects() default { };
-
-    /**
-     * <p>Specifies the default access level of the setter
-     * 		methods generated for any defined properties</p>
-     * @see Access
-     * @see Property
-     */
-    Access reader() default Access.PUBLIC;
-
-    /**
-     * <p>Specifies the default access level of the getter methods
-     * 		generated for any defined properties</p>
-     * @see Access
-     * @see Property
-     */
-    Access writer() default Access.PUBLIC;
 }
