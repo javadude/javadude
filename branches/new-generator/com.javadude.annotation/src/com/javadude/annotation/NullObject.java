@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
+
 /**
  * <p>Specifies a java interface that will be implemented using Null Object methods. If the methods have a return value, they will
  * 	return null, false or 0. If they do not have a return value, they will do nothing.</p>

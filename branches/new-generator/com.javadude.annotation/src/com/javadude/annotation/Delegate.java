@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
+
 /**
  * <p>Defines a type (interface or class) for which you want to generate delegation methods.</p>
  * <p>Delegation methods for all public methods in the target type will be created.</p>
