@@ -8,6 +8,8 @@
 package com.javadude.workingsets;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,8 @@ import com.javadude.workingsets.internal.Activator;
  * @author Scott Stanchfield
  */
 public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
+	private static final Map<Class<?>, Map<String, IWorkingSet>> workingSets_ = Collections.synchronizedMap(new HashMap<Class<?>, Map<String, IWorkingSet>>());
+
 	public DynamicWorkingSetUpdater() {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
@@ -121,7 +125,7 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 			}
 			private Set<IWorkingSet> setsContainingProject(IProject project) {
 				Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
-				for (IWorkingSet workingSet : getAllWorkingSetsOfThisType().values()) {
+				for (IWorkingSet workingSet : getMyWorkingSets().values()) {
 					IAdaptable[] elements = workingSet.getElements();
 					for (IAdaptable element : elements) {
 	                    if (element.equals(project)) {
@@ -135,7 +139,7 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 				if (!project.isOpen()) {
 					return;
 				}
-				for (Map.Entry<String, IWorkingSet> entry : getAllWorkingSetsOfThisType().entrySet()) {
+				for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
 					if (shouldInclude(project, entry.getKey())) {
 						// add project to working set
 						IWorkingSet workingSet = entry.getValue();
@@ -154,7 +158,6 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 
 	protected abstract boolean shouldInclude(IProject project, String workingSetId);
 	protected abstract String getId(IWorkingSet workingSet);
-	protected abstract Map<String, IWorkingSet> getAllWorkingSetsOfThisType();
 
 	public static boolean projectHasNature(IProject project, String natureList) throws CoreException {
 		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
@@ -169,21 +172,42 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 
 	@Override
 	public void add(IWorkingSet workingSet) {
-		getAllWorkingSetsOfThisType().put(getId(workingSet), workingSet);
+		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
+		if (workingSets == null) {
+			workingSets = new HashMap<String, IWorkingSet>();
+			workingSets_.put(getClass(), workingSets);
+		}
+		workingSets.put(getId(workingSet), workingSet);
 	}
 
 	@Override
 	public boolean contains(IWorkingSet workingSet) {
-		return getAllWorkingSetsOfThisType().values().contains(workingSet);
+		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
+		if (workingSets == null) {
+			return false;
+		}
+		return workingSets.values().contains(workingSet);
 	}
 
 	@Override
 	public void dispose() {
-		getAllWorkingSetsOfThisType().clear();
+		workingSets_.remove(getClass());
 	}
 
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
-		return getAllWorkingSetsOfThisType().remove(getId(workingSet)) != null;
+		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
+		if (workingSets == null) {
+			return false;
+		}
+		return workingSets.remove(getId(workingSet)) != null;
+	}
+
+	private Map<String, IWorkingSet> getMyWorkingSets() {
+		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
+		if (workingSets == null) {
+			return Collections.emptyMap();
+		}
+		return workingSets;
 	}
 }
