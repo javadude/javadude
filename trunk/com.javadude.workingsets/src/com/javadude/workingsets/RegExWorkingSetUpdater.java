@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkingSet;
  * 	and a filter that specifies which projects should be included.
  * @author Scott Stanchfield
  */
-public class RegExWorkingSetUpdater extends BaseWorkingSetUpdater {
+public class RegExWorkingSetUpdater extends DynamicWorkingSetUpdater {
 	private static final Map<String, IWorkingSet> workingSets_ = Collections.synchronizedMap(new HashMap<String, IWorkingSet>());
 	@Override protected String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();

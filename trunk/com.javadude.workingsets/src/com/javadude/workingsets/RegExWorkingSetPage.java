@@ -35,18 +35,18 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  * 	content assist, woohoo!) to filter projects for inclusion in the working set
  * @author Scott Stanchfield
  */
-public class RegExWorkingSetPage extends BaseWorkingSetPage {
+public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 	private Text regexText_ = null;
 	private org.eclipse.swt.widgets.List matches_;
 
 	public RegExWorkingSetPage() {
-		super("com.hcrest.classpath.regexWorkingSetPage", "Enter project regular expression to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
+		this("com.hcrest.classpath.regexWorkingSetPage");
 	}
 	public RegExWorkingSetPage(String pageName) {
-		super(pageName);
+		this(pageName, "Enter project regular expression to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
 	}
 	public RegExWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
-		super(pageName, title, titleImage);
+		super("com.javadude.workingsets.RegExWorkingSetPage", pageName, title, titleImage);
 	}
 
 	/**
@@ -115,7 +115,6 @@ public class RegExWorkingSetPage extends BaseWorkingSetPage {
 		}
 		return projects;
 	}
-	@Override protected String getWorkingSetId() { return "com.javadude.workingsets.RegExWorkingSetPage"; }
 	@Override protected String getWorkingSetName() {
 		return "RegEx: " + regexText_.getText();
 	}

@@ -30,16 +30,14 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
  * Superclass for common functionality on both workset property pages.
  * @author Scott Stanchfield
  */
-public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingSetPage {
+public abstract class DynamicWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private IWorkingSet workingSet_;
-	private Text workingSetLabelText_ = null;
+	private Text workingSetLabelText_;
+	private String workingSetId_;
 
-	public BaseWorkingSetPage(String pageName) {
-		super(pageName);
-	}
-
-	public BaseWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
+	public DynamicWorkingSetPage(String workingSetId, String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
+		workingSetId_ = workingSetId;
 	}
 
 	public IWorkingSet getWorkingSet() { return workingSet_; }
@@ -64,12 +62,6 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 	 * @return the display name
 	 */
 	protected abstract String getWorkingSetName();
-
-	/**
-	 * Get the id of this working set
-	 * @return the working set id
-	 */
-	protected abstract String getWorkingSetId();
 
 	/**
 	 * Validate the current field values
@@ -103,7 +95,7 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 		if (workingSet_ == null) {
 			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
 			workingSet_= workingSetManager.createWorkingSet(getWorkingSetName(), projects.toArray(new IAdaptable[projects.size()]));
-			workingSet_.setId(getWorkingSetId());
+			workingSet_.setId(workingSetId_);
 
 		// if this is a working set update, create it and fill in the details
 		} else {
@@ -123,8 +115,9 @@ public abstract class BaseWorkingSetPage extends WizardPage implements IWorkingS
 			updateStatus("Label must be specified");
 			return;
 		}
-		if (!validate())
+		if (!validate()) {
 			return;
+		}
 
 		updateStatus(null);
 	}
