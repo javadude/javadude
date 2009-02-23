@@ -43,8 +43,10 @@ import com.javadude.workingsets.internal.Activator;
  */
 public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 	private static final Map<Class<?>, Map<String, IWorkingSet>> workingSets_ = Collections.synchronizedMap(new HashMap<Class<?>, Map<String, IWorkingSet>>());
+	private String baseId_;
 
-	public DynamicWorkingSetUpdater() {
+	public DynamicWorkingSetUpdater(String baseId) {
+		baseId_ = baseId;
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
@@ -157,8 +159,10 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 	}
 
 	protected abstract boolean shouldInclude(IProject project, String workingSetId);
-	protected abstract String getId(IWorkingSet workingSet);
-
+	private String getId(IWorkingSet workingSet) {
+		String id = workingSet.getName();
+		return id.substring(baseId_.length());
+	}
 	public static boolean projectHasNature(IProject project, String natureList) throws CoreException {
 		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
 		while (stringTokenizer.hasMoreTokens()) {

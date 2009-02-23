@@ -10,8 +10,6 @@ package com.javadude.workingsets.internal;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IWorkingSet;
-
 import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
@@ -20,9 +18,8 @@ import com.javadude.workingsets.DynamicWorkingSetUpdater;
  * @author Scott Stanchfield
  */
 public class RegExWorkingSetUpdater extends DynamicWorkingSetUpdater {
-	@Override protected String getId(IWorkingSet workingSet) {
-		String id = workingSet.getName();
-		return id.substring("RegEx: ".length());
+	public RegExWorkingSetUpdater() {
+		super("RegEx: ");
 	}
 	@Override protected boolean shouldInclude(IProject project, String workingSetId) {
 		return (Pattern.matches(workingSetId, project.getName()));

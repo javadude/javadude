@@ -11,19 +11,16 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IWorkingSet;
-
 import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
- * An updater for nature working sets. This defines the working set it
+ * An updater for nature working sets. This defines the working set id
  * 	and a filter that specifies which projects should be included.
  * @author Scott Stanchfield
  */
 public class NatureWorkingSetUpdater extends DynamicWorkingSetUpdater {
-	@Override protected String getId(IWorkingSet workingSet) {
-		String id = workingSet.getName();
-		return id.substring("Nature: ".length());
+	public NatureWorkingSetUpdater() {
+		super("Nature: ");
 	}
 	@Override protected boolean shouldInclude(IProject project, String workingSetId) {
 		StringTokenizer stringTokenizer = new StringTokenizer(workingSetId, ", ");
