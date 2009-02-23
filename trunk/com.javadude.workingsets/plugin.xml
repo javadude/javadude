@@ -11,7 +11,7 @@
       <workingSet
             icon="icons/workset.gif"
             id="com.hcrest.classpath.natureWorkingSet"
-            name="Nature Working Set"
+            name="Dynamic Nature Working Set"
             pageClass="com.javadude.workingsets.internal.NatureWorkingSetPage"
             updaterClass="com.javadude.workingsets.internal.NatureWorkingSetUpdater">
       </workingSet>
@@ -20,7 +20,7 @@
       <workingSet
             icon="icons/workset.gif"
             id="com.hcrest.classpath.regexWorkingSet"
-            name="Regular Expression Working Set"
+            name="Dynamic Regular Expression Working Set"
             pageClass="com.javadude.workingsets.internal.RegExWorkingSetPage"
             updaterClass="com.javadude.workingsets.internal.RegExWorkingSetUpdater">
       </workingSet>

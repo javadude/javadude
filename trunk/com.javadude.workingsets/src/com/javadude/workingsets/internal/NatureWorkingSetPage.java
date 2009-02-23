@@ -93,7 +93,7 @@ public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 	 * Get all projects that are tagged with at least one of the selected
 	 * 	project natures
 	 */
-	@Override protected List<IAdaptable> getMatchingProjects() {
+	@Override protected List<IAdaptable> getMatchingItems() {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		try {
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {

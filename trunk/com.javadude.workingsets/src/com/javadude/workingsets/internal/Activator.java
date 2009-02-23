@@ -55,6 +55,6 @@ public class Activator extends AbstractUIPlugin {
         return Activator.util_;
     }
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("com.hcrest.classpath", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 }
