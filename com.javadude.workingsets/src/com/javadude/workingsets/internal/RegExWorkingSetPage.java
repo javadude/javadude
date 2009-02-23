@@ -45,7 +45,7 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 		this("com.hcrest.classpath.regexWorkingSetPage");
 	}
 	public RegExWorkingSetPage(String pageName) {
-		this(pageName, "Enter project regular expression to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
+		this(pageName, "Enter project name regular expression", Activator.getImageDescriptor("icons/logo16.gif"));
 	}
 	public RegExWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
 		super("com.javadude.workingsets.RegExWorkingSetPage", pageName, title, titleImage);
@@ -107,7 +107,7 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 			return;
 		}
 	}
-	@Override protected List<IAdaptable> getMatchingProjects() {
+	@Override protected List<IAdaptable> getMatchingItems() {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		String regex = regexText_.getText();
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {

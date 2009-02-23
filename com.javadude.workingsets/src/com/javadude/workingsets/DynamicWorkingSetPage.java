@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 
 /**
- * Superclass for common functionality on both workset property pages.
+ * Superclass for common functionality on both workingset property pages.
  * @author Scott Stanchfield
  */
 public abstract class DynamicWorkingSetPage extends WizardPage implements IWorkingSetPage {
@@ -50,12 +50,13 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 	 * @param workingSet the working set containing existing data to populate fields
 	 */
 	protected abstract void initFields(IWorkingSet workingSet);
+
 	/**
-	 * Get a list of all projects in the workspace that match the filters specified
+	 * Get a list of all items in the workspace that match the filters specified
 	 * 	to define the current working set
-	 * @return project list
+	 * @return item list
 	 */
-	protected abstract List<IAdaptable> getMatchingProjects();
+	protected abstract List<IAdaptable> getMatchingItems();
 
 	/**
 	 * Get the display name of this working set
@@ -89,18 +90,18 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 	 * The user hit ok; update the working set with the new settings
 	 */
 	@Override public void finish() {
-		List<IAdaptable> projects = getMatchingProjects();
+		List<IAdaptable> items = getMatchingItems();
 
 		// if this is a new working set, create it and fill in the details
 		if (workingSet_ == null) {
 			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
-			workingSet_= workingSetManager.createWorkingSet(getWorkingSetName(), projects.toArray(new IAdaptable[projects.size()]));
+			workingSet_= workingSetManager.createWorkingSet(getWorkingSetName(), items.toArray(new IAdaptable[items.size()]));
 			workingSet_.setId(workingSetId_);
 
 		// if this is a working set update, create it and fill in the details
 		} else {
 			workingSet_.setName(getWorkingSetName());
-			workingSet_.setElements(projects.toArray(new IAdaptable[projects.size()]));
+			workingSet_.setElements(items.toArray(new IAdaptable[items.size()]));
 		}
 
 		// update the display text
