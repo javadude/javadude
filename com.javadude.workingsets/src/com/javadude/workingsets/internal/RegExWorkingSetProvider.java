@@ -7,15 +7,26 @@
  *******************************************************************************/
 package com.javadude.workingsets.internal;
 
-import com.javadude.workingsets.DynamicWorkingSetUpdater;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+
+import com.javadude.workingsets.DynamicWorkingSetProvider;
 
 /**
  * An updater for regex working sets. This defines the working set it
  * 	and a filter that specifies which projects should be included.
  * @author Scott Stanchfield
  */
-public class RegExWorkingSetUpdater extends DynamicWorkingSetUpdater {
-	public RegExWorkingSetUpdater() {
-		super(new RegExWorkingSetProvider());
+public class RegExWorkingSetProvider extends DynamicWorkingSetProvider {
+	public RegExWorkingSetProvider() {
+		super("RegEx: ");
+	}
+	@Override protected boolean shouldInclude(IResource resource, String workingSetId) {
+		if (!(resource instanceof IProject)) {
+			return false;
+		}
+		return (Pattern.matches(workingSetId, ((IProject) resource).getName()));
 	}
 }
