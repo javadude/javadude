@@ -17,13 +17,11 @@ You can grab the dynamic working sets feature at
 
 http://javadude.googlecode.com/svn/trunk/com.javadude.updatesite
 
-*NOTE: MAKE SURE YOU SELECT BOTH THE DYNAMIC WORKING SETS PLUGIN AND THE JAVADUDE COMMON PLUGIN (under "misc")* I'm having trouble getting p2 to auto-select the common one when dynamic working sets are selected; hopefully I'll get that working soon, but selecting both should make the plugin work. 
-
 If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->Help Contents, and read the section under
  
 Workbench User Guide->Tasks->Updating Features with the update Manager->Installing new features with the update manager.
 
-Choose "!JavaDude Automated Working Sets Feature" and "JavaDude Common Feature"
+Choose "!JavaDude Automated Working Sets Feature"
 
 http://javadude.googlecode.com/svn/wiki/images/p2.gif
 
