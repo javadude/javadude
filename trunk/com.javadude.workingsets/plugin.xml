@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.startup">
       <startup
-            class="com.javadude.workingsets.DummyStartup">
+            class="com.javadude.workingsets.internal.DummyStartup">
       </startup>
    </extension>
    <extension point="org.eclipse.ui.workingSets">
@@ -12,8 +12,8 @@
             icon="icons/workset.gif"
             id="com.hcrest.classpath.natureWorkingSet"
             name="Nature Working Set"
-            pageClass="com.javadude.workingsets.NatureWorkingSetPage"
-            updaterClass="com.javadude.workingsets.NatureWorkingSetUpdater">
+            pageClass="com.javadude.workingsets.internal.NatureWorkingSetPage"
+            updaterClass="com.javadude.workingsets.internal.NatureWorkingSetUpdater">
       </workingSet>
    </extension>
    <extension point="org.eclipse.ui.workingSets">
@@ -21,8 +21,8 @@
             icon="icons/workset.gif"
             id="com.hcrest.classpath.regexWorkingSet"
             name="Regular Expression Working Set"
-            pageClass="com.javadude.workingsets.RegExWorkingSetPage"
-            updaterClass="com.javadude.workingsets.RegExWorkingSetUpdater">
+            pageClass="com.javadude.workingsets.internal.RegExWorkingSetPage"
+            updaterClass="com.javadude.workingsets.internal.RegExWorkingSetUpdater">
       </workingSet>
    </extension>
 </plugin>

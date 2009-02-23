@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.javadude.workingsets;
+package com.javadude.workingsets.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +25,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkingSet;
+
+import com.javadude.workingsets.DynamicWorkingSetPage;
+import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
  * A property page for nature-based dynamic working sets.

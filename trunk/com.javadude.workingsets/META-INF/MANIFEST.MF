@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Workingsets Plug-in
 Bundle-SymbolicName: com.javadude.workingsets;singleton:=true
-Bundle-Version: 2.0.2
-Bundle-Activator: com.javadude.workingsets.Activator
+Bundle-Version: 2.0.3
+Bundle-Activator: com.javadude.workingsets.internal.Activator
 Bundle-Vendor: JavaDude.com
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor;bundle-version="3.4.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.javadude.workingsets
