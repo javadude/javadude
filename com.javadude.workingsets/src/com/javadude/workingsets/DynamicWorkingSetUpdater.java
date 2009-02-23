@@ -37,8 +37,8 @@ import org.eclipse.ui.IWorkingSetUpdater;
  *		workspace, allowing us to iterate over them to update them on the fly.
  * @author Scott Stanchfield
  */
-public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
-	public BaseWorkingSetUpdater() {
+public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
+	public DynamicWorkingSetUpdater() {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
 			public void resourceChanged(IResourceChangeEvent event) {

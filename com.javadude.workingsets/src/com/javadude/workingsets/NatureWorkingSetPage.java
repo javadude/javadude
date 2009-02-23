@@ -32,25 +32,26 @@ import org.eclipse.ui.IWorkingSet;
  * 	to filter projects for inclusion in the working set
  * @author Scott Stanchfield
  */
-public class NatureWorkingSetPage extends BaseWorkingSetPage {
+public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 	private String natureId_ = null;
 
 	public NatureWorkingSetPage() {
-		super("com.hcrest.classpath.natureWorkingSetPage", "Enter nature to display in this working set", Activator.getImageDescriptor("icons/logo16.gif"));
+		this("com.hcrest.classpath.natureWorkingSetPage");
 	}
 	public NatureWorkingSetPage(String pageName) {
-		super(pageName);
+		this(pageName, "Select project natures", Activator.getImageDescriptor("icons/logo16.gif"));
 	}
 	public NatureWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
-		super(pageName, title, titleImage);
+		super("com.javadude.workingsets.NatureWorkingSetPage", pageName, title, titleImage);
 	}
 
 	/**
 	 * Create the UI for the property page
 	 */
 	@Override protected void createFields(Composite parent) {
-		if (getWorkingSet() != null)
+		if (getWorkingSet() != null) {
 			natureId_ = getWorkingSet().getName().substring(8);
+		}
 		Label label = new Label(parent, SWT.NULL);
 		label.setText("Registered Natures:");
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true));
@@ -75,10 +76,11 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 			@Override public void checkStateChanged(CheckStateChangedEvent event) {
 				natureId_ = null;
 				for (Object o : table.getCheckedElements()) {
-					if (natureId_ == null)
+					if (natureId_ == null) {
 						natureId_ = (String) o;
-					else
+					} else {
 						natureId_ += ',' + (String) o;
+					}
 				}
 				dialogChanged();
 			} });
@@ -92,7 +94,7 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		try {
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && BaseWorkingSetUpdater.projectHasNature(project, natureId_)) {
+	            if (project.isOpen() && DynamicWorkingSetUpdater.projectHasNature(project, natureId_)) {
 	            	projects.add(project);
 	            }
 			}
@@ -103,7 +105,6 @@ public class NatureWorkingSetPage extends BaseWorkingSetPage {
 	}
 
 	@Override protected String getWorkingSetName() { return "Nature: " + natureId_; }
-	@Override protected String getWorkingSetId() { return "com.javadude.workingsets.NatureWorkingSetPage"; }
 	@Override protected void initFields(IWorkingSet workingSet) {
 		natureId_ = workingSet.getName().substring(8);
 	}
