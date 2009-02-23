@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.javadude.workingsets;
+package com.javadude.workingsets.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IWorkingSet;
+
+import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
  * An updater for regex working sets. This defines the working set it

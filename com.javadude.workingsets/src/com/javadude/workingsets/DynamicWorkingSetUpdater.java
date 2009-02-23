@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
+import com.javadude.workingsets.internal.Activator;
+
 /**
  * Common functionality for both working set updaters.
  * This updater watches for changes to the workspace. In particular:

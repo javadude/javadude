@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.javadude.workingsets;
+package com.javadude.workingsets.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+
+import com.javadude.workingsets.DynamicWorkingSetPage;
 
 /**
  * A property page for regular-expression-based dynamic working sets.
