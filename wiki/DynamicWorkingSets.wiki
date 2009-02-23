@@ -21,7 +21,7 @@ If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->
  
 Workbench User Guide->Tasks->Updating Features with the update Manager->Installing new features with the update manager.
 
-Choose "!JavaDude Automated Working Sets Feature" (you no longer need to manually select the JavaDude Common feature)
+Choose "!JavaDude Automated Working Sets Feature"
 
 http://javadude.googlecode.com/svn/wiki/images/p2.gif
 
