@@ -145,7 +145,6 @@ public abstract class BaseWorkingSetUpdater implements IWorkingSetUpdater {
 						System.arraycopy(elements, 0, newElements, 0, elements.length);
 						newElements[elements.length] = project;
 						workingSet.setElements(newElements);
-						break;
 					}
 				}
 			}});
