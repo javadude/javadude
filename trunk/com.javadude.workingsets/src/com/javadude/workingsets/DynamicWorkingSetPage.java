@@ -149,11 +149,6 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 		workingSetLabelText_ = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		workingSetLabelText_.setLayoutData(gd);
-		workingSetLabelText_.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				dialogChanged();
-			}
-		});
 
 		// call the subclass' createFields method to customize
 		createFields(container);
@@ -164,8 +159,15 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 			initFields(workingSet_);
 		}
 
+		workingSetLabelText_.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				dialogChanged();
+			}
+		});
+
+		setControl(container);
+
 		// prime the changes
 		dialogChanged();
-		setControl(container);
 	}
 }

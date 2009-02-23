@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.FindReplaceDocumentAdapterContentProposalProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -42,13 +41,10 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 	private org.eclipse.swt.widgets.List matches_;
 
 	public RegExWorkingSetPage() {
-		this("com.hcrest.classpath.regexWorkingSetPage");
-	}
-	public RegExWorkingSetPage(String pageName) {
-		this(pageName, "Enter project name regular expression", Activator.getImageDescriptor("icons/logo16.gif"));
-	}
-	public RegExWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
-		super("com.javadude.workingsets.RegExWorkingSetPage", pageName, title, titleImage);
+		super("com.javadude.workingsets.RegExWorkingSetPage",
+				"com.hcrest.classpath.regexWorkingSetPage",
+				"Enter project name regular expression",
+				Activator.getImageDescriptor("icons/logo16.gif"));
 	}
 
 	/**
@@ -126,6 +122,7 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 	@Override protected boolean validate() {
 		String regex = regexText_.getText();
 		if ("".equals(regex.trim())) {
+			System.out.println("missing regex");
 			updateStatus("Regular expression must be specified");
 			return false;
 		}
@@ -136,7 +133,6 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 			updateStatus("Regular expression syntax: " + message);
 			return false;
 		}
-
 		return true;
 	}
 }

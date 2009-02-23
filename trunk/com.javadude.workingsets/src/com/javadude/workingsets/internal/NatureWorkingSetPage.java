@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -27,7 +26,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkingSet;
 
 import com.javadude.workingsets.DynamicWorkingSetPage;
-import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
  * A property page for nature-based dynamic working sets.
@@ -39,13 +37,10 @@ public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 	private String natureId_ = null;
 
 	public NatureWorkingSetPage() {
-		this("com.hcrest.classpath.natureWorkingSetPage");
-	}
-	public NatureWorkingSetPage(String pageName) {
-		this(pageName, "Select project natures", Activator.getImageDescriptor("icons/logo16.gif"));
-	}
-	public NatureWorkingSetPage(String pageName, String title, ImageDescriptor titleImage) {
-		super("com.javadude.workingsets.NatureWorkingSetPage", pageName, title, titleImage);
+		super("com.javadude.workingsets.NatureWorkingSetPage",
+				"com.hcrest.classpath.natureWorkingSetPage",
+				"Select project natures",
+				Activator.getImageDescriptor("icons/logo16.gif"));
 	}
 
 	/**
@@ -97,7 +92,7 @@ public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		try {
 			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && DynamicWorkingSetUpdater.projectHasNature(project, natureId_)) {
+	            if (project.isOpen() && NatureWorkingSetProvider.projectHasNature(project, natureId_)) {
 	            	projects.add(project);
 	            }
 			}

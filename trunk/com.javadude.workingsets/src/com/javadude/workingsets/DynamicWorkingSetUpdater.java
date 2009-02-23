@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -43,10 +41,10 @@ import com.javadude.workingsets.internal.Activator;
  */
 public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 	private static final Map<Class<?>, Map<String, IWorkingSet>> workingSets_ = Collections.synchronizedMap(new HashMap<Class<?>, Map<String, IWorkingSet>>());
-	private String baseId_;
+	private DynamicWorkingSetProvider provider_;
 
-	public DynamicWorkingSetUpdater(String baseId) {
-		baseId_ = baseId;
+	public DynamicWorkingSetUpdater(DynamicWorkingSetProvider provider) {
+		provider_ = provider;
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
@@ -142,7 +140,7 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 					return;
 				}
 				for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
-					if (shouldInclude(project, entry.getKey())) {
+					if (provider_.shouldInclude(project, entry.getKey())) {
 						// add project to working set
 						IWorkingSet workingSet = entry.getValue();
 						if (setsContainingProject != null) {
@@ -158,20 +156,9 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 			}});
 	}
 
-	protected abstract boolean shouldInclude(IProject project, String workingSetId);
 	private String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
-		return id.substring(baseId_.length());
-	}
-	public static boolean projectHasNature(IProject project, String natureList) throws CoreException {
-		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
-		while (stringTokenizer.hasMoreTokens()) {
-			String nature = stringTokenizer.nextToken();
-			if (project.hasNature(nature)) {
-				return true;
-			}
-		}
-		return false;
+		return id.substring(provider_.getBaseId().length());
 	}
 
 	@Override
