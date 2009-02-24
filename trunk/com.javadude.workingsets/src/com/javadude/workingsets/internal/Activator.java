@@ -11,15 +11,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.javadude.common.PluginUtil;
-
 /**
  * The activator class controls the plug-in life cycle
  * @author Scott Stanchfield
  */
 public class Activator extends AbstractUIPlugin {
-    private static PluginUtil util_;
-
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.javadude.workingsets";
 
@@ -48,12 +44,6 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return Activator.plugin;
 	}
-    public static PluginUtil getUtil() {
-        if (Activator.util_ == null) {
-            Activator.util_ = new PluginUtil(Activator.getDefault().getBundle().getSymbolicName(), Activator.getDefault().getLog());
-        }
-        return Activator.util_;
-    }
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}

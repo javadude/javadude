@@ -26,8 +26,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
-import com.javadude.workingsets.internal.Activator;
-
 /**
  * Common functionality for both working set updaters.
  * This updater watches for changes to the workspace. In particular:
@@ -70,8 +68,9 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 									}
 									break;
 								case IResourceDelta.CHANGED: // natures change or project opened/closed
-									if ((delta.getResource() instanceof IProject) && (delta.getFlags() & IResourceDelta.OPEN) != 0) {
-										project = (IProject) delta.getResource();
+									IResource resource = delta.getResource();
+									if ((resource instanceof IProject) && (delta.getFlags() & IResourceDelta.OPEN) != 0) {
+										project = (IProject) resource;
 
 									} else if (".project".equals(delta.getResource().getName())) {
 										// natures could have changed -- might need to update the working sets
@@ -103,62 +102,62 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 						}
 					});
 				} catch (CoreException e) {
-					Activator.getUtil().error(2, "Error walking delta", e);
+					throw new RuntimeException(e);
 				}
 			}
-
-			private void removeFromWorkingSet(IWorkingSet workingSet, IProject project) {
-				IAdaptable[] elements = workingSet.getElements();
-				if (elements.length == 0) {
-					return;
-				}
-				List<IAdaptable> newElements = new ArrayList<IAdaptable>();
-				boolean found = false;
-				for (IAdaptable adaptable : elements) {
-					if (adaptable != project) {
-						newElements.add(adaptable);
-					} else {
-						found = true;
-					}
-				}
-				if (!found) {
-					return;
-				}
-				workingSet.setElements(newElements.toArray(new IAdaptable[newElements.size()]));
-			}
-			private Set<IWorkingSet> setsContainingProject(IProject project) {
-				Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
-				for (IWorkingSet workingSet : getMyWorkingSets().values()) {
-					IAdaptable[] elements = workingSet.getElements();
-					for (IAdaptable element : elements) {
-	                    if (element.equals(project)) {
-	                    	workingSetsContainingProject.add(workingSet);
-	                    }
-                    }
-				}
-				return workingSetsContainingProject;
-			}
-			private void addToWorkingSets(IProject project, Set<IWorkingSet> setsContainingProject) {
-				if (!project.isOpen()) {
-					return;
-				}
-				for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
-					if (shouldInclude(project, entry.getKey())) {
-						// add project to working set
-						IWorkingSet workingSet = entry.getValue();
-						if (setsContainingProject != null) {
-							setsContainingProject.remove(workingSet);
-						}
-						IAdaptable[] elements = workingSet.getElements();
-						IAdaptable[] newElements = new IAdaptable[elements.length + 1];
-						System.arraycopy(elements, 0, newElements, 0, elements.length);
-						newElements[elements.length] = project;
-						workingSet.setElements(newElements);
-					}
-				}
-			}});
+		});
 	}
 
+	protected void removeFromWorkingSet(IWorkingSet workingSet, IProject project) {
+		IAdaptable[] elements = workingSet.getElements();
+		if (elements.length == 0) {
+			return;
+		}
+		List<IAdaptable> newElements = new ArrayList<IAdaptable>();
+		boolean found = false;
+		for (IAdaptable adaptable : elements) {
+			if (adaptable != project) {
+				newElements.add(adaptable);
+			} else {
+				found = true;
+			}
+		}
+		if (!found) {
+			return;
+		}
+		workingSet.setElements(newElements.toArray(new IAdaptable[newElements.size()]));
+	}
+	protected void addToWorkingSets(IProject project, Set<IWorkingSet> setsContainingProject) {
+		if (!project.isOpen()) {
+			return;
+		}
+		for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
+			if (shouldInclude(project, entry.getKey())) {
+				// add project to working set
+				IWorkingSet workingSet = entry.getValue();
+				if (setsContainingProject != null) {
+					setsContainingProject.remove(workingSet);
+				}
+				IAdaptable[] elements = workingSet.getElements();
+				IAdaptable[] newElements = new IAdaptable[elements.length + 1];
+				System.arraycopy(elements, 0, newElements, 0, elements.length);
+				newElements[elements.length] = project;
+				workingSet.setElements(newElements);
+			}
+		}
+	}
+	protected Set<IWorkingSet> setsContainingProject(IProject project) {
+		Set<IWorkingSet> workingSetsContainingProject = new HashSet<IWorkingSet>();
+		for (IWorkingSet workingSet : getMyWorkingSets().values()) {
+			IAdaptable[] elements = workingSet.getElements();
+			for (IAdaptable element : elements) {
+				if (element.equals(project)) {
+					workingSetsContainingProject.add(workingSet);
+				}
+			}
+		}
+		return workingSetsContainingProject;
+	}
 	private String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
 		return id.substring(baseId_.length());
