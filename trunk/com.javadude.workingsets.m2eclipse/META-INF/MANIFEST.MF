@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: M2eclipse Dynamic WorkingSet Plug-in
+Bundle-SymbolicName: com.javadude.workingsets.m2eclipse;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.javadude.workingsets.m2eclipse.Activator
+Bundle-Vendor: JavaDude.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.javadude.workingsets;bundle-version="2.0.3",
+ org.maven.ide.eclipse;bundle-version="0.9.7",
+ org.maven.ide.eclipse.central;bundle-version="0.9.7",
+ org.maven.ide.eclipse.jdt;bundle-version="0.9.7",
+ org.eclipse.core.resources;bundle-version="3.4.1",
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.4.1",
+ org.eclipse.jface.text;bundle-version="3.4.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
