@@ -7,6 +7,12 @@
  *******************************************************************************/
 package com.javadude.workingsets.internal;
 
+import java.util.StringTokenizer;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+
 import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
@@ -16,6 +22,29 @@ import com.javadude.workingsets.DynamicWorkingSetUpdater;
  */
 public class NatureWorkingSetUpdater extends DynamicWorkingSetUpdater {
 	public NatureWorkingSetUpdater() {
-		super(new NatureWorkingSetProvider());
+		super("Nature: ");
+	}
+
+	public static boolean projectHasNature(IProject project, String natureList) {
+		StringTokenizer stringTokenizer = new StringTokenizer(natureList, ", ");
+		while (stringTokenizer.hasMoreTokens()) {
+			String nature = stringTokenizer.nextToken();
+			try {
+				if (project.hasNature(nature)) {
+					return true;
+				}
+			} catch (CoreException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return false;
+	}
+
+	@Override protected boolean shouldInclude(IResource resource, String workingSetId) {
+		if (!(resource instanceof IProject)) {
+			return false;
+		}
+		IProject project = (IProject) resource;
+		return projectHasNature(project, workingSetId);
 	}
 }

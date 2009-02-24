@@ -14,7 +14,6 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -90,14 +89,10 @@ public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 	 */
 	@Override protected List<IAdaptable> getMatchingItems() {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
-		try {
-			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-	            if (project.isOpen() && NatureWorkingSetProvider.projectHasNature(project, natureId_)) {
-	            	projects.add(project);
-	            }
-			}
-		} catch (CoreException e) {
-			Activator.getUtil().error(42, "Error checking natures", e);
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (project.isOpen() && NatureWorkingSetUpdater.projectHasNature(project, natureId_)) {
+            	projects.add(project);
+            }
 		}
 		return projects;
 	}

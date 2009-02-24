@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -41,10 +42,12 @@ import com.javadude.workingsets.internal.Activator;
  */
 public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 	private static final Map<Class<?>, Map<String, IWorkingSet>> workingSets_ = Collections.synchronizedMap(new HashMap<Class<?>, Map<String, IWorkingSet>>());
-	private DynamicWorkingSetProvider provider_;
+	private String baseId_;
 
-	public DynamicWorkingSetUpdater(DynamicWorkingSetProvider provider) {
-		provider_ = provider;
+	protected abstract boolean shouldInclude(IResource resource, String workingSetId);
+
+	public DynamicWorkingSetUpdater(String baseId) {
+		baseId_ = baseId;
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
 			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
@@ -140,7 +143,7 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 					return;
 				}
 				for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
-					if (provider_.shouldInclude(project, entry.getKey())) {
+					if (shouldInclude(project, entry.getKey())) {
 						// add project to working set
 						IWorkingSet workingSet = entry.getValue();
 						if (setsContainingProject != null) {
@@ -158,7 +161,7 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 
 	private String getId(IWorkingSet workingSet) {
 		String id = workingSet.getName();
-		return id.substring(provider_.getBaseId().length());
+		return id.substring(baseId_.length());
 	}
 
 	@Override

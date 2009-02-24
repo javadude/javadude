@@ -7,6 +7,11 @@
  *******************************************************************************/
 package com.javadude.workingsets.internal;
 
+import java.util.regex.Pattern;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+
 import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
 /**
@@ -16,6 +21,12 @@ import com.javadude.workingsets.DynamicWorkingSetUpdater;
  */
 public class RegExWorkingSetUpdater extends DynamicWorkingSetUpdater {
 	public RegExWorkingSetUpdater() {
-		super(new RegExWorkingSetProvider());
+		super("RegEx: ");
+	}
+	@Override protected boolean shouldInclude(IResource resource, String workingSetId) {
+		if (!(resource instanceof IProject)) {
+			return false;
+		}
+		return (Pattern.matches(workingSetId, ((IProject) resource).getName()));
 	}
 }
