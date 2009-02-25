@@ -48,7 +48,9 @@ import com.javadude.annotation.Delegate;
               instantiateAs = FlightAgentImpl.class)
     }
 )
-public class TravelAgent extends TravelAgentGen {
+public class TravelAgent extends TravelAgentGen
+    implements IHotelAgent, ICarAgent, IFlightAgent
+{
 
 }
 }}}
