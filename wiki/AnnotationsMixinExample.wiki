@@ -1,6 +1,8 @@
 !JavaDude Tools->[Annotations Annotations]->[AnnotationsExamples Annotations examples]
 =Mixin Example=
 
+Note: I'm not a fan of the "I" prefix on interfaces, but I'm using it here to make it more clear which types are interfaces vs classes.
+
 Suppose we have the following three interfaces:
 
 {{{
