@@ -1,6 +1,9 @@
 #labels Featured
 =Dynamic Working Sets for Eclipse.=
 
+= News =
+Following a suggested enhancement, I've added M2Eclipse support - you can now set up a working set based on a regular expression for the group and/or artifact ids of a maven project.
+
 = Introduction =
 
 Working sets are a great way to organize your projects in eclipse. However, it's up to you to add/move/remove projects.
@@ -22,6 +25,8 @@ If you're not sure how to use the Eclipse Update Manager open the Eclipse Help->
 Workbench User Guide->Tasks->Updating Features with the update Manager->Installing new features with the update manager.
 
 Choose "!JavaDude Automated Working Sets Feature"
+
+Note: If you select the "JavaDude Dynamic Maven Working Set Feature" you must have m2eclipse installed or you will not see the maven working sets appear.
 
 http://javadude.googlecode.com/svn/wiki/images/p2.gif
 
@@ -65,6 +70,8 @@ Alternatively, you can create a Project Nature Working Set:
 http://javadude.googlecode.com/svn/wiki/images/naturews.gif
 
 Name the working set, select the nature(s) you would like to include, and press *Finish*.
+
+You can also select a Dynamic Maven Working set. Setup is similar to the regular expression working sets but the regular expressions apply to the group artifact ids of your m2eclipse projects.
 
 If you like to use the *Top Level Elements->Working Sets*, switch back to it now.
 
