@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.workingsets.m2eclipse.feature"
       label="JavaDude Dynamic Maven Working Set Feature"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="JavaDude.com">
 
    <description url="http://javadude.com/tools/workingsets">
@@ -109,13 +109,13 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="com.javadude.workingsets" version="2.0.3" match="greaterOrEqual"/>
       <import plugin="org.maven.ide.eclipse" version="0.9.7" match="greaterOrEqual"/>
       <import plugin="org.maven.ide.eclipse.central" version="0.9.7" match="greaterOrEqual"/>
       <import plugin="org.maven.ide.eclipse.jdt" version="0.9.7" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.4.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor" version="3.4.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text" version="3.4.1" match="greaterOrEqual"/>
+      <import plugin="com.javadude.workingsets" version="2.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
