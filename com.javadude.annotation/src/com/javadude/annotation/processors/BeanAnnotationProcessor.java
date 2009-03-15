@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import com.javadude.annotation.Access;
 import com.javadude.annotation.Bean;
@@ -68,7 +66,7 @@ import com.sun.mirror.type.ReferenceType;
 // TODO override paramString if defined in superclass -- if method not found, check if the superclass annotation would define it
 
 public class BeanAnnotationProcessor implements AnnotationProcessor {
-	private static Map<String, AnnotationValue> getAnnotationValues(AnnotationMirror a) {
+	private Map<String, AnnotationValue> getAnnotationValues(AnnotationMirror a) {
 		Map<String, AnnotationValue> values = new HashMap<String, AnnotationValue>();
 		Map<AnnotationTypeElementDeclaration, AnnotationValue> elementValues = a.getElementValues();
 		for (Map.Entry<AnnotationTypeElementDeclaration, AnnotationValue> entry : elementValues.entrySet()) {
@@ -77,6 +75,61 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		return values;
 	}
 
+	private Map<String, AnnotationValue> getAnnotationValues(Declaration declaration, String annotationName) {
+		Collection<AnnotationMirror> annotationMirrors = declaration.getAnnotationMirrors();
+		for (AnnotationMirror annotationMirror : annotationMirrors) {
+			if (annotationName.equals(annotationMirror.getAnnotationType().getDeclaration().getQualifiedName())) {
+				return getAnnotationValues(annotationMirror);
+			}
+		}
+		return null;
+	}
+
+	private void setValue(Thing data, Map<String, AnnotationValue> values, String name, Object def) {
+		AnnotationValue annotationValue = values.get(name);
+		if (annotationValue == null) {
+			if (def != null)
+				data.put(name, def);
+		} else {
+			data.put(name, annotationValue.getValue());
+		}
+	}
+	private List<AnnotationValue> l(Map<String, AnnotationValue> values, String name) {
+		AnnotationValue annotationValue = values.get(name);
+		if (annotationValue == null) {
+			return Collections.emptyList();
+		}
+		@SuppressWarnings("unchecked")
+		List<AnnotationValue> value = (List<AnnotationValue>) annotationValue.getValue();
+		return value;
+	}
+	private String s(Map<String, AnnotationValue> values, String name, String def) {
+		AnnotationValue annotationValue = values.get(name);
+		if (annotationValue == null) {
+			return def;
+		}
+		return (String) annotationValue.getValue();
+	}
+	private int i(Map<String, AnnotationValue> values, String name, int def) {
+		AnnotationValue annotationValue = values.get(name);
+		if (annotationValue == null) {
+			return def;
+		}
+		return ((Integer) annotationValue.getValue()).intValue();
+	}
+	private boolean b(Map<String, AnnotationValue> values, String name) {
+		AnnotationValue annotationValue = values.get(name);
+		if (annotationValue == null) {
+			return false;
+		}
+		return ((Boolean) annotationValue.getValue()).booleanValue();
+	}
+	private boolean b(AnnotationValue value) {
+		if (value == null) {
+			return false;
+		}
+		return ((Boolean) value.getValue()).booleanValue();
+	}
 	private static final Set<String> createSet(String... items) {
 		Set<String> set = new HashSet<String>();
 		for (String item : items) {
@@ -84,7 +137,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		}
 		return set;
 	}
-	private static final Set<String> METHODS_TO_SKIP = BeanAnnotationProcessor.createSet("equals", "hashCode", "toString", "wait", "notify", "notifyAll");
+//	private static final Set<String> METHODS_TO_SKIP = BeanAnnotationProcessor.createSet("equals", "hashCode", "toString", "wait", "notify", "notifyAll");
 	private static final Set<String> PRIMITIVE_TYPES = BeanAnnotationProcessor.createSet("byte", "short", "int", "long", "float", "double", "char", "boolean");
 	private static Processor template;
 	private static final boolean nestedEclipse;
@@ -100,72 +153,20 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 	}
 
 	// TODO add parameters to METHODS_TO_SKIP and only skip those methods that match those parameters...
-	private static final Class<?>[] EMPTY_PARAMS = {};
-	private static final Object[] EMPTY_ARGS = {};
+//	private static final Class<?>[] EMPTY_PARAMS = {};
+//	private static final Object[] EMPTY_ARGS = {};
 	private final AnnotationProcessorEnvironment env_;
 
 	public BeanAnnotationProcessor(AnnotationProcessorEnvironment env) {
 		env_ = env;
 	}
-//	private String selectType(Declaration declaration, String spec, Object o, String classAttribute, String stringAttribute, String defaultValue, boolean required) {
-//		java.lang.reflect.Method classMethod;
-//		java.lang.reflect.Method stringMethod;
-//		try {
-//			classMethod = o.getClass().getMethod(classAttribute, BeanAnnotationProcessor.EMPTY_PARAMS);
-//			stringMethod = o.getClass().getMethod(stringAttribute, BeanAnnotationProcessor.EMPTY_PARAMS);
-//			String classValue = null;
-//			try {
-//				classMethod.invoke(o, BeanAnnotationProcessor.EMPTY_ARGS);
-//			} catch (InvocationTargetException e) {
-//				if (e.getTargetException() instanceof MirroredTypeException) {
-//					classValue = ((MirroredTypeException) e.getTargetException()).getQualifiedName();
-//				} else {
-//					throw e;
-//				}
-//			}
-//
-//			if ("java.lang.Void".equals(classValue)) {
-//				classValue = null;
-//			}
-//
-//			String stringValue = (String) stringMethod.invoke(o, BeanAnnotationProcessor.EMPTY_ARGS);
-//
-//			if ("java.lang.Void".equals(stringValue) || "".equals(stringValue)) {
-//				stringValue = null;
-//			}
-//
-//			if (classValue == null && stringValue != null) {
-//				return stringValue;
-//			} else if (stringValue == null && classValue != null) {
-//				return classValue;
-//			}
-//
-//			if (defaultValue != null) {
-//				return defaultValue;
-//			} else {
-//				if (required) {
-//					error(declaration, "You must specify " + classAttribute + " or " + stringAttribute + " for " + spec);
-//				}
-//				return null;
-//			}
-//		} catch (Exception e1) {
-//			StringWriter sw = new StringWriter();
-//			PrintWriter pw = new PrintWriter(sw);
-//			e1.printStackTrace(pw);
-//			pw.close();
-//			String message = "Error processing " + spec + ": ";
-//			error(declaration, message + sw);
-//			return null;
-//		}
-//	}
-
-	private void error(AnnotationMirror annotationMirror, String message) {
+	public void error(AnnotationMirror annotationMirror, String message) {
 		env_.getMessager().printError(annotationMirror.getPosition(), message);
 	}
-	private void error(Declaration declaration, String message) {
+	public void error(Declaration declaration, String message) {
 		env_.getMessager().printError(declaration.getPosition(), message);
 	}
-	private void error(AnnotationValue value, String message) {
+	public void error(AnnotationValue value, String message) {
 		env_.getMessager().printError(value.getPosition(), message);
 	}
 	private String commaSeparate(Collection<?> values) {
@@ -173,19 +174,22 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		for (Object object : values) {
 			result = addWithCommasBetween(result, object);
 		}
-		if (result == null)
+		if (result == null) {
 			return "";
+		}
 		return result;
 	}
 	private String addWithCommasBetween(String list, Object item) {
-		if (list == null)
+		if (list == null) {
 			return item.toString();
-		else
+		} else {
 			return list + ", " + item.toString();
+		}
 	}
 	private String normalizeList(String list) {
-		if (list == null)
+		if (list == null) {
 			return "";
+		}
 		return list + ' ';
 	}
 	private Thing setupMethod(ExecutableDeclaration declaration, boolean forceNonAbstract) {
@@ -200,8 +204,9 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			MethodDeclaration methodDeclaration = (MethodDeclaration) declaration;
 			name = methodDeclaration.getSimpleName();
 			returnType = methodDeclaration.getReturnType().toString();
-			if (!forceNonAbstract)
+			if (!forceNonAbstract) {
 				isAbstract = methodDeclaration.getModifiers().contains(Modifier.ABSTRACT);
+			}
 			if ("void".equals(returnType)) {
 				nullBody = "// null object implementation; do nothing";
 			} else if ("boolean".equals(returnType)) {
@@ -215,8 +220,9 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			}
 		}
 		Collection<ReferenceType> thrownTypes = declaration.getThrownTypes();
-		if (!thrownTypes.isEmpty())
+		if (!thrownTypes.isEmpty()) {
 			throwsClause = "throws " + commaSeparate(thrownTypes);
+		}
 		String genericDecls = null;
 		String argDecls = null;
 		String args = null;
@@ -232,28 +238,29 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		}
 		Collection<Modifier> modifiers2 = declaration.getModifiers();
 		for (Modifier modifier : modifiers2) {
-			if (!"abstract".equals(modifier.toString()))
+			if (!"abstract".equals(modifier.toString())) {
 				modifiers += modifier.toString() + ' ';
+			}
 		}
-		if (genericDecls == null)
+		if (genericDecls == null) {
 			genericDecls = "";
-		else
+		} else {
 			genericDecls = '<' + genericDecls + "> ";
+		}
 		Thing method = new Thing("method");
-		method.set("name", name);
-		method.set("returnType", returnType);
-		method.set("abstract", isAbstract);
-		method.set("nullBody", nullBody);
-		method.set("modifiers", modifiers); // do not normalize; already "" or has ' ' at end
-		method.set("argDecls", normalizeList(argDecls));
-		method.set("args", normalizeList(args));
-		method.set("genericDecls", genericDecls);
-		method.set("throwsClause", throwsClause);
+		method.put("name", name);
+		method.put("returnType", returnType);
+		method.put("abstract", isAbstract);
+		method.put("nullBody", nullBody);
+		method.put("modifiers", modifiers); // do not normalize; already "" or has ' ' at end
+		method.put("argDecls", normalizeList(argDecls));
+		method.put("args", normalizeList(args));
+		method.put("genericDecls", genericDecls);
+		method.put("throwsClause", throwsClause);
 		return method;
 	}
 	public void process() {
 		final AnnotationTypeDeclaration beanAnn = (AnnotationTypeDeclaration) env_.getTypeDeclaration(Bean.class.getName());
-
 		for (Declaration declaration : env_.getDeclarationsAnnotatedWith(beanAnn)) {
 			try {
 				if (!(declaration instanceof ClassDeclaration)) {
@@ -261,552 +268,32 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					return;
 				}
 
+				Thing data = new Thing("data");
+
 				ClassDeclaration classDeclaration = (ClassDeclaration) declaration;
 				PackageDeclaration packageDeclaration = classDeclaration.getPackage();
 
-				String genericDecls = "";
-				boolean superclassHasPropertyChangeSupport = false;
-				boolean superclassHasParamString = false;
-				String classModifiers = "";
-				int spacesForLeadingTabs = -1;
-				boolean cloneable = false;
-				boolean defineEqualsAndHashCode = false;
-				boolean equalsAndHashCodeCallSuper = false;
-				boolean defineCreatePropertyMap = false;
-				String superclassName = null;
-				List<Thing> superclassConstructors = new ArrayList<Thing>();
-				List<Thing> defaultMethods = new ArrayList<Thing>();
-				boolean definePropertyNameConstants = false;
-				boolean extendPropertyNameConstants = false;
-				List<AnnotationValue> properties = Collections.emptyList();
-				List<AnnotationValue> observers = Collections.emptyList();
-				List<AnnotationValue> delegates = Collections.emptyList();
-				List<AnnotationValue> nullObjects = Collections.emptyList();
+				Map<String, AnnotationValue> beanValues = getAnnotationValues(classDeclaration, "com.javadude.annotation.Bean");
 
-				// TODO - deal with defaults defined in annotations
-				Collection<AnnotationMirror> annotationMirrors = classDeclaration.getAnnotationMirrors();
-				for (AnnotationMirror annotationMirror : annotationMirrors) {
-					if (!"com.javadude.annotation.Bean".equals(annotationMirror.getAnnotationType().getDeclaration().getQualifiedName()))
-						continue;
+				checkExtends(classDeclaration, packageDeclaration);		// check that the class extends XXXGen
+				processSuperclass(data, beanValues);					// process the superclass attribute
+				processProperties(data, beanValues);
+				processObservers(data, beanValues);
+				processNullObjects(data, beanValues);
+				processDelegates(data, beanValues);
+				processDefaultMethods(data, classDeclaration);
 
-					Map<AnnotationTypeElementDeclaration, AnnotationValue> elementValues = annotationMirror.getElementValues();
-					for (Entry<AnnotationTypeElementDeclaration, AnnotationValue> elementValue : elementValues.entrySet()) {
-						AnnotationValue value = elementValue.getValue();
-						AnnotationTypeElementDeclaration key = elementValue.getKey();
+				setValue(data, beanValues, "cloneable", false);
+				setValue(data, beanValues, "defineEqualsAndHashCode", false);
+				setValue(data, beanValues, "equalsAndHashCodeCallSuper", false);
+				setValue(data, beanValues, "definePropertyNameConstants", false);
+				setValue(data, beanValues, "defineCreatePropertyMap", false);
+				data.put("date", new Date());
+				data.put("year", Calendar.getInstance().get(Calendar.YEAR));
+				data.put("className", classDeclaration.getSimpleName());
+				data.put("packageName", packageDeclaration.getQualifiedName());
 
-						if ("cloneable".equals(key.getSimpleName())) {
-							cloneable = ((Boolean) value.getValue()).booleanValue();
-						} else if ("definePropertyNameConstants".equals(key.getSimpleName())) {
-							definePropertyNameConstants = ((Boolean) value.getValue()).booleanValue();
-						} else if ("spacesForLeadingTabs".equals(key.getSimpleName())) {
-							spacesForLeadingTabs = ((Integer) value.getValue()).intValue();
-						} else if ("defineEqualsAndHashCode".equals(key.getSimpleName())) {
-							defineEqualsAndHashCode = ((Boolean) value.getValue()).booleanValue();
-						} else if ("equalsShouldCheckSuperEquals".equals(key.getSimpleName())) {
-							equalsAndHashCodeCallSuper = ((Boolean) value.getValue()).booleanValue();
-						} else if ("defineCreatePropertyMap".equals(key.getSimpleName())) {
-							defineCreatePropertyMap = ((Boolean) value.getValue()).booleanValue();
-						} else if ("properties".equals(key.getSimpleName())) {
-							properties = (List<AnnotationValue>) value.getValue();
-						} else if ("observers".equals(key.getSimpleName())) {
-							observers = (List<AnnotationValue>) value.getValue();
-						} else if ("delegates".equals(key.getSimpleName())) {
-							delegates = (List<AnnotationValue>) value.getValue();
-						} else if ("nullObjects".equals(key.getSimpleName())) {
-							nullObjects = (List<AnnotationValue>) value.getValue();
-						} else if ("superclass".equals(key.getSimpleName())) {
-							if (!(value.getValue() instanceof ClassDeclaration)) {
-								error(value, "superclass must be a class");
-								return;
-							}
-							ClassDeclaration superclass = (ClassDeclaration) value.getValue();
-							superclassName = superclass.getQualifiedName();
-							superclassHasPropertyChangeSupport = methodInherited("getPropertyChangeSupport", "java.beans.PropertyChangeSupport", superclass);
-							superclassHasParamString = methodInherited("paramString", "java.lang.String", superclass);
-
-							Collection<TypeParameterDeclaration> formalTypeParameters2 = superclass.getFormalTypeParameters();
-							for (TypeParameterDeclaration typeParameterDeclaration : formalTypeParameters2) {
-								genericDecls = addWithCommasBetween(genericDecls, typeParameterDeclaration);
-							}
-							if (genericDecls == null)
-								genericDecls = "";
-							else
-								genericDecls = '<' + genericDecls + '>';
-							for (Modifier modifier : superclass.getModifiers()) {
-								if (!"abstract".equals(modifier.toString()))
-									classModifiers += modifier.toString() + ' ';
-							}
-							Collection<ConstructorDeclaration> constructors = superclass.getConstructors();
-							for (ConstructorDeclaration constructorDeclaration : constructors) {
-								superclassConstructors.add(setupMethod(constructorDeclaration, false));
-							}
-
-							// if superclass has a PropertyNameConstants interface or a Bean annotation with
-							//     definePropertyNameConstants=true, we need to have our PropertyNameConstants
-							//     extend it
-							Collection<TypeDeclaration> nestedTypes = superclass.getNestedTypes();
-							for (TypeDeclaration typeDeclaration : nestedTypes) {
-								if ("PropertyNames".equals(typeDeclaration.getSimpleName()) && (typeDeclaration instanceof InterfaceDeclaration)) {
-									extendPropertyNameConstants = true;
-								}
-							}
-							if (extendPropertyNameConstants) {
-								// check if the superclass is annotated with Bean
-								Bean annotation = superclass.getAnnotation(Bean.class);
-								if (annotation != null)
-									extendPropertyNameConstants = annotation.definePropertyNameConstants();
-							}
-						}
-					}
-				}
-
-				String superClassName = classDeclaration.getSuperclass().toString();
-				int lt = superClassName.indexOf('<');
-				if (lt != -1) {
-					superClassName = superClassName.substring(0, lt);
-				}
-				int dot = superClassName.lastIndexOf('.');
-				if (dot != -1) {
-					String superClassPackageName = superClassName.substring(0, dot);
-					if (!superClassPackageName.equals(packageDeclaration.getQualifiedName())) {
-						superClassName = ""; // force error below
-					} else {
-						superClassName = superClassName.substring(dot + 1);
-					}
-				}
-
-				if (!superClassName.equals(classDeclaration.getSimpleName() + "Gen")) {
-					error(declaration, classDeclaration.getQualifiedName() + " must extend " + classDeclaration.getQualifiedName() + "Gen for @Bean to work properly");
-					return;
-				}
-
-				// validate the property interface definition flags
-				if (definePropertyNameConstants) {
-					if (extendPropertyNameConstants) {
-						if (superclassName == null) {
-							error(declaration, classDeclaration.getQualifiedName() + " cannot specify extendPropertyNameConstants=true without a superclass");
-							return;
-						}
-					}
-				} else if (extendPropertyNameConstants) {
-					error(declaration, classDeclaration.getQualifiedName() + " cannot specify extendPropertyNameConstants=true if definePropertyNameConstants=false");
-					return;
-				}
-
-				// find any methods that have default parameters
-				boolean error = false;
-				for (ConstructorDeclaration constructorDeclaration : classDeclaration.getConstructors()) {
-					Collection<ParameterDeclaration> parameters = constructorDeclaration.getParameters();
-					for (ParameterDeclaration parameterDeclaration : parameters) {
-						Default annotation = parameterDeclaration.getAnnotation(Default.class);
-						if (annotation != null) {
-							error(parameterDeclaration, "@Default is not legal in constructor parameters");
-							error = true;
-						}
-					}
-				}
-				if (error)
-					return;
-
-				methods: for (MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
-					Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
-					boolean seenDefault = false;
-					String[] names    = new String[parameters.size()];
-					String[] types    = new String[parameters.size()];
-					String[] defaults = new String[parameters.size()];
-					int n = 0;
-					for (ParameterDeclaration parameterDeclaration : parameters) {
-						Default annotation = parameterDeclaration.getAnnotation(Default.class);
-						names[n] = parameterDeclaration.getSimpleName();
-						types[n] = parameterDeclaration.getType().toString();
-						if (annotation != null) {
-							seenDefault = true;
-							if ("java.lang.String".equals(types[n])) {
-								defaults[n] = '"' + annotation.value() + '"';
-							} else {
-								defaults[n] = annotation.value();
-							}
-						} else if (seenDefault) {
-							error(parameterDeclaration, "All parameters after a parameter annotated with @Default must be annotated with @Default");
-							continue methods;
-						}
-						n++;
-					}
-
-					if (seenDefault) {
-						if (methodDeclaration.getModifiers().contains(Modifier.PRIVATE)) {
-							error(methodDeclaration, "Private methods cannot use @Default parameters");
-						}
-						if (methodDeclaration.getModifiers().contains(Modifier.STATIC)) {
-							error(methodDeclaration, "Static methods cannot use @Default parameters");
-						}
-						String modifiers3 = "";
-						if (methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
-							modifiers3 = "public ";
-						} else if (methodDeclaration.getModifiers().contains(Modifier.PROTECTED)) {
-							modifiers3 = "protected ";
-						}
-						String throwsClause = getThrowsClause(methodDeclaration);
-						String returnType = methodDeclaration.getReturnType().toString();
-						String methodName = methodDeclaration.getSimpleName();
-						String argDecl = "";
-						String callArgs = "";
-						for (int i = 0; i < n; i++) {
-							if (defaults[i] != null) {
-								String callArgsWithDefaults = callArgs;
-								for (int j = i; j < n; j++) {
-									if (j > 0) {
-										callArgsWithDefaults += ", ";
-									}
-									callArgsWithDefaults += defaults[j];
-								}
-								Thing method = new Thing("method");
-								method.set("name", methodName);
-								method.set("returnType", returnType);
-								method.set("throwsClause", throwsClause);
-								method.set("argDecls", argDecl);
-								method.set("modifiers", modifiers3);
-								method.set("args", callArgsWithDefaults);
-								defaultMethods.add(method);
-							}
-							if (i > 0) {
-								argDecl += ", ";
-								callArgs += ", ";
-							}
-							argDecl += types[i] + ' ' + names[i];
-							callArgs += names[i];
-						}
-						Thing method = new Thing("method");
-						method.set("name", methodName);
-						method.set("returnType", returnType);
-						method.set("throwsClause", throwsClause);
-						method.set("modifiers", modifiers3);
-						method.set("abstract", true);
-						method.set("argDecls", argDecl);
-						defaultMethods.add(method);
-					}
-				}
-
-				String firstPropertyName = null;
-				Set<String> propertyNames = new HashSet<String>();
-				boolean atLeastOneBound = false;
-				boolean atLeastOneDouble = false;
-				boolean atLeastOneObject = false;
-				if (properties != null) {
-				    String defaultTypeString = "java.lang.String";
-				    String defaultTypeClass = "java.lang.String";
-				    String defaultKeyTypeString = "java.lang.String";
-				    String defaultKeyTypeClass = "java.lang.String";
-				    Access defaultReader = Access.PUBLIC;
-				    Access defaultWriter = Access.PUBLIC;
-				    boolean defaultBound = false;
-				    PropertyKind defaultKind = PropertyKind.SIMPLE;
-				    boolean defaultOmitFromToString = false;
-				    boolean defaultNotNull = false;
-				    boolean defaultIsStatic = false;
-				    boolean defaultIsSynchronized = false;
-
-					for (AnnotationValue propertyValue : properties) {
-						// SAS SAS SAS - STOPPED HERE
-						// TODO change these values to AttributeValue
-						//   report errors on the actual values
-						//   know when they're set vs not set so we can apply default values appropriately
-
-					    String name = null;
-					    String plural = null;
-					    String typeClass = null;
-					    String typeString = null;
-					    String keyTypeClass = null;
-					    String keyTypeString = null;
-					    Access reader = defaultReader;
-					    Access writer = defaultWriter;
-					    boolean bound = defaultBound;
-					    PropertyKind kind = defaultKind;
-					    boolean omitFromToString = defaultOmitFromToString;
-					    boolean notNull = defaultNotNull;
-					    boolean isStatic = defaultIsStatic;
-					    boolean isSynchronized = defaultIsSynchronized;
-
-						AnnotationMirror property = (AnnotationMirror) propertyValue.getValue();
-						Map<AnnotationTypeElementDeclaration, AnnotationValue> elementValues = property.getElementValues();
-						for (Entry<AnnotationTypeElementDeclaration, AnnotationValue> elementValue : elementValues.entrySet()) {
-							AnnotationValue value = elementValue.getValue();
-							AnnotationTypeElementDeclaration key = elementValue.getKey();
-							String simpleName = key.getSimpleName();
-
-							if ("name".equals(simpleName))
-								name = (String) value.getValue();
-							else if ("plural".equals(simpleName))
-								plural = (String) value.getValue();
-							else if ("type".equals(simpleName))
-								typeClass = ((ClassDeclaration) value.getValue()).getQualifiedName();
-							else if ("typeString".equals(simpleName))
-								typeString = (String) value.getValue();
-							else if ("keyType".equals(simpleName))
-								keyTypeClass = ((ClassDeclaration) value.getValue()).getQualifiedName();
-							else if ("keyTypeString".equals(simpleName))
-								keyTypeString = (String) value.getValue();
-							else if ("reader".equals(simpleName))
-								reader = (Access) value.getValue();
-							else if ("writer".equals(simpleName))
-								writer = (Access) value.getValue();
-							else if ("bound".equals(simpleName))
-								bound = ((Boolean) value.getValue()).booleanValue();
-							else if ("omitFromToString".equals(simpleName))
-								omitFromToString = ((Boolean) value.getValue()).booleanValue();
-							else if ("notNull".equals(simpleName))
-								notNull = ((Boolean) value.getValue()).booleanValue();
-							else if ("isStatic".equals(simpleName))
-								isStatic = ((Boolean) value.getValue()).booleanValue();
-							else if ("isSynchronized".equals(simpleName))
-								isSynchronized = ((Boolean) value.getValue()).booleanValue();
-							else if ("kind".equals(simpleName))
-								kind = (PropertyKind) value.getValue();
-							else
-								throw new RuntimeException("Unhanded @Property attribute " + simpleName);
-						}
-
-						if (Property.DEFAULTS.equals(name)) {
-						    defaultTypeString = typeString;
-						    defaultTypeClass = typeClass;
-						    defaultKeyTypeString = keyTypeString;
-						    defaultKeyTypeClass = keyTypeClass;
-						    defaultReader = reader;
-						    defaultWriter = writer;
-						    defaultBound = bound;
-						    defaultKind = kind;
-						    defaultOmitFromToString = omitFromToString;
-						    defaultNotNull = notNull;
-						    defaultIsStatic = isStatic;
-						    defaultIsSynchronized = isSynchronized;
-
-						    if (defaultTypeString != null && defaultTypeClass != null)
-						    	error(property, "@Property cannot have both type and typeString attributes specified");
-						    if (defaultKeyTypeString != null && defaultKeyTypeClass != null)
-						    	error(property, "Default @Property cannot have both keyType and keyTypeString attributes specified");
-						    continue; // defaults are set; go to next property
-						}
-
-
-						// check for duplicate type specifications
-						if (typeString == null)
-							if (typeClass == null)
-								if (defaultTypeString != null)
-									typeString = defaultTypeString;
-								else
-									typeString = defaultTypeClass;
-							else
-								typeString = typeClass;
-						else
-							if (typeClass != null)
-								error(property, "@Property cannot have both type and typeString attributes specified");
-
-						if (kind == null)
-							kind = defaultKind;
-
-						// check for duplicate keytype specifications
-						if (kind.isMap()) {
-							if (keyTypeString == null)
-								if (keyTypeClass == null)
-									if (defaultKeyTypeString != null)
-										keyTypeString = defaultKeyTypeString;
-									else
-										keyTypeString = defaultKeyTypeClass;
-								else
-									keyTypeString = typeClass;
-							else
-								if (typeClass != null)
-									error(property, "@Property cannot have both type and typeString attributes specified");
-						} else {
-							if (keyTypeString != null || keyTypeClass == null)
-								error(property, "@Property can only have a keyType or keyTypeString attribute if kind is MAP or UNMODIFIABLE_MAP");
-						}
-
-						// check for plural names
-						if (kind.isSimple()) {
-							if (plural != null)
-								error(property, "@Property cannot have plural specified if kind is SIMPLE");
-						} else {
-							if (plural == null)
-								plural = name + 's';
-						}
-
-						if (firstPropertyName == null)
-							firstPropertyName = name;
-						if (propertyNames.contains(name)) {
-							error(declaration, "Duplicate property name '" + name + "' specified for @Bean properties definition");
-						} else {
-							propertyNames.add(name);
-						}
-
-						if (bound)
-							if (isStatic)
-								error(property, "Static properties cannot be declared bound");
-							else
-								atLeastOneBound = true;
-
-						if ("double".equals(typeString))
-							atLeastOneDouble = true;
-
-//						PropertySpec propertySpec = new PropertySpec();
-//						propertySpec.set("kind", property.kind());
-//						propertySpec.set("omitFromToString", property.omitFromToString());
-//						data.addProperty(propertySpec);
-//						String type = selectType(declaration, "@Property", property, "type", "typeString", "java.lang.String", true);
-//						if (type == null) {
-//							return;
-//						}
-//
-//						propertySpec.set("type", type);
-//
-//						// evil hack to get the type, which is a Class
-//
-//						if (property.kind().isMap()) {
-//							propertySpec.set("kind", property.kind());
-//							String keyType = selectType(declaration, "@Property", property, "keyType", "keyTypeString", "java.lang.String", false);
-//							if (keyType == null) {
-//								error(declaration, "keytype cannot be null for map property " + property.name() + " in @Property");
-//								return;
-//							}
-//							propertySpec.set("keyType", keyType);
-//							propertySpec.set("pluralName", plural);
-//
-//						} else {
-//							String keyType = selectType(declaration, "@Property", property, "keyType", "keyTypeString", null, false);
-//							if (keyType != null) {
-//								error(declaration, "keytype can only be specified for map properties; property " + property.name() + " is not a map");
-//								return;
-//							}
-//							if (property.kind().isList() || property.kind().isSet()) {
-//								propertySpec.set("pluralName", plural);
-//							} else {
-//								propertySpec.set("primitive", BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(type));
-//							}
-//						}
-//
-//						propertySpec.set("name", property.name());
-//
-//						if (!propertySpec.isPrimitive())
-//							atLeastOneObject = true;
-//						propertySpec.set("bound", property.bound());
-//						Access reader = property.reader();
-//						Access writer = property.writer();
-//						if (writer == Access.NOT_SPECIFIED) {
-//							writer = defaultWriter;
-//						}
-//						if (reader == Access.NOT_SPECIFIED) {
-//							reader = defaultReader;
-//						}
-//
-//						if (writer.exists()) {
-//							propertySpec.set("writerAccess", writer.getModifier());
-//						}
-//						if (reader.exists()) {
-//							propertySpec.set("readerAccess", reader.getModifier());
-//						}
-//						propertySpec.set("readable", reader.exists());
-//						propertySpec.set("writeable", writer.exists());
-//						propertySpec.set("notNull", property.notNull());
-//						if (propertySpec.isNotNull() && propertySpec.isPrimitive()) {
-//							error(declaration, "Cannot specify notNull for primitive-typed property " + propertySpec.getName() + " in @Property");
-//							return;
-//						}
-//						String extraFieldKeywords = "";
-//						String extraMethodKeywords = "";
-//						if (property.isStatic()) {
-//							extraFieldKeywords = "static ";
-//							extraMethodKeywords = "static ";
-//						}
-//						if (property.isSynchronized()) {
-//							if (property.isStatic()) {
-//								extraMethodKeywords += "synchronized ";
-//							} else {
-//								extraMethodKeywords = "synchronized ";
-//							}
-//						}
-//						propertySpec.set("extraFieldKeywords", extraFieldKeywords);
-//						propertySpec.set("extraMethodKeywords", extraMethodKeywords);
-					}
-				}
-//
-//				if (bean.observers() != null) {
-//					for (Observer observer : bean.observers()) {
-//						if (observer == null) {
-//							continue;
-//						}
-//						Type type = new Type();
-//						data.addObserver(type);
-//						String typeName = selectType(declaration, "@Observer", observer, "type", "typeString", null, true);
-//						if (typeName == null) {
-//							return;
-//						}
-//						type.set("name", typeName);
-//						defineListenerOrDelegate(false, type, packageDeclaration, "listener interface", "eventsets", packageName);
-//					}
-//				}
-//
-//				if (bean.nullObjects().length > 0 && !"".equals(bean.nullObjects()[0])) {
-//					for (NullObject nullObject : bean.nullObjects()) {
-//						if (nullObject == null) {
-//							continue;
-//						}
-//						Type listener = new Type();
-//						String type = selectType(declaration, "@NullObject", nullObject, "type", "typeString", null, true);
-//						if (type == null) {
-//							return;
-//						}
-//						listener.set("name", type);
-//						data.addNullObject(listener);
-//						defineListenerOrDelegate(true, listener, classDeclaration, "null implementation class/interface", "nullImplementationName", packageName);
-//					}
-//				}
-//
-//				if (bean.delegates() != null) {
-//					for (Delegate delegate : bean.delegates()) {
-//						if (delegate == null) {
-//							continue;
-//						}
-//						try {
-//							DelegateSpec delegateSpec = new DelegateSpec();
-//							delegateSpec.set("accessor", delegate.accessor());
-//							data.addDelegate(delegateSpec);
-//							String type = selectType(declaration, "@Delegate", delegate, "type", "typeString", null, true);
-//							if (type == null) {
-//								return;
-//							}
-//							delegateSpec.set("name", type);
-//							defineListenerOrDelegate(false, delegateSpec, packageDeclaration, "delegate type", "delegates", packageName);
-//
-//							// TODO if property doesn't exist, define it
-//						} catch (NoSuchElementException e) {
-//							error(declaration, "Invalid delegate specification; must be type,varName,type,varName...");
-//						}
-//					}
-//				}
-
-				Thing data = new Thing("data");
-				data.set("classModifiers", classModifiers);
-				data.set("genericDecls", genericDecls);
-				data.set("cloneable", cloneable);
-				data.set("defineEqualsAndHashCode", defineEqualsAndHashCode);
-				data.set("equalsAndHashCodeCallSuper", equalsAndHashCodeCallSuper);
-				data.set("defineCreatePropertyMap", defineCreatePropertyMap);
-				data.set("superclass", superclassName);
-				data.set("superclassConstructors", superclassConstructors);
-				data.set("date", new Date());
-				data.set("year", Calendar.getInstance().get(Calendar.YEAR));
-				data.set("className", classDeclaration.getSimpleName());
-				String packageName = packageDeclaration.getQualifiedName();
-				data.set("packageName", packageName);
-				data.set("extendPropertyNameConstants", extendPropertyNameConstants);
-				data.set("paramStringModifiers", "protected");
-				data.set("extendParamString", superclassHasParamString);
-				data.set("definePropertyChangeSupport", !superclassHasPropertyChangeSupport && atLeastOneBound);
-				data.set("atLeastOneDouble", atLeastOneDouble);
-				data.set("atLeastOneObject", atLeastOneObject);
-				data.set("definePropertyNameConstants", definePropertyNameConstants);
-				data.set("defaultMethods", defaultMethods);
-				data.set("firstPropertyName", firstPropertyName);
+				data.checkAllValuesSet(declaration, this);
 
 				Filer f = env_.getFiler();
 				PrintWriter pw = f.createSourceFile(classDeclaration.getQualifiedName() + "Gen");
@@ -816,11 +303,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					FileReader fileReader = new FileReader(workspace + "/com.javadude.annotation/template/$packageName$/$className$Gen.java");
 					template = new TemplateReader().readTemplate(fileReader);
 				}
+				int spacesForLeadingTabs = i(beanValues, "spacesForLeadingTabs", -1);
 				String padding = null;
 				if (spacesForLeadingTabs != -1) {
 					padding = "";
-					for (int i = 0; i < spacesForLeadingTabs; i++)
+					for (int i = 0; i < spacesForLeadingTabs; i++) {
 						padding += ' ';
+					}
 				}
 				template.process(new Symbols(data), pw, -1, padding);
 				pw.close();
@@ -837,62 +326,641 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			}
 		}
 	}
-	private boolean methodInherited(String methodName, String returnType, ClassDeclaration superclass) {
+	private void processSuperclass(Thing data, Map<String, AnnotationValue> beanValues) {
+		AnnotationValue value = beanValues.get("superclass");
+		data.put("superclass", null);
+		data.put("genericDecls", "");
+		data.put("classModifiers", "");
+		data.put("propertyNameConstantsInherited", false);
+		data.put("getPropertyChangeSupportInherited", false);
+		data.put("getPropertyChangeSupportModifiers", "protected");
+		data.put("paramStringInherited", false);
+		data.put("paramStringModifiers", "protected");
+		data.put("createPropertyMapInherited", false);
+		data.put("createPropertyMapModifiers", "public");
+		data.put("atLeastOneDouble", false);
+		data.put("atLeastOneBound", false);
+		data.put("atLeastOneObject", false);
+		data.put("atLeastOneDefault", false);
+
+		if (value == null) {
+			data.setEmpty("superclassConstructors");
+		} else {
+			if (!(value.getValue() instanceof ClassDeclaration)) {
+				error(value, "superclass must be a class");
+				return;
+			}
+			ClassDeclaration superclass = (ClassDeclaration) value.getValue();
+			data.put("superclass", superclass.getQualifiedName());
+			boolean hasProperties = !l(beanValues, "properties").isEmpty();
+			// check if getPropertyChangeSupport or some superclass defines bound properties in @Bean
+			checkInheritedMethod(data, "getPropertyChangeSupport", "java.beans.PropertyChangeSupport", superclass, true,
+					new InheritCheck() {
+						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+							Bean beanAnn = classDeclaration.getAnnotation(Bean.class);
+							if (beanAnn != null) {
+								Property[] properties = beanAnn.properties();
+								for (Property property : properties) {
+									if (property.bound()) {
+										d.put("getPropertyChangeSupportInherited", true);
+										d.put("getPropertyChangeSupportModifiers", "protected");
+										return true;
+									}
+								}
+							}
+							return false;
+						} });
+			// check if paramString inherited or some superclass has @Bean
+			checkInheritedMethod(data, "paramString", "java.lang.String", superclass, !hasProperties,
+					new InheritCheck() {
+						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+							if (classDeclaration.getAnnotation(Bean.class) != null) {
+								d.put("paramStringInherited", true);
+								d.put("paramStringModifiers", "protected");
+								return true;
+							}
+							return false;
+						} });
+			// check if createPropertyMap inherited or some superclass has @Bean with defineCreatePropertyMap
+			checkInheritedMethod(data, "createPropertyMap", "java.lang.String", superclass, !hasProperties,
+					new InheritCheck() {
+						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+							Bean beanAnn = classDeclaration.getAnnotation(Bean.class);
+							if (beanAnn != null && beanAnn.defineCreatePropertyMap()) {
+								d.put("createPropertyMapInherited", true);
+								d.put("createPropertyMapModifiers", "public");
+								return true;
+							}
+							return false;
+						} });
+
+			String genericDecls = null;
+			Collection<TypeParameterDeclaration> formalTypeParameters2 = superclass.getFormalTypeParameters();
+			for (TypeParameterDeclaration typeParameterDeclaration : formalTypeParameters2) {
+				genericDecls = addWithCommasBetween(genericDecls, typeParameterDeclaration);
+			}
+			if (genericDecls == null) {
+				genericDecls = "";
+			} else {
+				genericDecls = '<' + genericDecls + '>';
+			}
+			data.put("genericDecls", genericDecls);
+
+			String classModifiers = "";
+			for (Modifier modifier : superclass.getModifiers()) {
+				if (!"abstract".equals(modifier.toString())) {
+					classModifiers += modifier.toString() + ' ';
+				}
+			}
+			data.put("classModifiers", classModifiers);
+
+			Collection<ConstructorDeclaration> constructors = superclass.getConstructors();
+			if (constructors.isEmpty()) {
+				data.setEmpty("superclassConstructors");
+			} else {
+				for (ConstructorDeclaration constructorDeclaration : constructors) {
+					data.add("superclassConstructors", setupMethod(constructorDeclaration, false));
+				}
+			}
+
+			boolean extendPropertyNameConstants = false;
+			if (b(beanValues, "definePropertyNameConstants")) {
+				// if superclass has a PropertyNameConstants interface or a Bean annotation with
+				//     definePropertyNameConstants=true, we need to have our PropertyNameConstants
+				//     extend it
+				Collection<TypeDeclaration> nestedTypes = superclass.getNestedTypes();
+				for (TypeDeclaration typeDeclaration : nestedTypes) {
+					if ("PropertyNames".equals(typeDeclaration.getSimpleName()) && (typeDeclaration instanceof InterfaceDeclaration)) {
+						extendPropertyNameConstants = true;
+					}
+				}
+				if (!extendPropertyNameConstants) {
+					// check if the superclass is annotated with Bean
+					Bean annotation = superclass.getAnnotation(Bean.class);
+					if (annotation != null) {
+						extendPropertyNameConstants = annotation.definePropertyNameConstants();
+					}
+				}
+			}
+			data.put("propertyNameConstantsInherited", extendPropertyNameConstants);
+		}
+	}
+
+	private AnnotationValue get(Map<String, AnnotationValue> values, String name, AnnotationValue def) {
+		AnnotationValue value = values.get(name);
+		if (value != null)
+			return value;
+		return def;
+	}
+	private void processProperties(Thing data, Map<String, AnnotationValue> beanValues) {
+		boolean atLeastOneBound = false;
+		boolean atLeastOneDouble = false;
+		boolean atLeastOneObject = false;
+		String firstPropertyName = null;
+		AnnotationValue propertiesValue = beanValues.get("properties");
+		if (propertiesValue == null) {
+			data.setEmpty("properties");
+		} else {
+			Set<String> propertyNames = new HashSet<String>();
+			AnnotationValue defaultType = null;
+			AnnotationValue defaultTypeString = null;
+			AnnotationValue defaultKeyType = null;
+			AnnotationValue defaultKeyTypeString = null;
+			AnnotationValue defaultReader = null;
+			AnnotationValue defaultWriter = null;
+			AnnotationValue defaultBound = null;
+			AnnotationValue defaultKind = null;
+			AnnotationValue defaultOmitFromToString = null;
+			AnnotationValue defaultNotNull = null;
+			AnnotationValue defaultIsStatic = null;
+			AnnotationValue defaultIsSynchronized = null;
+
+    		@SuppressWarnings("unchecked")
+    		List<AnnotationValue> properties = (List<AnnotationValue>) propertiesValue.getValue();
+		    for (AnnotationValue annotationValue : properties) {
+				AnnotationMirror propertyMirror = (AnnotationMirror) annotationValue.getValue();
+				Map<String, AnnotationValue> propertyValues = getAnnotationValues(propertyMirror);
+				AnnotationValue name = get(propertyValues, "name", null);
+				AnnotationValue plural = get(propertyValues, "plural", null);
+				AnnotationValue type = get(propertyValues, "type", defaultType);
+				AnnotationValue typeString = get(propertyValues, "typeString", defaultTypeString);
+				AnnotationValue keyType = get(propertyValues, "keyType", defaultKeyType);
+				AnnotationValue keyTypeString = get(propertyValues, "keyTypeString", defaultKeyTypeString);
+				AnnotationValue reader = get(propertyValues, "reader", defaultReader);
+				AnnotationValue writer = get(propertyValues, "writer", defaultWriter);
+				AnnotationValue bound = get(propertyValues, "bound", defaultBound);
+				AnnotationValue kind = get(propertyValues, "kind", defaultKind);
+				AnnotationValue omitFromToString = get(propertyValues, "omitFromToString", defaultOmitFromToString);
+				AnnotationValue notNull = get(propertyValues, "notNull", defaultNotNull);
+				AnnotationValue isStatic = get(propertyValues, "isStatic", defaultIsStatic);
+				AnnotationValue isSynchronized = get(propertyValues, "isSynchronized", defaultIsSynchronized);
+
+				if (Property.DEFAULTS.equals(name.getValue())) {
+					defaultType = type;
+					defaultTypeString = typeString;
+					defaultKeyType = keyType;
+					defaultKeyTypeString = keyTypeString;
+					defaultReader = reader;
+					defaultWriter = writer;
+					defaultBound = bound;
+					defaultKind = kind;
+					defaultOmitFromToString = omitFromToString;
+					defaultNotNull = notNull;
+					defaultIsStatic = isStatic;
+					defaultIsSynchronized = isSynchronized;
+					continue;
+				}
+
+				// plugin the default values
+				if (type == null) type = defaultType;
+				if (typeString == null) typeString = defaultTypeString;
+				if (keyType == null) keyType = defaultKeyType;
+				if (keyTypeString == null) keyTypeString = defaultKeyTypeString;
+				if (reader == null) reader = defaultReader;
+				if (writer == null) writer = defaultWriter;
+				if (bound == null) bound = defaultBound;
+				if (kind == null) kind = defaultKind;
+				if (omitFromToString == null) omitFromToString = defaultOmitFromToString;
+				if (notNull == null) notNull = defaultNotNull;
+				if (isStatic == null) isStatic = defaultIsStatic;
+				if (isSynchronized == null) isSynchronized = defaultIsSynchronized;
+
+				Thing property = new Thing("property");
+				property.put("name", name.getValue());
+
+				if (typeString == null) {
+					if (type == null) {
+						property.put("type", "java.lang.String");
+					} else {
+						property.put("type", ((TypeDeclaration) type.getValue()).getQualifiedName());
+					}
+				} else {
+					if (type != null) {
+						error(typeString, "@Property cannot have both type and typeString attributes specified");
+						error(type, "@Property cannot have both type and typeString attributes specified");
+					} else {
+						property.put("type", typeString.getValue());
+					}
+				}
+
+				PropertyKind propertyKind = PropertyKind.SIMPLE;
+				if (kind != null) {
+					propertyKind = (PropertyKind) kind.getValue();
+				}
+
+				// check for duplicate keytype specifications
+				if (propertyKind.isMap()) {
+					if (keyTypeString == null) {
+						if (keyType == null) {
+							property.put("keyType", "java.lang.String");
+						} else {
+							property.put("keyType", ((TypeDeclaration) keyType.getValue()).getQualifiedName());
+						}
+					} else
+						if (keyType != null) {
+							error(keyType, "@Property cannot have both keyType and keyTypeString attributes specified");
+							error(keyTypeString, "@Property cannot have both keyType and keyTypeString attributes specified");
+						}
+				} else {
+					if (keyTypeString != null) {
+						error(keyTypeString, "@Property can only have a keyTypeString attribute if kind is MAP or UNMODIFIABLE_MAP");
+					}
+					if (keyType != null) {
+						error(keyType, "@Property can only have a keyType attribute if kind is MAP or UNMODIFIABLE_MAP");
+					}
+					property.put("keyType", null);
+				}
+
+				// check for plural names
+				if (propertyKind.isSimple()) {
+					if (plural != null) {
+						error(plural, "@Property cannot have plural specified if kind is SIMPLE");
+					}
+					property.put("pluralName", null);
+				} else {
+					if (plural == null) {
+						property.put("pluralName", name.getValue() + "s");
+					} else {
+						property.put("pluralName", plural.getValue());
+					}
+				}
+
+				property.put("simple", propertyKind.isSimple());
+				property.put("list", propertyKind.isList());
+				property.put("map", propertyKind.isMap());
+				property.put("set", propertyKind.isSet());
+				String typeName = (String) property.get("type");
+
+				property.put("float", "float".equals(typeName));
+				property.put("double", "double".equals(typeName));
+				property.put("boolean", "boolean".equals(typeName));
+				property.put("char", "char".equals(typeName));
+				property.put("byte", "byte".equals(typeName));
+				property.put("long", "long".equals(typeName));
+				property.put("int", "int".equals(typeName));
+				property.put("short", "short".equals(typeName));
+
+				if (property.containsKey("firstPropertyName")) {
+					property.put("firstPropertyName", name.getValue());
+				}
+				if (propertyNames.contains(name.getValue())) {
+					error(name, "Duplicate property name '" + name + "' specified for @Bean properties definition");
+				} else {
+					propertyNames.add((String) name.getValue());
+				}
+
+				if (bound != null) {
+					if (isStatic!= null) {
+						error(bound, "Static properties cannot be declared bound");
+						error(isStatic, "Static properties cannot be declared bound");
+					} else {
+						atLeastOneBound = true;
+					}
+				}
+
+				if ("double".equals(property.get("type"))) {
+					data.put("atLeastOneDouble", true);
+				}
+				property.put("kind", propertyKind);
+				property.put("omitFromToString", b(omitFromToString));
+				data.add("properties", property);
+
+				// evil hack to get the type, which is a Class
+
+				boolean isPrimitive = BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(property.get("type"));
+				property.put("primitive", isPrimitive);
+
+				if (!isPrimitive)
+					data.put("atLeastOneObject", true);
+
+				property.put("bound", b(bound));
+				if (writer == null) {
+					property.put("writerAccess", Access.PUBLIC.getModifier());
+					property.put("writeable", true);
+				} else {
+					Access writerAccess = (Access) writer.getValue();
+					property.put("writerAccess", writerAccess.getModifier());
+					property.put("writeable", writerAccess != Access.NONE);
+				}
+				if (reader == null) {
+					property.put("readerAccess", Access.PUBLIC.getModifier());
+					property.put("readable", true);
+				} else {
+					Access readerAccess = (Access) reader.getValue();
+					property.put("readerAccess", readerAccess.getModifier());
+					property.put("readable", readerAccess != Access.NONE);
+				}
+
+				boolean bNotNull = b(notNull);
+				boolean bIsStatic = b(isStatic);
+				boolean bIsSynchronized = b(isSynchronized);
+				property.put("notNull", bNotNull);
+
+				if (bNotNull && isPrimitive) {
+					error(notNull, "Cannot specify notNull for primitive-typed property " + name.getValue() + " in @Property");
+					return;
+				}
+				String extraFieldKeywords = "";
+				String extraMethodKeywords = "";
+				if (bIsStatic) {
+					extraFieldKeywords = "static ";
+					extraMethodKeywords = "static ";
+				}
+				if (bIsSynchronized) {
+					if (bIsStatic) {
+						extraMethodKeywords += "synchronized ";
+					} else {
+						extraMethodKeywords = "synchronized ";
+					}
+				}
+				property.put("extraFieldKeywords", extraFieldKeywords);
+				property.put("extraMethodKeywords", extraMethodKeywords);
+				property.checkAllValuesSet(propertiesValue, this);
+			}
+		}
+		data.put("definePropertyChangeSupport", !((Boolean) data.get("getPropertyChangeSupportInherited")) && atLeastOneBound);
+		data.put("atLeastOneDouble", atLeastOneDouble);
+		data.put("atLeastOneObject", atLeastOneObject);
+		data.put("firstPropertyName", firstPropertyName);
+	}
+
+
+	private void processDelegates(Thing data, Map<String, AnnotationValue> beanValues) {
+		AnnotationValue delegatesValue = beanValues.get("delegates");
+		if (delegatesValue == null) {
+			data.setEmpty("delegates");
+		} else {
+//		if (bean.delegates() != null) {
+//		for (Delegate delegate : bean.delegates()) {
+//			if (delegate == null) {
+//				continue;
+//			}
+//			try {
+//				DelegateSpec delegateSpec = new DelegateSpec();
+//				delegateSpec.set("accessor", delegate.accessor());
+//				data.addDelegate(delegateSpec);
+//				String type = selectType(declaration, "@Delegate", delegate, "type", "typeString", null, true);
+//				if (type == null) {
+//					return;
+//				}
+//				delegateSpec.set("name", type);
+//				defineListenerOrDelegate(false, delegateSpec, packageDeclaration, "delegate type", "delegates", packageName);
+//
+//				// TODO if property doesn't exist, define it
+//			} catch (NoSuchElementException e) {
+//				error(declaration, "Invalid delegate specification; must be type,varName,type,varName...");
+//			}
+//		}
+	}
+	}
+
+	private void processNullObjects(Thing data, Map<String, AnnotationValue> beanValues) {
+		AnnotationValue nullObjectsValue = beanValues.get("nullObjects");
+		if (nullObjectsValue == null) {
+			data.setEmpty("nullObjects");
+		} else {
+//		if (bean.nullObjects().length > 0 && !"".equals(bean.nullObjects()[0])) {
+//		for (NullObject nullObject : bean.nullObjects()) {
+//			if (nullObject == null) {
+//				continue;
+//			}
+//			Type listener = new Type();
+//			String type = selectType(declaration, "@NullObject", nullObject, "type", "typeString", null, true);
+//			if (type == null) {
+//				return;
+//			}
+//			listener.set("name", type);
+//			data.addNullObject(listener);
+//			defineListenerOrDelegate(true, listener, classDeclaration, "null implementation class/interface", "nullImplementationName", packageName);
+//		}
+	}
+	}
+
+	private void processObservers(Thing data, Map<String, AnnotationValue> beanValues) {
+		AnnotationValue observersValue = beanValues.get("observers");
+		if (observersValue == null) {
+			data.setEmpty("observers");
+		} else {
+//		for (Observer observer : bean.observers()) {
+//			if (observer == null) {
+//				continue;
+//			}
+//			Type type = new Type();
+//			data.addObserver(type);
+//			String typeName = selectType(declaration, "@Observer", observer, "type", "typeString", null, true);
+//			if (typeName == null) {
+//				return;
+//			}
+//			type.set("name", typeName);
+//			defineListenerOrDelegate(false, type, packageDeclaration, "listener interface", "eventsets", packageName);
+//		}
+		}
+	}
+
+
+	private void processDefaultMethods(Thing data, ClassDeclaration classDeclaration) {
+		// find any methods that have default parameters
+		boolean error = false;
+		for (ConstructorDeclaration constructorDeclaration : classDeclaration.getConstructors()) {
+			Collection<ParameterDeclaration> parameters = constructorDeclaration.getParameters();
+			for (ParameterDeclaration parameterDeclaration : parameters) {
+				Default annotation = parameterDeclaration.getAnnotation(Default.class);
+				if (annotation != null) {
+					error(parameterDeclaration, "@Default is not legal in constructor parameters");
+					error = true;
+				}
+			}
+		}
+		if (error) {
+			return;
+		}
+
+		boolean atLeastOneDefault = false;
+		methods: for (MethodDeclaration methodDeclaration : classDeclaration.getMethods()) {
+			Collection<ParameterDeclaration> parameters = methodDeclaration.getParameters();
+			boolean seenDefault = false;
+			String[] names    = new String[parameters.size()];
+			String[] types    = new String[parameters.size()];
+			String[] defaults = new String[parameters.size()];
+			int n = 0;
+			for (ParameterDeclaration parameterDeclaration : parameters) {
+				Default annotation = parameterDeclaration.getAnnotation(Default.class);
+				names[n] = parameterDeclaration.getSimpleName();
+				types[n] = parameterDeclaration.getType().toString();
+				if (annotation != null) {
+					seenDefault = true;
+					if ("java.lang.String".equals(types[n])) {
+						defaults[n] = '"' + annotation.value() + '"';
+					} else {
+						defaults[n] = annotation.value();
+					}
+				} else if (seenDefault) {
+					error(parameterDeclaration, "All parameters after a parameter annotated with @Default must be annotated with @Default");
+					continue methods;
+				}
+				n++;
+			}
+
+			if (seenDefault) {
+				atLeastOneDefault = true;
+				if (methodDeclaration.getModifiers().contains(Modifier.PRIVATE)) {
+					error(methodDeclaration, "Private methods cannot use @Default parameters");
+				}
+				if (methodDeclaration.getModifiers().contains(Modifier.STATIC)) {
+					error(methodDeclaration, "Static methods cannot use @Default parameters");
+				}
+				String modifiers3 = "";
+				if (methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
+					modifiers3 = "public ";
+				} else if (methodDeclaration.getModifiers().contains(Modifier.PROTECTED)) {
+					modifiers3 = "protected ";
+				}
+				String throwsClause = getThrowsClause(methodDeclaration);
+				String returnType = methodDeclaration.getReturnType().toString();
+				String methodName = methodDeclaration.getSimpleName();
+				String argDecl = "";
+				String callArgs = "";
+				for (int i = 0; i < n; i++) {
+					if (defaults[i] != null) {
+						String callArgsWithDefaults = callArgs;
+						for (int j = i; j < n; j++) {
+							if (j > 0) {
+								callArgsWithDefaults += ", ";
+							}
+							callArgsWithDefaults += defaults[j];
+						}
+						Thing method = new Thing("method");
+						method.put("name", methodName);
+						method.put("returnType", returnType);
+						method.put("throwsClause", throwsClause);
+						method.put("argDecls", argDecl);
+						method.put("modifiers", modifiers3);
+						method.put("args", callArgsWithDefaults);
+						data.add("defaultMethods", method);
+					}
+					if (i > 0) {
+						argDecl += ", ";
+						callArgs += ", ";
+					}
+					argDecl += types[i] + ' ' + names[i];
+					callArgs += names[i];
+				}
+				Thing method = new Thing("method");
+				method.put("name", methodName);
+				method.put("returnType", returnType);
+				method.put("throwsClause", throwsClause);
+				method.put("modifiers", modifiers3);
+				method.put("abstract", true);
+				method.put("argDecls", argDecl);
+				data.add("defaultMethods", method);
+
+			}
+		}
+		if (!atLeastOneDefault) {
+			data.setEmpty("defaultMethods");
+		}
+	}
+
+	private void checkExtends(ClassDeclaration classDeclaration, PackageDeclaration packageDeclaration) {
+		String scName = classDeclaration.getSuperclass().toString();
+		int lt = scName.indexOf('<');
+		if (lt != -1) {
+			scName = scName.substring(0, lt);
+		}
+		int dot = scName.lastIndexOf('.');
+		if (dot != -1) {
+			String superClassPackageName = scName.substring(0, dot);
+			if (!superClassPackageName.equals(packageDeclaration.getQualifiedName())) {
+				scName = ""; // force error below
+			} else {
+				scName = scName.substring(dot + 1);
+			}
+		}
+		if (!scName.equals(classDeclaration.getSimpleName() + "Gen")) {
+			error(classDeclaration, classDeclaration.getQualifiedName() + " must extend " +
+					classDeclaration.getQualifiedName() + "Gen for @Bean to work properly");
+		}
+	}
+
+	private interface InheritCheck {
+		boolean isInherited(Thing data, ClassDeclaration classDeclaration);
+	}
+	private boolean checkInheritedMethod(Thing data, String methodName, String returnType, ClassDeclaration superclass, boolean finalOk, InheritCheck inheritCheck) {
+		if (inheritCheck != null) {
+			if (inheritCheck.isInherited(data, superclass)) {
+				return true;
+			}
+		}
 		for (MethodDeclaration methodDeclaration : superclass.getMethods()) {
 			if (methodName.equals(methodDeclaration.getSimpleName()) &&
 					methodDeclaration.getParameters().isEmpty() &&
-					returnType.equals(methodDeclaration.getReturnType().toString()))
+					returnType.equals(methodDeclaration.getReturnType().toString())) {
+				data.put(methodName + "Inherited", true);
+				Collection<Modifier> modifiers = methodDeclaration.getModifiers();
+				if ((modifiers.contains(Modifier.FINAL) || modifiers.contains(Modifier.PRIVATE)) && !finalOk) {
+					// TBD TBD TBD - ERROR!!! cannot extend class with superclass method like this - how to report?
+				} else if (modifiers.contains(Modifier.PROTECTED)) {
+					data.put(methodName + "Modifiers", "protected");
+				} else if (modifiers.contains(Modifier.PUBLIC)) {
+					data.put(methodName + "Modifiers", "public");
+				} else {
+					data.put(methodName + "Modifiers", "");
+				}
 				return true;
+			}
 		}
 		if (superclass.getSuperclass() != null) {
-			if (superclass.getSuperclass().getDeclaration() != null)
-				return methodInherited(methodName, returnType, superclass.getSuperclass().getDeclaration());
+			if (superclass.getSuperclass().getDeclaration() != null) {
+				if (checkInheritedMethod(data, methodName, returnType, superclass.getSuperclass().getDeclaration(), finalOk, inheritCheck)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
-	private TypeDeclaration getType(Declaration declaration, String name, String packageName, String notFoundMessage) {
-		TypeDeclaration typeDeclaration = env_.getTypeDeclaration(name);
-		if (typeDeclaration != null) {
-			return typeDeclaration;
-		}
+//	private TypeDeclaration getType(Declaration declaration, String name, String packageName, String notFoundMessage) {
+//		TypeDeclaration typeDeclaration = env_.getTypeDeclaration(name);
+//		if (typeDeclaration != null) {
+//			return typeDeclaration;
+//		}
+//
+//		// try it with the package name prepended
+//		typeDeclaration = env_.getTypeDeclaration(packageName + '.' + name);
+//		if (typeDeclaration != null) {
+//			return typeDeclaration;
+//		}
+//
+//		error(declaration, notFoundMessage);
+//		return null;
+//	}
 
-		// try it with the package name prepended
-		typeDeclaration = env_.getTypeDeclaration(packageName + '.' + name);
-		if (typeDeclaration != null) {
-			return typeDeclaration;
-		}
-
-		error(declaration, notFoundMessage);
-		return null;
-	}
-
-	private void defineListenerOrDelegate(boolean abstractOnly, Thing type, Declaration declaration, String typeOfThing, String partOfBean, String packageName) {
-		TypeDeclaration typeDeclaration = getType(declaration, (String) type.get("name"), packageName, "Cannot find " + typeOfThing + " " + type.get("name") + " defined as an " + partOfBean + " in @Bean (you probably need to fully-qualify it)");
-		if (typeDeclaration == null) {
-			return;
-		}
-		Collection<? extends MethodDeclaration> methods = typeDeclaration.getMethods();
-		for (MethodDeclaration methodDeclaration : methods) {
-			if (methodDeclaration.getModifiers().contains(Modifier.STATIC)) {
-				continue;
-			}
-			if (abstractOnly) {
-				if (!methodDeclaration.getModifiers().contains(Modifier.ABSTRACT)) {
-					continue;
-				}
-			} else {
-				if (!methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
-					continue;
-				}
-			}
-			if (BeanAnnotationProcessor.METHODS_TO_SKIP.contains(methodDeclaration.getSimpleName())) {
-				continue;
-			}
-
-			type.add("methods", setupMethod(methodDeclaration, true));
-		}
-	}
-
+//	private void defineListenerOrDelegate(boolean abstractOnly, Thing type, Declaration declaration, String typeOfThing, String partOfBean, String packageName) {
+//		TypeDeclaration typeDeclaration = getType(declaration, (String) type.get("name"), packageName, "Cannot find " + typeOfThing + " " + type.get("name") + " defined as an " + partOfBean + " in @Bean (you probably need to fully-qualify it)");
+//		if (typeDeclaration == null) {
+//			return;
+//		}
+//		Collection<? extends MethodDeclaration> methods = typeDeclaration.getMethods();
+//		for (MethodDeclaration methodDeclaration : methods) {
+//			if (methodDeclaration.getModifiers().contains(Modifier.STATIC)) {
+//				continue;
+//			}
+//			if (abstractOnly) {
+//				if (!methodDeclaration.getModifiers().contains(Modifier.ABSTRACT)) {
+//					continue;
+//				}
+//			} else {
+//				if (!methodDeclaration.getModifiers().contains(Modifier.PUBLIC)) {
+//					continue;
+//				}
+//			}
+//			if (BeanAnnotationProcessor.METHODS_TO_SKIP.contains(methodDeclaration.getSimpleName())) {
+//				continue;
+//			}
+//
+//			type.add("methods", setupMethod(methodDeclaration, true));
+//		}
+//	}
+//
 	private String getThrowsClause(MethodDeclaration methodDeclaration) {
 		Collection<ReferenceType> thrownTypes = methodDeclaration.getThrownTypes();
 		boolean first = true;
