@@ -43,6 +43,7 @@ import com.sun.mirror.declaration.AnnotationValue;
 import com.sun.mirror.declaration.ClassDeclaration;
 import com.sun.mirror.declaration.ConstructorDeclaration;
 import com.sun.mirror.declaration.Declaration;
+import com.sun.mirror.declaration.EnumConstantDeclaration;
 import com.sun.mirror.declaration.ExecutableDeclaration;
 import com.sun.mirror.declaration.InterfaceDeclaration;
 import com.sun.mirror.declaration.MethodDeclaration;
@@ -51,6 +52,7 @@ import com.sun.mirror.declaration.PackageDeclaration;
 import com.sun.mirror.declaration.ParameterDeclaration;
 import com.sun.mirror.declaration.TypeDeclaration;
 import com.sun.mirror.declaration.TypeParameterDeclaration;
+import com.sun.mirror.type.PrimitiveType;
 import com.sun.mirror.type.ReferenceType;
 
 // does not support standard indexed properties
@@ -480,20 +482,20 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		    for (AnnotationValue annotationValue : properties) {
 				AnnotationMirror propertyMirror = (AnnotationMirror) annotationValue.getValue();
 				Map<String, AnnotationValue> propertyValues = getAnnotationValues(propertyMirror);
-				AnnotationValue name = get(propertyValues, "name", null);
-				AnnotationValue plural = get(propertyValues, "plural", null);
-				AnnotationValue type = get(propertyValues, "type", defaultType);
-				AnnotationValue typeString = get(propertyValues, "typeString", defaultTypeString);
-				AnnotationValue keyType = get(propertyValues, "keyType", defaultKeyType);
-				AnnotationValue keyTypeString = get(propertyValues, "keyTypeString", defaultKeyTypeString);
-				AnnotationValue reader = get(propertyValues, "reader", defaultReader);
-				AnnotationValue writer = get(propertyValues, "writer", defaultWriter);
-				AnnotationValue bound = get(propertyValues, "bound", defaultBound);
-				AnnotationValue kind = get(propertyValues, "kind", defaultKind);
-				AnnotationValue omitFromToString = get(propertyValues, "omitFromToString", defaultOmitFromToString);
-				AnnotationValue notNull = get(propertyValues, "notNull", defaultNotNull);
-				AnnotationValue isStatic = get(propertyValues, "isStatic", defaultIsStatic);
-				AnnotationValue isSynchronized = get(propertyValues, "isSynchronized", defaultIsSynchronized);
+				AnnotationValue name = propertyValues.get("name");
+				AnnotationValue plural = propertyValues.get("plural");
+				AnnotationValue type = propertyValues.get("type");
+				AnnotationValue typeString = propertyValues.get("typeString");
+				AnnotationValue keyType = propertyValues.get("keyType");
+				AnnotationValue keyTypeString = propertyValues.get("keyTypeString");
+				AnnotationValue reader = propertyValues.get("reader");
+				AnnotationValue writer = propertyValues.get("writer");
+				AnnotationValue bound = propertyValues.get("bound");
+				AnnotationValue kind = propertyValues.get("kind");
+				AnnotationValue omitFromToString = propertyValues.get("omitFromToString");
+				AnnotationValue notNull = propertyValues.get("notNull");
+				AnnotationValue isStatic = propertyValues.get("isStatic");
+				AnnotationValue isSynchronized = propertyValues.get("isSynchronized");
 
 				if (Property.DEFAULTS.equals(name.getValue())) {
 					defaultType = type;
@@ -512,10 +514,14 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				}
 
 				// plugin the default values
-				if (type == null) type = defaultType;
-				if (typeString == null) typeString = defaultTypeString;
-				if (keyType == null) keyType = defaultKeyType;
-				if (keyTypeString == null) keyTypeString = defaultKeyTypeString;
+				if (type == null && typeString == null) {
+					type = defaultType;
+					typeString = defaultTypeString;
+				}
+				if (keyType == null && keyTypeString == null) {
+					keyType = defaultKeyType;
+					keyTypeString = defaultKeyTypeString;
+				}
 				if (reader == null) reader = defaultReader;
 				if (writer == null) writer = defaultWriter;
 				if (bound == null) bound = defaultBound;
@@ -532,12 +538,17 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					if (type == null) {
 						property.put("type", "java.lang.String");
 					} else {
-						property.put("type", ((TypeDeclaration) type.getValue()).getQualifiedName());
+						if (type.getValue() instanceof TypeDeclaration)
+							property.put("type", ((TypeDeclaration) type.getValue()).getQualifiedName());
+						else
+							property.put("type", ((PrimitiveType) type.getValue()).toString());
 					}
 				} else {
 					if (type != null) {
-						error(typeString, "@Property cannot have both type and typeString attributes specified");
-						error(type, "@Property cannot have both type and typeString attributes specified");
+						String message = "@Property cannot have both type and typeString attributes specified";
+						error(typeString, message);
+						error(type, message);
+						property.put("type", "<ERROR>");
 					} else {
 						property.put("type", typeString.getValue());
 					}
@@ -545,7 +556,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
 				PropertyKind propertyKind = PropertyKind.SIMPLE;
 				if (kind != null) {
-					propertyKind = (PropertyKind) kind.getValue();
+					propertyKind = PropertyKind.valueOf(kind.getValue().toString());
 				}
 
 				// check for duplicate keytype specifications
@@ -558,8 +569,10 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 						}
 					} else
 						if (keyType != null) {
-							error(keyType, "@Property cannot have both keyType and keyTypeString attributes specified");
-							error(keyTypeString, "@Property cannot have both keyType and keyTypeString attributes specified");
+							String message = "@Property cannot have both keyType and keyTypeString attributes specified";
+							error(keyType, message);
+							error(keyTypeString, message);
+							property.put("keyType", "<ERROR>");
 						}
 				} else {
 					if (keyTypeString != null) {
@@ -568,7 +581,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					if (keyType != null) {
 						error(keyType, "@Property can only have a keyType attribute if kind is MAP or UNMODIFIABLE_MAP");
 					}
-					property.put("keyType", null);
+					property.put("keyType", "<ERROR>");
 				}
 
 				// check for plural names
@@ -638,7 +651,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					property.put("writerAccess", Access.PUBLIC.getModifier());
 					property.put("writeable", true);
 				} else {
-					Access writerAccess = (Access) writer.getValue();
+					EnumConstantDeclaration writerValue = (EnumConstantDeclaration) writer.getValue();
+					Access writerAccess = Access.valueOf(writerValue.toString());
 					property.put("writerAccess", writerAccess.getModifier());
 					property.put("writeable", writerAccess != Access.NONE);
 				}
@@ -646,7 +660,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					property.put("readerAccess", Access.PUBLIC.getModifier());
 					property.put("readable", true);
 				} else {
-					Access readerAccess = (Access) reader.getValue();
+					EnumConstantDeclaration readerValue = (EnumConstantDeclaration) reader.getValue();
+					Access readerAccess = Access.valueOf(readerValue.toString());
 					property.put("readerAccess", readerAccess.getModifier());
 					property.put("readable", readerAccess != Access.NONE);
 				}
@@ -658,7 +673,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
 				if (bNotNull && isPrimitive) {
 					error(notNull, "Cannot specify notNull for primitive-typed property " + name.getValue() + " in @Property");
-					return;
 				}
 				String extraFieldKeywords = "";
 				String extraMethodKeywords = "";

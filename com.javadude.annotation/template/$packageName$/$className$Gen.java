@@ -137,9 +137,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *	@throws IllegalArgumentException if the value is null													//? writeable & notNull
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/void set$UPPER_name$($type$ value) {									//? writeable
-		if (value == null) {
-			throw new IllegalArgumentException("$name$ cannot be null");							//? writeable & notNull
-		}
+		if (value == null) {																					//? writeable & notNull
+			throw new IllegalArgumentException("$name$ cannot be null");										//? writeable & notNull
+		}																										//? writeable & notNull
 		$type$ oldValue = $name$_;																				//? writeable & bound
 		$name$_ = value;																						//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", oldValue, value);								//? writeable & bound
@@ -190,9 +190,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *  @param value the value to insert.																		//? writeable
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/void add$UPPER_name$(int i, $type$ value) {							//? writeable
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot add null to $name$");						//? writeable
-		}
+		if (value == null) {																					//? writeable
+			throw new IllegalArgumentException("Cannot add null to $name$");									//? writeable
+		}																										//? writeable
 		$pluralName_list$_.add(i, value);																		//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", null, $pluralName_list$_);						//? writeable & bound
 	}																											//? writeable
@@ -234,9 +234,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *  @param value the value to insert.																		//? writeable
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/void add$UPPER_name$($type$ value) {									//? writeable
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot add null to $name$");						//? writeable
-		}
+		if (value == null) {																					//? writeable
+			throw new IllegalArgumentException("Cannot add null to $name$");									//? writeable
+		}																										//? writeable
 		$pluralName_list$_.add(value);																			//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", null, $pluralName_list$_);						//? writeable & bound
 	}																											//? writeable
@@ -251,9 +251,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *  @param value the value to remove.																		//? writeable
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/boolean remove$UPPER_name$($type$ value) {							//? writeable
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot remove null from $name$");				//? writeable
-		}
+		if (value == null) {																					//? writeable
+			throw new IllegalArgumentException("Cannot remove null from $name$");								//? writeable
+		}																										//? writeable
 		boolean result = $pluralName_list$_.remove(value);														//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", null, $pluralName_list$_);						//? writeable & bound
 		return result;																							//? writeable
@@ -326,12 +326,12 @@ class $PARENT_name$ {								//#DUMMY
 	 *  @param value the value to insert.																		//? writeable
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/void put$UPPER_name$($keyType$ key, $type$ value) {					//? writeable
-		if (key == null) {
-			throw new IllegalArgumentException("Cannot put null key in $name$");					//? writeable
-		}
-		if (value == null) {
-			throw new IllegalArgumentException("Cannot put null value in $name$");				//? writeable
-		}
+		if (key == null) {																						//? writeable
+			throw new IllegalArgumentException("Cannot put null key in $name$");								//? writeable
+		}																										//? writeable
+		if (value == null) {																					//? writeable
+			throw new IllegalArgumentException("Cannot put null value in $name$");								//? writeable
+		}																										//? writeable
 		$pluralName_map$_.put(key, value);																		//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", null, $pluralName_map$_);						//? writeable & bound
 	}																											//? writeable
@@ -345,9 +345,9 @@ class $PARENT_name$ {								//#DUMMY
 	 *  @return the value that was removed.																		//? writeable
 	 **/																										//? writeable
 	/*$writerAccess$$extraMethodKeywords$*/$type$ remove$UPPER_name$($keyType$ key) {							//? writeable
-		if (key == null) {
-			throw new IllegalArgumentException("Cannot remove null key from $name$");				//? writeable
-		}
+		if (key == null) {																						//? writeable
+			throw new IllegalArgumentException("Cannot remove null key from $name$");							//? writeable
+		}																										//? writeable
 		$type$ result = $pluralName_map$_.remove(key);															//? writeable
 		getPropertyChangeSupport().firePropertyChange("$name$", null, $pluralName_map$_);						//? writeable & bound
 		return result;																							//? writeable
@@ -370,23 +370,23 @@ class $PARENT_name$ {								//#DUMMY
 	/** Delegate for $PARENT_name$.$name$($argDecls$).
 	 * 	@see $PARENT_name$.$name$($argDecls$)
 	 **/
-	/*$modifiers$*/abstract $returnType$ $name_1$(/*$argDecls$*/)/*$throwsClause$*/;	//? abstract
-	/*$modifiers$*/$returnType$ $name_2$(/*$argDecls$*/)/*$throwsClause$*/ {			//? !abstract
-		$accessor$.$name_2$(/*$args$*/);												//? !abstract & !returns
-		return $accessor$.$name_2$(/*$args$*/); 										//? !abstract & returns
-	}																					//? !abstract
+	/*$modifiers$*/abstract $returnType$ $name_1$(/*$argDecls$*/)/*$throwsClause$*/;							//? abstract
+	/*$modifiers$*/$returnType$ $name_2$(/*$argDecls$*/)/*$throwsClause$*/ {									//? !abstract
+		$accessor$.$name_2$(/*$args$*/);																		//? !abstract & !returns
+		return $accessor$.$name_2$(/*$args$*/); 																//? !abstract & returns
+	}																											//? !abstract
 	//#END foreach methods
 	//#END foreach delegates
-	private $returnType$ $nullBody$;													//#DUMMY
-	private $name$ $accessor$;															//#DUMMY
+	private $returnType$ $nullBody$;																			//#DUMMY
+	private $name$ $accessor$;																					//#DUMMY
 	//#FOREACH nullObjects
 	//#FOREACH methods
 	/** Null implementation for $PARENT_name$.$name$($argDecls$).
 	 * 	@see $PARENT_name$.$name$($argDecls$)
 	 **/
 	public $returnType$ $name_3$(/*$argDecls$*/)/*$throwsClause$*/ {
-		/*$nullBody$*/;																	//? !returns
-		return $nullBody$;																//? returns
+		/*$nullBody$*/;																							//? !returns
+		return $nullBody$;																						//? returns
 	}
 	//#END foreach methods
 	//#END foreach observers
@@ -431,53 +431,53 @@ class $PARENT_name$ {								//#DUMMY
 		if (obj == this) {
 			return true;
 		}
-		if (obj == null || obj.getClass() != getClass() || !super.equals(obj)) {				//? equalsAndHashCodeCallSuper
-			return false;																		//? equalsAndHashCodeCallSuper
-		}																						//? equalsAndHashCodeCallSuper
-		if (obj == null || obj.getClass() != getClass()) {										//? !equalsAndHashCodeCallSuper
-			return false;																		//? !equalsAndHashCodeCallSuper
-		}																						//? !equalsAndHashCodeCallSuper
+		if (obj == null || obj.getClass() != getClass() || !super.equals(obj)) {								//? equalsAndHashCodeCallSuper
+			return false;																						//? equalsAndHashCodeCallSuper
+		}																										//? equalsAndHashCodeCallSuper
+		if (obj == null || obj.getClass() != getClass()) {														//? !equalsAndHashCodeCallSuper
+			return false;																						//? !equalsAndHashCodeCallSuper
+		}																										//? !equalsAndHashCodeCallSuper
 		$className$Gen other = ($className$Gen) obj;
 		//#FOREACH properties
-		if ($name$_ != other.$name$_) {															//? primitive
-			return false;																		//? primitive
-		}																						//? primitive
-		if ($name$_ == null) {																	//? !primitive & simple
-			if (other.$name$_ != null) {														//? !primitive & simple
-				return false;																	//? !primitive & simple
-			}																					//? !primitive & simple
-		} else if (!$name$_.equals(other.$name$_)) {											//? !primitive & simple
-			return false;																		//? !primitive & simple
-		}																						//? !primitive & simple
-		if ($pluralName_set$_ == null) {														//? !primitive & !simple
-			if (other.$pluralName_set$_ != null) {												//? !primitive & !simple
-				return false;																	//? !primitive & !simple
-			}																					//? !primitive & !simple
-		} else if (!$pluralName_set$_.equals(other.$pluralName_set$_)) {						//? !primitive & !simple
-			return false;																		//? !primitive & !simple
-		}																						//? !primitive & !simple
+		if ($name$_ != other.$name$_) {																			//? primitive
+			return false;																						//? primitive
+		}																										//? primitive
+		if ($name$_ == null) {																					//? !primitive & simple
+			if (other.$name$_ != null) {																		//? !primitive & simple
+				return false;																					//? !primitive & simple
+			}																									//? !primitive & simple
+		} else if (!$name$_.equals(other.$name$_)) {															//? !primitive & simple
+			return false;																						//? !primitive & simple
+		}																										//? !primitive & simple
+		if ($pluralName_set$_ == null) {																		//? !primitive & !simple
+			if (other.$pluralName_set$_ != null) {																//? !primitive & !simple
+				return false;																					//? !primitive & !simple
+			}																									//? !primitive & !simple
+		} else if (!$pluralName_set$_.equals(other.$pluralName_set$_)) {										//? !primitive & !simple
+			return false;																						//? !primitive & !simple
+		}																										//? !primitive & !simple
 		//#END foreach properties
 		return true;
 	}
-	private boolean $name_boolean$_;	//#DUMMY
-	private int $name_int$_;			//#DUMMY
-	private long $name_long$_;			//#DUMMY
-	private float $name_float$_;		//#DUMMY
-	private double $name_double$_;		//#DUMMY
+	private boolean $name_boolean$_;																			//#DUMMY
+	private int $name_int$_;																					//#DUMMY
+	private long $name_long$_;																					//#DUMMY
+	private float $name_float$_;																				//#DUMMY
+	private double $name_double$_;																				//#DUMMY
 	public int hashCode() {
 		int result;
-		result = 1;																					//? !equalsAndHashCodeCallSuper
-		result = super.hashCode();																	//? equalsAndHashCodeCallSuper
-		long temp;																					//? atLeastOneDouble
+		result = 1;																								//? !equalsAndHashCodeCallSuper
+		result = super.hashCode();																				//? equalsAndHashCodeCallSuper
+		long temp;																								//? atLeastOneDouble
 		//#FOREACH properties
-		result = 31 * result + ($name_boolean$_ ? 1231 : 1237);										//? boolean
-		result = 31 * result + $name_int$_;															//? byte | char | short | int)
-		result = 31 * result + (int) ($name_long$_ ^ ($name_long$_ >>> 32));						//? long
-		result = 31 * result + Float.floatToIntBits($name_float$_);									//? float
-		temp = Double.doubleToLongBits($name_double$_);												//? double
-		result = 31 * result + (int) (temp ^ (temp >>> 32));										//? double
-		result = 31 * result + ($name$_ == null ? 0 : $name$_.hashCode());							//? !primitive & simple
-		result = 31 * result + ($pluralName_list$_ == null ? 0 : $pluralName_list$_.hashCode());	//? !primitive & !simple
+		result = 31 * result + ($name_boolean$_ ? 1231 : 1237);													//? boolean
+		result = 31 * result + $name_int$_;																		//? byte | char | short | int)
+		result = 31 * result + (int) ($name_long$_ ^ ($name_long$_ >>> 32));									//? long
+		result = 31 * result + Float.floatToIntBits($name_float$_);												//? float
+		temp = Double.doubleToLongBits($name_double$_);															//? double
+		result = 31 * result + (int) (temp ^ (temp >>> 32));													//? double
+		result = 31 * result + ($name$_ == null ? 0 : $name$_.hashCode());										//? !primitive & simple
+		result = 31 * result + ($pluralName_list$_ == null ? 0 : $pluralName_list$_.hashCode());				//? !primitive & !simple
 		//#END properties
 		return result;
 	}
@@ -497,14 +497,14 @@ class $PARENT_name$ {								//#DUMMY
 	 **/
 	/*$paramStringModifiers$*/ java.lang.String paramString() {
 		String result;
-		result = super.paramString();													//? paramStringInherited
-		result = "";																	//? !paramStringInherited
+		result = super.paramString();																			//? paramStringInherited
+		result = "";																							//? !paramStringInherited
 		//#FOREACH properties
-		result += ',';																	//? !FIRST
-		result += "$name$=" + $name$_;													//? simple & !omitFromToString
-		result += "$pluralName$=" + $pluralName_list$_;									//? !simple & !omitFromToString
-		result += "$name$=<" + $name$_.getClass().getName() + '>';						//? simple & omitFromToString
-		result += "$pluralName$=<" + $pluralName_list$_.getClass().getName() + '>';		//? !simple & omitFromToString
+		result += ',';																							//? !FIRST
+		result += "$name$=" + $name$_;																			//? simple & !omitFromToString
+		result += "$pluralName$=" + $pluralName_list$_;															//? !simple & !omitFromToString
+		result += "$name$=<" + $name$_.getClass().getName() + '>';												//? simple & omitFromToString
+		result += "$pluralName$=<" + $pluralName_list$_.getClass().getName() + '>';								//? !simple & omitFromToString
 		//#END foreach properties
 		return result;
 	}
@@ -517,11 +517,11 @@ class $PARENT_name$ {								//#DUMMY
 	 **/
 	public java.util.Map<java.lang.String, java.lang.Object> createPropertyMap() {
 		java.util.Map<java.lang.String, java.lang.Object> map =
-			new java.util.HashMap<java.lang.String, java.lang.Object>();				//? !createPropertyMapInherited
-			super.createPropertyMap();													//? createPropertyMapInherited
+			new java.util.HashMap<java.lang.String, java.lang.Object>();										//? !createPropertyMapInherited
+			super.createPropertyMap();																			//? createPropertyMapInherited
 		//#FOREACH properties
-		map.put("$name$", $name$_);														//? readable & simple
-		map.put("$pluralName$", $pluralName_list$_);									//? readable & !simple
+		map.put("$name$", $name$_);																				//? readable & simple
+		map.put("$pluralName$", $pluralName_list$_);															//? readable & !simple
 		//#END foreach properties
 		return map;
 	}
