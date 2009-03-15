@@ -8,7 +8,6 @@ Export-Package: com.javadude.annotation;uses:="com.sun.mirror.apt",
 Bundle-ClassPath: .
 Require-Bundle: org.eclipse.jdt.apt.core,
  org.eclipse.core.runtime,
- org.apache.ant;bundle-version="1.7.0",
  org.junit4
 Bundle-Vendor: JavaDude.com
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
