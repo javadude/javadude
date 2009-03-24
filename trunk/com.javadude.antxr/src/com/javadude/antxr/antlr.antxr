@@ -163,15 +163,15 @@ fileOptionsSpec
         ;
 
 parserOptionsSpec
-{ Token nsTok=null; Token idTok; Token value; }
+{ Token nsTok=null; Token idTok; Token value; String optBase=""; Token next=null;}
         :	OPTIONS
                 (
-                        (nsTok=id COLON)? idTok = id
+                        (nsTok=id COLON)? idTok = id {optBase = idTok.getText(); } (DASH next=id {optBase += '-' + next.getText();} )*
                         ASSIGN
                         value = optionValue
                         {
                                 if (nsTok != null)
-                                        idTok.setText(nsTok.getText() + ':' + idTok.getText());
+                                        idTok.setText(nsTok.getText() + ':' + optBase);
                         }
                         { behavior.setGrammarOption(idTok, value); }
                         SEMI
@@ -895,6 +895,7 @@ ML_COMMENT :
         ;
 
 
+DASH : '-' ;
 COMMA : ',';
 
 QUESTION :	'?' ;
