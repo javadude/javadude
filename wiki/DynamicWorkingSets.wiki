@@ -2,7 +2,14 @@
 =Dynamic Working Sets for Eclipse.=
 
 = News =
-Following a suggested enhancement, I've added M2Eclipse support - you can now set up a working set based on a regular expression for the group and/or artifact ids of a maven project.
+Following another suggested enhancement, I've set up the regex working sets so they will also include closed projects. I may make this an option at some point.
+
+Following a suggested enhancement, I've added !M2Eclipse support - you can now set up a working set based on a regular expression for the group and/or artifact ids of a maven project.
+
+= Note on closed projects =
+The regular expression working set will include all projects that match the regular expression, regardless if they are open or closed.
+
+The nature and maven working sets require examination of project contents that cannot be performed when a project is closed. These working sets will only include open projects.
 
 = Introduction =
 
