@@ -15,7 +15,7 @@
    <feature url="features/com.javadude.antxr.feature_2.1.7.jar" id="com.javadude.antxr.feature" version="2.1.7">
       <category name="ANTXR"/>
    </feature>
-   <feature url="features/com.javadude.workingsets.feature_2.1.0.jar" id="com.javadude.workingsets.feature" version="2.1.0">
+   <feature url="features/com.javadude.workingsets.feature_2.1.1.jar" id="com.javadude.workingsets.feature" version="2.1.1">
       <category name="Dynamic Working Sets"/>
    </feature>
    <feature url="features/com.javadude.workingsets.m2eclipse.feature_1.0.1.jar" id="com.javadude.workingsets.m2eclipse.feature" version="1.0.1">
