@@ -23,6 +23,8 @@ public class RegExWorkingSetUpdater extends DynamicWorkingSetUpdater {
 	public RegExWorkingSetUpdater() {
 		super("RegEx: ");
 	}
+	@Override protected boolean allowClosedProjects() { return true; }
+
 	@Override protected boolean shouldInclude(IResource resource, String workingSetId) {
 		if (!(resource instanceof IProject)) {
 			return false;

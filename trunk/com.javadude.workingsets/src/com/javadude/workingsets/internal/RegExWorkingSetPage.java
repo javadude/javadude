@@ -107,7 +107,7 @@ public class RegExWorkingSetPage extends DynamicWorkingSetPage {
 		List<IAdaptable> projects = new ArrayList<IAdaptable>();
 		String regex = regexText_.getText();
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-            if (project.isOpen() && Pattern.matches(regex, project.getName())) {
+            if (Pattern.matches(regex, project.getName())) {
             	projects.add(project);
             }
 		}
