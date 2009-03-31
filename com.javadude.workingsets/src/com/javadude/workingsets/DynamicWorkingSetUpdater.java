@@ -127,8 +127,9 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 		}
 		workingSet.setElements(newElements.toArray(new IAdaptable[newElements.size()]));
 	}
+	protected boolean allowClosedProjects() { return false; }
 	protected void addToWorkingSets(IProject project, Set<IWorkingSet> setsContainingProject) {
-		if (!project.isOpen()) {
+		if (!allowClosedProjects() && !project.isOpen()) {
 			return;
 		}
 		for (Map.Entry<String, IWorkingSet> entry : getMyWorkingSets().entrySet()) {
