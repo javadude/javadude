@@ -105,13 +105,13 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		List<AnnotationValue> value = (List<AnnotationValue>) annotationValue.getValue();
 		return value;
 	}
-	private String s(Map<String, AnnotationValue> values, String name, String def) {
-		AnnotationValue annotationValue = values.get(name);
-		if (annotationValue == null) {
-			return def;
-		}
-		return (String) annotationValue.getValue();
-	}
+//	private String s(Map<String, AnnotationValue> values, String name, String def) {
+//		AnnotationValue annotationValue = values.get(name);
+//		if (annotationValue == null) {
+//			return def;
+//		}
+//		return (String) annotationValue.getValue();
+//	}
 	private int i(Map<String, AnnotationValue> values, String name, int def) {
 		AnnotationValue annotationValue = values.get(name);
 		if (annotationValue == null) {
@@ -448,12 +448,12 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		}
 	}
 
-	private AnnotationValue get(Map<String, AnnotationValue> values, String name, AnnotationValue def) {
-		AnnotationValue value = values.get(name);
-		if (value != null)
-			return value;
-		return def;
-	}
+//	private AnnotationValue get(Map<String, AnnotationValue> values, String name, AnnotationValue def) {
+//		AnnotationValue value = values.get(name);
+//		if (value != null)
+//			return value;
+//		return def;
+//	}
 	private void processProperties(Thing data, Map<String, AnnotationValue> beanValues) {
 		boolean atLeastOneBound = false;
 		boolean atLeastOneDouble = false;
