@@ -21,6 +21,9 @@
    <feature url="features/com.javadude.workingsets.m2eclipse.feature_1.0.1.jar" id="com.javadude.workingsets.m2eclipse.feature" version="1.0.1">
       <category name="Dynamic Working Sets"/>
    </feature>
+   <feature url="features/com.javadude.derived.warning.cleaner.feature_1.0.0.jar" id="com.javadude.derived.warning.cleaner.feature" version="1.0.0">
+      <category name="Miscellaneous"/>
+   </feature>
    <category-def name="Annotations" label="Annotations"/>
    <category-def name="Miscellaneous" label="Miscellaneous"/>
    <category-def name="ANTXR" label="ANTXR"/>
