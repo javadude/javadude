@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Derived-Source Warning Cleaner Plug-in
+Bundle-SymbolicName: com.javadude.derived.warning.cleaner; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: JavaDude.com
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: com.javadude.derived.warning.cleaner.Activator
+Bundle-ActivationPolicy: lazy

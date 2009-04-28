@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="derivedWarningCleanerBuilder"
+         name="Derived Source Warning Cleaner Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.javadude.derived.warning.cleaner.builder.DerivedWarningCleanerBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="derivedWarningCleanerNature"
+         name="Derived Source Warning Cleaner Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.javadude.derived.warning.cleaner.builder.DerivedWarningCleanerNature">
+         </run>
+      </runtime>
+      <builder
+            id="com.javadude.derived.warning.cleaner.derivedWarningCleanerBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.javadude.derived.warning.cleaner.contribution1">
+         <action
+               label="Add/Remove Derived Source Warning Cleaner Nature"
+               class="com.javadude.derived.warning.cleaner.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="com.javadude.derived.warning.cleaner.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
