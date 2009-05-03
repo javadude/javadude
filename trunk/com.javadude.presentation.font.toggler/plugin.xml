@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.javadude.presentation.font.toggler.actionSet"
+            label="Presentation Mode Action Set"
+            visible="true">
+         <action
+               class="com.javadude.presentation.font.toggler.actions.TogglePresentationFontsAction"
+               icon="icons/17438_thread_and_monitor_view.png"
+               id="com.javadude.presentation.font.toggler.togglePresentationFontAction"
+               label="&amp;Toggle Presentation Fonts"
+               toolbarPath="togglePresentationFontGroup"
+               tooltip="Toggle Presentation Fonts">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
