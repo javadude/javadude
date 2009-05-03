@@ -6,7 +6,12 @@
       provider-name="JavaDude.com">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      This is a quick-n-dirty font-switcher for use when I teach or otherwise present
+      code in eclipse. It hardcodes the fonts in which I develop and present, and has
+      a little toolbar action to toggle between them.
+      
+      This plugin is not really intended for public consumption, but it it aids ya,
+      enjoy it!
    </description>
 
    <copyright url="http://www.example.com/copyright">
