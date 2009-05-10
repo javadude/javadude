@@ -10,5 +10,12 @@ import com.javadude.annotation.Property;
 	}
 )
 public class Person extends PersonGen implements IPerson {
-
+	/**
+	 * does something
+	 * @param x the parameter
+	 * @throws IllegalArgumentException if the paramerer is bad
+	 */
+	public void foo(int x) throws IllegalArgumentException {
+		// do something
+	}
 }

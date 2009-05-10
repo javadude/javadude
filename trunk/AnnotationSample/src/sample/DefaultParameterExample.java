@@ -7,11 +7,13 @@ import com.javadude.annotation.Default;
 
 @Bean
 public class DefaultParameterExample extends DefaultParameterExampleGen {
+	@Override
 	protected void process(Processor processor, String item, @Default("Processor.Size.LARGE") Size size,
 			               @Default("red") String color, @Default("1") int quantity) {
 		processor.process(item, size, color, quantity);
 	}
 
+	@Override
 	public void report(@Default("Hello") String message) {
 		System.out.println("Message: " + message);
 	}
