@@ -25,10 +25,10 @@ public abstract class CompositeProcessor extends Processor {
 		lastChild = processor;
 	}
 
-	protected void processChildren(Symbols symbols, Writer writer) {
+	protected void processChildren(Symbols symbols, Writer writer, String padding) {
 		Processor p = children;
 		while (p != null) {
-			p.process(symbols, writer, line);
+			p.process(symbols, writer, line, padding);
 			p = p.getNext();
 		}
 	}

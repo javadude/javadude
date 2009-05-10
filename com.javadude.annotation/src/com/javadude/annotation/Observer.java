@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
+
 /**
  * <p>Defines an event set to generate code for.</p>
  *
