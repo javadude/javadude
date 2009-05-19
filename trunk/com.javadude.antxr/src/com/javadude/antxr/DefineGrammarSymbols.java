@@ -195,12 +195,10 @@ public class DefineGrammarSymbols implements ANTXRGrammarParseBehavior {
                     tool.warning("Redefinition of literal in tokens {...}: " + literal, grammar.getFilename(), tokliteral == null ? -1 : tokliteral.getLine(), tokliteral == null ? -1 : tokliteral.getColumn());
                     return;
                 }
-                else {
-                    // The literal had no label, but new def does.  Set it.
-                    sl.setLabel(name);
-                    // Also, map the label to the literal.
-                    grammar.tokenManager.mapToTokenSymbol(name, sl);
-                }
+                // The literal had no label, but new def does.  Set it.
+                sl.setLabel(name);
+                // Also, map the label to the literal.
+                grammar.tokenManager.mapToTokenSymbol(name, sl);
             }
             // if they provide a name/label and that name/label already
             // exists, just hook this literal onto old token.

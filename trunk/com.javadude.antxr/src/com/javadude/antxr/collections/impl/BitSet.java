@@ -171,6 +171,14 @@ public class BitSet implements Cloneable {
         }
         return false;
     }
+    @Override
+	public int hashCode() {
+    	long h = 1234;
+    	for (int i = bits.length; --i >= 0; ) {
+			h ^= bits[i] * (i + 1);
+		}
+    	return (int)((h >> 32) ^ h);
+    }
 
     /** Find ranges in a set element array.  @param elems The array of
      * elements representing the set, usually from Bit Set.toArray().

@@ -45,6 +45,9 @@ public class AntxrCompletionProcessor implements IContentAssistProcessor {
         public boolean equals(Object aProposal) {
             return false;
         }
+        public int hashCode() {
+        	return 1;
+        }
     };
 
     /**
@@ -62,11 +65,11 @@ public class AntxrCompletionProcessor implements IContentAssistProcessor {
         String prefix = new AntxrTextGuesser(aViewer.getDocument(), anOffset,
                                              false).getText();
         String[] rules = fEditor.getRules(prefix);
-        for (int i = 0; i < rules.length; i++) {
-            if (rules[i].startsWith(prefix)) {
-                proposals.add(new CompletionProposal(rules[i],
+        for (String rule : rules) {
+            if (rule.startsWith(prefix)) {
+                proposals.add(new CompletionProposal(rule,
                               anOffset - prefix.length(), prefix.length(),
-                              rules[i].length(), null, rules[i], null, null));
+                              rule.length(), null, rule, null, null));
             }
         }
         Collections.sort(proposals, AntxrCompletionProcessor.PROPOSAL_COMPARATOR);
