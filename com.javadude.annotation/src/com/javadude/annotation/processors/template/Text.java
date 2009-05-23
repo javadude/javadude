@@ -17,12 +17,13 @@ public class Text extends Processor {
 			if (padding != null) {
 				// count & replace leading tabs
 				int i = 0;
-				String indent = "";
+				StringBuilder builder = new StringBuilder();
 				while (i < text.length() && text.charAt(i) == '\t') {
 					i++;
-					indent += padding;
+					builder.append(padding);
 				}
-				text = indent + text.substring(i);
+				builder.append(text.substring(i));
+				text = builder.toString();
 			}
 			writer.write(text);
 		} catch (IOException e) {
