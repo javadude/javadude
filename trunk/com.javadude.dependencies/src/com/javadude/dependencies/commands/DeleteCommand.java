@@ -14,19 +14,22 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.javadude.annotation.Bean;
-import com.javadude.annotation.Property;
 import com.javadude.dependencies.Dependency;
 
-@Bean(superclass=Command.class,
-      properties={
-		@Property(name="dependency", type=Dependency.class),
-		@Property(name="deletedEntry", type=IClasspathEntry.class),
-		@Property(name="deletedPosition", type=int.class),
-})
-public class DeleteCommand extends DeleteCommandGen {
+public class DeleteCommand extends Command {
+	private Dependency dependency;
+	private IClasspathEntry deletedEntry;
+	private int deletedPosition;
 
-    public DeleteCommand(Dependency dependency) {
+
+    public Dependency getDependency() { return dependency; }
+	public void setDependency(Dependency dependency) { this.dependency = dependency; }
+	public IClasspathEntry getDeletedEntry() { return deletedEntry; }
+	public void setDeletedEntry(IClasspathEntry deletedEntry) { this.deletedEntry = deletedEntry; }
+	public int getDeletedPosition() { return deletedPosition; }
+	public void setDeletedPosition(int deletedPosition) { this.deletedPosition = deletedPosition; }
+
+	public DeleteCommand(Dependency dependency) {
         setDependency(dependency);
     }
 
