@@ -9,17 +9,18 @@ package com.javadude.dependencies;
 
 import org.eclipse.jdt.core.IJavaProject;
 
-import com.javadude.annotation.Bean;
-import com.javadude.annotation.Property;
+public class Dependency {
+	private IJavaProject source;
+	private IJavaProject target;
+	private boolean exported;
 
-@Bean(defineSimpleEqualsAndHashCode=true,
-	  properties = {
-		@Property(name="source", type=IJavaProject.class),
-		@Property(name="target", type=IJavaProject.class),
-		@Property(name="exported", type=boolean.class),
-})
-public class Dependency extends DependencyGen {
-    public Dependency(IJavaProject source, IJavaProject target, boolean exported) {
+    public IJavaProject getSource() { return source; }
+	public void setSource(IJavaProject source) { this.source = source; }
+	public IJavaProject getTarget() { return target; }
+	public void setTarget(IJavaProject target) { this.target = target; }
+	public boolean isExported() { return exported; }
+	public void setExported(boolean exported) { this.exported = exported; }
+	public Dependency(IJavaProject source, IJavaProject target, boolean exported) {
     	setSource(source);
     	setTarget(target);
     	setExported(exported);
