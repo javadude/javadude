@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.cleanup.feature"
       label="JavaDude Cleanup Feature"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="JavaDude.com">
 
    <description url="http://www.example.com/description">
