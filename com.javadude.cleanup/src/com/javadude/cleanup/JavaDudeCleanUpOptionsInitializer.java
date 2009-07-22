@@ -12,7 +12,7 @@ public class JavaDudeCleanUpOptionsInitializer implements
 
 	@Override
 	public void setDefaultOptions(CleanUpOptions options) {
-		options.setOption(CONVERT_TABS_TO_SPACES, CleanUpOptions.TRUE);
+		options.setOption(CONVERT_TABS_TO_SPACES, CleanUpOptions.FALSE);
 		options.setOption(TAB_SIZE, "4");
 	}
 }
