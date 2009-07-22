@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.jdt.ui.cleanUps">
+      <cleanUp
+            class="com.javadude.cleanup.JavaDudeCleanUp"
+            id="com.javadude.cleanup.tabToSpaceCleanup">
+      </cleanUp>
+      <cleanUpOptionsInitializer
+            class="com.javadude.cleanup.JavaDudeCleanUpOptionsInitializer"
+            cleanUpKind="cleanUp">
+      </cleanUpOptionsInitializer>
+      <cleanUpOptionsInitializer
+            class="com.javadude.cleanup.JavaDudeCleanUpOptionsInitializer"
+            cleanUpKind="saveAction">
+      </cleanUpOptionsInitializer>
+      <cleanUpConfigurationUI
+            class="com.javadude.cleanup.JavaDudeCleanUpConfigurationUI"
+            cleanUpKind="cleanUp"
+            name="JavaDude Cleanups">
+      </cleanUpConfigurationUI>
+      <cleanUpConfigurationUI
+            class="com.javadude.cleanup.JavaDudeCleanUpConfigurationUI"
+            cleanUpKind="saveAction"
+            name="JavaDude Cleanups">
+      </cleanUpConfigurationUI>
+   </extension>
+
+</plugin>

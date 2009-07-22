@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaDude Cleanup Helpers
+Bundle-SymbolicName: com.javadude.cleanup;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.javadude.cleanup.Activator
+Bundle-Vendor: JavaDude.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.jdt.core.manipulation,
+ org.eclipse.jface.text
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
