@@ -65,8 +65,6 @@ import com.sun.mirror.type.ReferenceType;
 // TODO check for addPropertyChangeListener et al - should treat it separately
 //      -- if getPropertyChangeSupport() present, can still delegate to it
 
-// TODO override paramString if defined in superclass -- if method not found, check if the superclass annotation would define it
-
 public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private Map<String, AnnotationValue> getAnnotationValues(AnnotationMirror a) {
 		Map<String, AnnotationValue> values = new HashMap<String, AnnotationValue>();
@@ -90,8 +88,9 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 	private void setValue(Thing data, Map<String, AnnotationValue> values, String name, Object def) {
 		AnnotationValue annotationValue = values.get(name);
 		if (annotationValue == null) {
-			if (def != null)
+			if (def != null) {
 				data.put(name, def);
+			}
 		} else {
 			data.put(name, annotationValue.getValue());
 		}
@@ -343,7 +342,6 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		data.put("atLeastOneDouble", false);
 		data.put("atLeastOneBound", false);
 		data.put("atLeastOneObject", false);
-		data.put("atLeastOneDefault", false);
 
 		if (value == null) {
 			data.setEmpty("superclassConstructors");
@@ -522,14 +520,30 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					keyType = defaultKeyType;
 					keyTypeString = defaultKeyTypeString;
 				}
-				if (reader == null) reader = defaultReader;
-				if (writer == null) writer = defaultWriter;
-				if (bound == null) bound = defaultBound;
-				if (kind == null) kind = defaultKind;
-				if (omitFromToString == null) omitFromToString = defaultOmitFromToString;
-				if (notNull == null) notNull = defaultNotNull;
-				if (isStatic == null) isStatic = defaultIsStatic;
-				if (isSynchronized == null) isSynchronized = defaultIsSynchronized;
+				if (reader == null) {
+					reader = defaultReader;
+				}
+				if (writer == null) {
+					writer = defaultWriter;
+				}
+				if (bound == null) {
+					bound = defaultBound;
+				}
+				if (kind == null) {
+					kind = defaultKind;
+				}
+				if (omitFromToString == null) {
+					omitFromToString = defaultOmitFromToString;
+				}
+				if (notNull == null) {
+					notNull = defaultNotNull;
+				}
+				if (isStatic == null) {
+					isStatic = defaultIsStatic;
+				}
+				if (isSynchronized == null) {
+					isSynchronized = defaultIsSynchronized;
+				}
 
 				Thing property = new Thing("property");
 				property.put("name", name.getValue());
@@ -538,10 +552,11 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 					if (type == null) {
 						property.put("type", "java.lang.String");
 					} else {
-						if (type.getValue() instanceof TypeDeclaration)
+						if (type.getValue() instanceof TypeDeclaration) {
 							property.put("type", ((TypeDeclaration) type.getValue()).getQualifiedName());
-						else
+						} else {
 							property.put("type", ((PrimitiveType) type.getValue()).toString());
+						}
 					}
 				} else {
 					if (type != null) {
@@ -643,8 +658,9 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 				boolean isPrimitive = BeanAnnotationProcessor.PRIMITIVE_TYPES.contains(property.get("type"));
 				property.put("primitive", isPrimitive);
 
-				if (!isPrimitive)
+				if (!isPrimitive) {
 					data.put("atLeastOneObject", true);
+				}
 
 				property.put("bound", b(bound));
 				if (writer == null) {
