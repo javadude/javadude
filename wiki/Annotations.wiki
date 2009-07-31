@@ -7,7 +7,7 @@ I'm working on a newer version of the annotations. THE API IS CHANGING SOMEWHAT.
 The upgrade path shouldn't be too bad; I'll see if I can write a little converter.
 
 Please let me know if you use these annotations and find them useful!
-scott@javadude.com
+[mailto:scott@javadude.com scott@javadude.com]
 
 ==Overview==
 The !JavaDude Annotations are Java 5/6 annotations and annotation processors that generate some of the tedious code you need in your day-to-day programming. Using these annotations, you can generate:
