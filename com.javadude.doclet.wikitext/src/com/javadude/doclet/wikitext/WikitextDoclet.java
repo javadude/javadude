@@ -25,7 +25,7 @@ import com.sun.tools.doclets.standard.Standard;
  * I hope this -*works*...
  *
  * Stuff
- *    - this *might* be useful...
+ *    - this *might* *be* useful...
  *    - this might be useful again...
  *
  * More stuff
@@ -151,6 +151,7 @@ public class WikitextDoclet {
 			result = emphasisStrong.matcher(result).replaceAll("<i><b>$1</b></i>");
 			result = emphasis.matcher(result).replaceAll("<i>$1</i>");
 			result = strong.matcher(result).replaceAll("<b>$1</b>");
+			result = copyright.matcher(result).replaceAll("&copy;");
 
 			StringBuilder html = new StringBuilder();
 			String[] lines = result.split("(\r\n?|\n)");
@@ -298,9 +299,10 @@ public class WikitextDoclet {
 			return n;
 		}
 	}
-	private static final Pattern emphasis = Pattern.compile("\\b_(\\S(.*?\\S)??)_\\b");
-	private static final Pattern emphasisStrong = Pattern.compile("\\b__(\\S(.*?\\S)??)__\\b");
-	private static final Pattern strong = Pattern.compile("\\B\\*(\\S(.*?\\S)??)\\*\\B");
+	private static final Pattern copyright = Pattern.compile("(?<=\\A|\\s)(\\(c\\))(?=\\z|\\s)");
+	private static final Pattern emphasis = Pattern.compile("\\b_(?=[^_\\s])(.*?)(?<=[^_\\s])_\\b");
+	private static final Pattern emphasisStrong = Pattern.compile("\\b__(?=[^_\\s])(.*?)(?<=[^_\\s])__\\b");
+	private static final Pattern strong = Pattern.compile("\\B\\*(?=[^\\*\\s])(.*?)(?<=[^\\*\\s])\\*\\B");
 
 	private static enum NestingType {
 		PARAGRAPHS {
@@ -349,7 +351,7 @@ public class WikitextDoclet {
 		" I hope this -*works*...\n" +
 		"\n" +
 		" Stuff\n" +
-		"    - this *might* be useful...\n" +
+		"    - this *might* *be* useful...\n" +
 		"    - this might be useful again...\n" +
 		"       - nested...\n" +
 		"\n" +
