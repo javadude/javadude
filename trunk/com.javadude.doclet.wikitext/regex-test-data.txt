@@ -1,0 +1,31 @@
+(c) foo(c) (c) hello(c)adsd ca(c) asd (c)
+
+_hello_ _there_ _foo_ __fee__ _too da loo _ _a_ asd _ asd_ __ asd _wwww_ asd_asdsad_asdsad _asd_
+*hello* *there* *foo* **fee** *too da loo * *a* asd * asd* ** asd *wwww* asdsad*as*asdasd *asd*
+__hello__ __there__ __foo__ ____fee____ __too da loo __ __a__ asd __ asd__ ____ asd __wwww__ __asd__
+(c)
+
+
+ This is a _simple_ wikitext *doclet*. So __there__.
+
+ I hope this -*works*...
+
+ Stuff
+    - this *might* *be* useful...
+    - this might be useful again...
+
+ More stuff
+    # hello
+    # there
+      # plah
+      # fnord
+      # crinkle
+
+        More content
+
+      Nested paragraph
+    # how
+
+ || A   || B   || C   ||
+ || xxx || yyy || zzz ||
+ || qqq || rrr || sss ||
