@@ -21,6 +21,8 @@ import com.sun.tools.doclets.standard.Standard;
 
 /**
  * This is a _simple_ wikitext *doclet*. So __there__.
+ * Copyright (c) 2009 Scott Stanchfield. All Rights Reserved.
+ * Copyright (c)2009 Scott Stanchfield. All Rights Reserved.
  *
  * I hope this -*works*...
  *
@@ -299,7 +301,7 @@ public class WikitextDoclet {
 			return n;
 		}
 	}
-	private static final Pattern copyright = Pattern.compile("(?<=\\A|\\s)(\\(c\\))(?=\\z|\\s)");
+	private static final Pattern copyright = Pattern.compile("(?<=\\A|\\s)(\\(c\\))(?=\\z|\\s|\\d{4})");
 	private static final Pattern emphasis = Pattern.compile("\\b_(?=[^_\\s])(.*?)(?<=[^_\\s])_\\b");
 	private static final Pattern emphasisStrong = Pattern.compile("\\b__(?=[^_\\s])(.*?)(?<=[^_\\s])__\\b");
 	private static final Pattern strong = Pattern.compile("\\B\\*(?=[^\\*\\s])(.*?)(?<=[^\\*\\s])\\*\\B");
