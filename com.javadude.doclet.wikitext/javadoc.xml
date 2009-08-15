@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" classpath="C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.swt_3.5.0.v3550b.jar;C:\eclipse35\plugins\org.eclipse.core.jobs_3.4.100.v20090429-1800.jar;C:\eclipse35\plugins\org.eclipse.core.contenttype_3.4.0.v20090429-1800.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.confluence.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.osgi_3.5.0.v20090520.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.tracwiki.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.jface_3.5.0.I20090525-2000.jar;C:\eclipse35\plugins\org.eclipse.ui.workbench_3.5.0.I20090603-2000.jar;C:\eclipse35\plugins\org.eclipse.core.commands_3.5.0.I20090525-2000.jar;C:\eclipse35\plugins\org.eclipse.core.runtime_3.5.0.v20090525.jar;C:\eclipse35\plugins\org.eclipse.equinox.common_3.5.0.v20090520-1800.jar;C:\eclipse35\plugins\org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800\runtime_registry_compatibility.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.twiki.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.textile.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.equinox.app_1.2.0.v20090520-1800.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.mediawiki.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.equinox.registry_3.4.100.v20090520-1800.jar;C:\eclipse35\plugins\org.eclipse.swt.win32.win32.x86_3.5.0.v3550b.jar;C:\eclipse35\plugins\org.eclipse.ui_3.5.0.I20090604-2000.jar;C:\eclipse35\plugins\org.eclipse.equinox.preferences_3.2.300.v20090520-1800.jar" 
+			destdir="doc" doctitle="some title" nodeprecated="false" nodeprecatedlist="false" noindex="false" 
+			nonavbar="false" notree="false" packagenames="com.javadude.doclet.wikitext" sourcepath="src" 
+			splitindex="false" stylesheetfile="C:\eclipse35\workspace\com.javadude.doclet.wikitext\stylesheet.css" 
+			use="true" version="true">
+            <doclet name="com.javadude.doclet.wikitext.WikitextDoclet" 
+            	path="c:\tools.jar;c:\eclipse35\workspace\com.javadude.doclet.wikitext\bin;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.twiki.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.confluence.core_1.1.1.v20090722-0200-e3x.jar;C:\eclipse35\plugins\org.eclipse.mylyn.wikitext.tracwiki.core_1.1.1.v20090722-0200-e3x.jar"
+            />
+        </javadoc>
+    </target>
+</project>
