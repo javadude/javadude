@@ -269,9 +269,9 @@ public class WikitextDoclet {
 			}
 		}
 		private void pushNesting(StringBuilder html, int n, NestingType nestingType) {
-			// if we have a paragraph in progress, finish it before going more nested
+			// if we have a paragraph or nested paragraph in progress, finish it before going more nested
 			Nesting nesting = nestingStack.peek();
-			if (nesting.nestingType == NestingType.PARAGRAPHS) {
+			if (nesting.nestingType == NestingType.PARAGRAPHS || nesting.nestingType == NestingType.TEXT) {
 				finishItemInProgress(html, nesting);
 			}
 			Nesting newNesting = new Nesting(n, nestingType);
