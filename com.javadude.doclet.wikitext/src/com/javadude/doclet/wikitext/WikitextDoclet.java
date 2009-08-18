@@ -37,16 +37,15 @@ import com.sun.tools.doclets.standard.Standard;
  *      # fnord
  *      # crinkle
  *
- *        More content
+ *      More content
  *
- * {{{
- * int x = 42;
- * void foo() {
- *    int y = 22;
- * }
- * }}}
+ *    {{{
+ *    int x = 42;
  *
- *
+ *    void foo() {
+ *       int y = 22;
+ *    }
+ *    }}}
  *
  * _notes_:
  * _notes:_
@@ -196,34 +195,48 @@ public class WikitextDoclet {
 
 			nestingStack.push(new Nesting(-1, NestingType.PARAGRAPHS));
 
-			boolean preformatted = false;
 			for (String line : lines) {
 				String trimmedLine = line.trim();
-				// TODO allow {{{ or }}} to be on same line as other stuff
-				if ("{{{".equals(trimmedLine)) {
-					html.append("<pre>");
-					preformatted = true;
-					continue;
-				}
-				if ("}}}".equals(trimmedLine)) {
-					html.append("</pre>");
-					preformatted = false;
-					continue;
-				}
-				if (line.contains("{{{") || line.contains("}}}")) {
-					throw new RuntimeException("{{{ or }}} must be a on a line by itself");
-				}
-				if (preformatted) {
-					html.append(line);
-					html.append('\n');
-					continue;
-				}
 
 				// check for line items (lines that start with - and #)
 				boolean poppedOut = false;
 				int n = leadingSpaces(line);
 				NestingType nestingType = null;
 				Nesting nesting = nestingStack.peek();
+
+				if ("{{{".equals(trimmedLine)) {
+					nestingType = NestingType.PREFORMATTED;
+					poppedOut = pushOrPop(nesting, n, html, nestingType);
+					nesting = nestingStack.peek();
+					continue;
+
+				}
+				if ("}}}".equals(trimmedLine)) {
+					if (n != nesting.leadingSpaces) {
+						throw new RuntimeException("matching }}} must be at same indentation as {{{");
+					}
+					// pop nesting
+					popNesting(html);
+					continue;
+				}
+				if (nesting.nestingType == NestingType.PREFORMATTED) {
+					if ("".equals(trimmedLine)) {
+						line = "";
+					} else if (n < nesting.leadingSpaces) {
+						throw new RuntimeException("Preformatted text must be at least the same indentation as {{{ ... }}}");
+					} else {
+						line = line.substring(nesting.leadingSpaces);
+					}
+					html.append(line);
+					html.append('\n');
+					continue;
+				}
+
+				// TODO allow {{{ or }}} to be on same line as other stuff
+				if (line.contains("{{{") || line.contains("}}}")) {
+					throw new RuntimeException("{{{ or }}} must be a on a line by itself");
+				}
+
 				if (!"".equals(trimmedLine)) {
 					switch(line.charAt(n)) {
 						case '-':
@@ -242,27 +255,8 @@ public class WikitextDoclet {
 							break;
 					}
 
-					// pop off levels that are deeper than we currently are
-					while (nesting.leadingSpaces > n) {
-						popNesting(html);
-						poppedOut = true;
-						nesting = nestingStack.peek();
-					}
-
-					// if at same level as current nesting
-					if (nesting.leadingSpaces == n) {
-						// if it's a different type of nesting, pop off current and push on new below
-						if (nesting.nestingType != nestingType) {
-							popNesting(html);
-							nesting = nestingStack.peek();
-						}
-					}
-
-					// if want deeper nesting, push new nesting
-					if (nesting.leadingSpaces < n) {
-						pushNesting(html, n, nestingType);
-						nesting = nestingStack.peek();
-					}
+					poppedOut = pushOrPop(nesting, n, html, nestingType);
+					nesting = nestingStack.peek();
 				}
 
 				// if this is a blank line, or an explicit new item end the previous item
@@ -284,6 +278,35 @@ public class WikitextDoclet {
 			}
 			return html.toString();
 		}
+
+		private boolean pushOrPop(Nesting nesting, int n, StringBuilder html, NestingType nestingType) {
+			boolean poppedOut = false;
+
+			// pop off levels that are deeper than we currently are
+			while (nesting.leadingSpaces > n) {
+				popNesting(html);
+				poppedOut = true;
+				nesting = nestingStack.peek();
+			}
+
+			// if at same level as current nesting
+			if (nesting.leadingSpaces == n) {
+				// if it's a different type of nesting, pop off current and push on new below
+				if (nesting.nestingType != nestingType) {
+					popNesting(html);
+					nesting = nestingStack.peek();
+				}
+			}
+
+			// if want deeper nesting, push new nesting
+			if (nesting.leadingSpaces < n) {
+				pushNesting(html, n, nestingType);
+				nesting = nestingStack.peek();
+			}
+			return poppedOut;
+		}
+
+
 		private void finishItemInProgress(StringBuilder html, Nesting nesting) {
 			if (nesting.itemInProgress) {
 				html.append(nesting.nestingType.itemEnd());
@@ -294,7 +317,7 @@ public class WikitextDoclet {
 		private void pushNesting(StringBuilder html, int n, NestingType nestingType) {
 			// if we have a paragraph or nested paragraph in progress, finish it before going more nested
 			Nesting nesting = nestingStack.peek();
-			if (nesting.nestingType == NestingType.PARAGRAPHS || nesting.nestingType == NestingType.TEXT) {
+			if (nesting.nestingType == NestingType.PARAGRAPHS || nesting.nestingType == NestingType.TEXT || nesting.nestingType == NestingType.PREFORMATTED) {
 				finishItemInProgress(html, nesting);
 			}
 			Nesting newNesting = new Nesting(n, nestingType);
@@ -333,6 +356,12 @@ public class WikitextDoclet {
 			@Override public String end() { return ""; }
 			@Override public String itemStart() { return "<p>"; }
 			@Override public String itemEnd() { return "</p>"; }
+		},
+		PREFORMATTED {
+			@Override public String start() { return "<pre>"; }
+			@Override public String end() { return "</pre>"; }
+			@Override public String itemStart() { return ""; }
+			@Override public String itemEnd() { return ""; }
 		},
 		OL {
 			@Override public String start() { return "<ol>"; }
