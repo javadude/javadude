@@ -39,6 +39,25 @@ import com.sun.tools.doclets.standard.Standard;
  *
  *        More content
  *
+ * {{{
+ * int x = 42;
+ * void foo() {
+ *    int y = 22;
+ * }
+ * }}}
+ *
+ *
+ *
+ * _notes_:
+ * _notes:_
+ * (_notes:_)
+ * *notes*:
+ * (*notes*):
+ * *notes:*
+ * =notes:=
+ * =notes=:
+ * (=notes=):
+ *
  *      Nested paragraph
  *    # how
  *
@@ -153,6 +172,7 @@ public class WikitextDoclet {
 			result = emphasisStrong.matcher(result).replaceAll("<i><b>$1</b></i>");
 			result = emphasis.matcher(result).replaceAll("<i>$1</i>");
 			result = strong.matcher(result).replaceAll("<b>$1</b>");
+			result = code.matcher(result).replaceAll("<code>$1</code>");
 			result = copyright.matcher(result).replaceAll("&copy;");
 
 			StringBuilder html = new StringBuilder();
@@ -305,6 +325,7 @@ public class WikitextDoclet {
 	private static final Pattern emphasis = Pattern.compile("\\b_(?=[^_\\s])(.*?)(?<=[^_\\s])_\\b");
 	private static final Pattern emphasisStrong = Pattern.compile("\\b__(?=[^_\\s])(.*?)(?<=[^_\\s])__\\b");
 	private static final Pattern strong = Pattern.compile("\\B\\*(?=[^\\*\\s])(.*?)(?<=[^\\*\\s])\\*\\B");
+	private static final Pattern code = Pattern.compile("\\B=(?=[^\\*\\s])(.*?)(?<=[^\\*\\s])=\\B");
 
 	private static enum NestingType {
 		PARAGRAPHS {
@@ -361,6 +382,18 @@ public class WikitextDoclet {
 		"   Another nested paragraph\n" +
 		"      More nested paragraph\n" +
 		"   Back out paragraph\n" +
+		"\n" +
+		"_notes_:\n" +
+		"_notes:_\n" +
+		"(_notes:_)\n" +
+		"*notes*:\n" +
+		"(*notes*):\n" +
+		"*notes:*\n" +
+		"=notes:=\n" +
+		"=notes=:\n" +
+		"(=notes=):\n" +
+		"\n" +
+		"\n" +
 		" More stuff\n" +
 		"    # hello\n" +
 		"    # there\n" +
