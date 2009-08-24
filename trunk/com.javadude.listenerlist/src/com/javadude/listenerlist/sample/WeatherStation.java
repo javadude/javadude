@@ -10,9 +10,10 @@ package com.javadude.listenerlist.sample;
 import java.util.Date;
 
 import com.javadude.listenerlist.ListenerList;
+import com.javadude.listenerlist.ListenerList.Exceptions;
 
 public class WeatherStation {
-	private ListenerList<SunListener> sunListeners = ListenerList.create(SunListener.class);
+	private ListenerList<SunListener> sunListeners = ListenerList.create(SunListener.class, Exceptions.THROW);
 	public void addSunListener(SunListener listener)	{ sunListeners.add(listener); }
 	public void removeSunListener(SunListener listener)	{ sunListeners.remove(listener); }
 
