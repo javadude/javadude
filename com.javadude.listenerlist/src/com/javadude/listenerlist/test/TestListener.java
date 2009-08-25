@@ -7,8 +7,7 @@
  *******************************************************************************/
 package com.javadude.listenerlist.test;
 
-import java.util.Date;
 
-public interface SunListener {
-	void sunRose(Date date);
+public interface TestListener {
+	void notify(Object someData);
 }

@@ -7,31 +7,30 @@
  *******************************************************************************/
 package com.javadude.listenerlist.test;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.javadude.listenerlist.ListenerList;
 import com.javadude.listenerlist.ListenerList.Exceptions;
 
-public class Observable {
-	private ListenerList<SunListener> listeners;
-	public Observable(Exceptions exceptionHandling) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling);
+public class TestObservable {
+	private ListenerList<TestListener> listeners;
+	public TestObservable(Exceptions exceptionHandling) {
+		listeners = ListenerList.create(TestListener.class, exceptionHandling);
 	}
-	public Observable(Exceptions exceptionHandling, Logger logger, Level level) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling, logger, level);
+	public TestObservable(Exceptions exceptionHandling, Logger logger, Level level) {
+		listeners = ListenerList.create(TestListener.class, exceptionHandling, logger, level);
 	}
-	public Observable(Exceptions exceptionHandling, Logger logger) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling, logger);
+	public TestObservable(Exceptions exceptionHandling, Logger logger) {
+		listeners = ListenerList.create(TestListener.class, exceptionHandling, logger);
 	}
-	public void addSunListener(SunListener listener) {
+	public void addTestListener(TestListener listener) {
 		listeners.add(listener);
 	}
-	public void removeSunListener(SunListener listener) {
+	public void removeTestListener(TestListener listener) {
 		listeners.remove(listener);
 	}
-	public void fireSunRose() throws SomeException {
-		listeners.fire().sunRose(new Date());
+	public void fireNotify() throws TestException {
+		listeners.fire().notify(new Object());
 	}
 }

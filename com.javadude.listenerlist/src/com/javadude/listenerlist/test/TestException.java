@@ -7,10 +7,6 @@
  *******************************************************************************/
 package com.javadude.listenerlist.test;
 
-public class SomeException extends RuntimeException {
+public class TestException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
-
-	public SomeException() {
-		super("error");
-	}
 }
