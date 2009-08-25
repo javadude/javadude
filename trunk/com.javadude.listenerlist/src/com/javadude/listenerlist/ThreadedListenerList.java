@@ -48,7 +48,7 @@ public class ThreadedListenerList<ListenerInterface> extends ListenerList<Listen
 		return new ThreadedListenerList<ListenerInterface>(clazz, exceptionHandling, logger, logLevel);
 	}
 	private ThreadedListenerList(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Logger logger, Level logLevel) {
-		super(clazz, exceptionHandling, null, logger, logLevel);
+		super(clazz, exceptionHandling, logger, logLevel);
 		if (exceptionHandling == Exceptions.THROW) {
 			throw new IllegalArgumentException("Cannot use Exceptions.THROW for exception handling in ThreadedListenerList");
 		}

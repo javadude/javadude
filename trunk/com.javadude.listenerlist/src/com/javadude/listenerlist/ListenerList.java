@@ -7,7 +7,6 @@
  *******************************************************************************/
 package com.javadude.listenerlist;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,16 +16,32 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * <p>Manages a set of listeners on behalf of another class.</p>
+ *
+ *  TODO more detail and examples
+ *
+ * @param <ListenerInterface> The type of listeners we will track in this list. This must be an interface.
+ */
 public class ListenerList<ListenerInterface> {
 	public enum Exceptions {
+		/** Swallow all exceptions. All listeners will be notified and no exception will be thrown if any
+		 *  listeners throw exceptions. Exceptions will be logged if a logger is passed in when creating the
+		 *  listener list. */
 		SWALLOW,
+		/** Throw all exceptions. Exceptions thrown by any listener will immediately be thrown to the caller.
+		 *  Note that any listeners that have not yet been notified when an exception is thrown will
+		 *  not be notified.
+		 */
 		THROW,
+		/** Collect all exceptions. If any listeners throw an exception when being notified, the exception will
+		 *  be added to a list. All listeners will be notified, and zero or more may throw exceptions.
+		 *  After all listeners have been notified, a ListenerException will be thrown that contains all of the
+		 *  exceptions thrown.
+		 */
 		COLLECT
 	}
 	private Exceptions exceptionHandling;
-
-	private Constructor<? extends Throwable> wrapperConstructorNoMessage;
-	private Constructor<? extends Throwable> wrapperConstructorWithMessage;
 
 	// options for ExceptionHandling.LOG
 	private Logger logger;
@@ -36,54 +51,31 @@ public class ListenerList<ListenerInterface> {
 	private ListenerInterface dynamicProxy;
 	private final Class<ListenerInterface> clazz;
 
+	/**
+	 * Create a listener list without wrapping thrown exceptions. This list can be created using any exception mode.
+	 * @param <ListenerInterface> The listener interface that we will be tracking.
+	 * @param clazz The listener interface type
+	 * @param exceptionHandling The exception handling mode. Can be SWALLOW, THROW or COLLECT.
+	 * @return a new listener list instance
+	 * @see Exceptions
+	 */
 	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, null, null, null);
-	}
-	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Class<? extends Throwable> wrapperClass) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, wrapperClass, null, null);
+		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, null, null);
 	}
 	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Logger logger) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, null, logger, Level.SEVERE);
+		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, logger, Level.SEVERE);
 	}
 	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Logger logger, Level logLevel) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, null, logger, logLevel);
+		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, logger, logLevel);
 	}
-	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Class<? extends Throwable> wrapperClass, Logger logger) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, wrapperClass, logger, Level.SEVERE);
-	}
-	public static <ListenerInterface> ListenerList<ListenerInterface> create(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Class<? extends Throwable> wrapperClass, Logger logger, Level logLevel) {
-		return new ListenerList<ListenerInterface>(clazz, exceptionHandling, wrapperClass, logger, logLevel);
-	}
-	protected ListenerList(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Class<? extends Throwable> wrapperClass, Logger logger, Level logLevel) {
-		if (wrapperClass != null && exceptionHandling != Exceptions.THROW && exceptionHandling != Exceptions.COLLECT) {
-			throw new IllegalArgumentException("Exception handling must be THROW or COLLECT to wrap exceptions");
+	protected ListenerList(Class<ListenerInterface> clazz, Exceptions exceptionHandling, Logger logger, Level logLevel) {
+		if (!clazz.isInterface()) {
+			throw new IllegalArgumentException("Listener type must be an interface");
 		}
 		this.clazz = clazz;
 		this.exceptionHandling = exceptionHandling;
 		this.logger = logger;
 		this.logLevel = logLevel;
-		if (wrapperClass != null) {
-			if (!RuntimeException.class.isAssignableFrom(wrapperClass)) {
-				throw new IllegalArgumentException("Wrapper class must extend RuntimeException (or a subclass of RuntimeException)");
-			}
-			try {
-				this.wrapperConstructorWithMessage = wrapperClass.getConstructor(String.class, Throwable.class);
-			} catch (ThreadDeath t) {
-				throw t;
-			} catch (SecurityException e) {
-				throw new IllegalArgumentException("Wrapper class contains a public constructor that takes (String,Throwable) as an argument but it cannot be accessed", e);
-			} catch (NoSuchMethodException e) {
-				try {
-					this.wrapperConstructorNoMessage = wrapperClass.getConstructor(Throwable.class);
-				} catch (ThreadDeath t) {
-					throw t;
-				} catch (SecurityException t) {
-					throw new IllegalArgumentException("Wrapper class contains a public constructor that takes (Throwable) as an argument but it cannot be accessed", t);
-				} catch (Throwable t) {
-					throw new IllegalArgumentException("Wrapper class must contain a public constructor that takes (Throwable) or (String, Throwable) as an argument", t);
-				}
-			}
-		}
 		@SuppressWarnings("unchecked")
 		ListenerInterface proxy = (ListenerInterface) Proxy.newProxyInstance(clazz.getClassLoader(),
 				new Class<?>[] {clazz},
@@ -123,11 +115,7 @@ public class ListenerList<ListenerInterface> {
 			} catch (ThreadDeath t) {
 				throw t;
 			} catch (Throwable t) {
-				if (wrapperConstructorWithMessage != null) {
-					throw wrapperConstructorWithMessage.newInstance(t.getClass().getName() + ":" + t.getMessage(), t);
-				} else if (wrapperConstructorNoMessage != null) {
-					throw wrapperConstructorNoMessage.newInstance(t);
-				} else if (exceptionHandling == Exceptions.THROW || exceptionHandling == Exceptions.COLLECT) {
+				if (exceptionHandling == Exceptions.THROW || exceptionHandling == Exceptions.COLLECT) {
 					throw t;
 				}
 				// else swallow exception
