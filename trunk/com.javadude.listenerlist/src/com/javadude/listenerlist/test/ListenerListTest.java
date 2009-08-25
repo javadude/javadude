@@ -10,7 +10,6 @@ package com.javadude.listenerlist.test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -39,7 +38,7 @@ public class ListenerListTest {
 		@Override public void close() throws SecurityException { }
 	};
 	@Parameters public static Collection<Object[]> data() {
-    	Class<? extends Throwable> se = SomeException.class;
+    	Class<? extends Throwable> se = TestException.class;
     	Class<? extends Throwable> le = ListenerException.class;
         return Arrays.asList(
         		new Object[][] {
@@ -85,24 +84,24 @@ public class ListenerListTest {
 	}
 
 	private interface CallCheck {
-		boolean isSunRoseCalled();
+		boolean isCalled();
 	}
-	private static class ListenerNoThrow implements SunListener, CallCheck {
-		private boolean sunRoseCalled = false;
-		public boolean isSunRoseCalled() { return sunRoseCalled; }
-		@Override public void sunRose(Date date) { sunRoseCalled = true; }
+	private static class ListenerNoThrow implements TestListener, CallCheck {
+		private boolean called = false;
+		public boolean isCalled() { return called; }
+		@Override public void notify(Object someData) { called = true; }
 	}
-	private static class ListenerThrows implements SunListener, CallCheck {
-		private boolean sunRoseCalled = false;
-		public boolean isSunRoseCalled() { return sunRoseCalled; }
-		@Override public void sunRose(Date date) { sunRoseCalled = true; throw new SomeException(); }
+	private static class ListenerThrows implements TestListener, CallCheck {
+		private boolean called = false;
+		public boolean isCalled() { return called; }
+		@Override public void notify(Object someData) { called = true; throw new TestException(); }
 	}
 
 	@Test public void testNoLog() throws Throwable {
-		testBase(new Observable(handling));
+		testBase(new TestObservable(handling));
 	}
 	@Test public void testLog() throws Throwable {
-		testBase(new Observable(handling, logger));
+		testBase(new TestObservable(handling, logger));
 		checkLog(Level.SEVERE);
 	}
 	private void checkLog(Level level) {
@@ -110,9 +109,9 @@ public class ListenerListTest {
 		for (boolean b : listenerThrows) {
 			if (b) {
 				LogRecord logRecord = handler.getRecords().get(n++);
-				Assert.assertEquals("Error invoking listener method sunRose", logRecord.getMessage());
+				Assert.assertEquals("Error invoking listener method notify", logRecord.getMessage());
 				Assert.assertEquals(level, logRecord.getLevel());
-				Assert.assertEquals(SomeException.class, logRecord.getThrown().getClass());
+				Assert.assertEquals(TestException.class, logRecord.getThrown().getClass());
 				if (handling == Exceptions.THROW) {
 					// only one exception will be reported
 					break;
@@ -125,7 +124,7 @@ public class ListenerListTest {
 		Assert.assertEquals(n, handler.getRecords().size());
 	}
 	private void testLog(Level level) throws Throwable {
-		testBase(new Observable(handling, logger, level));
+		testBase(new TestObservable(handling, logger, level));
 		checkLog(level);
 	}
 	@Test public void testLogSevere() throws Throwable {
@@ -137,18 +136,18 @@ public class ListenerListTest {
 	@Test public void testLogInfo() throws Throwable {
 		testLog(Level.INFO);
 	}
-	public void testBase(Observable observable) throws Throwable {
-		SunListener[] listeners = new SunListener[listenerThrows.length];
+	public void testBase(TestObservable testObservable) throws Throwable {
+		TestListener[] listeners = new TestListener[listenerThrows.length];
 		for (int i = 0; i < listenerThrows.length; i++) {
 			if (listenerThrows[i]) {
 				listeners[i] = new ListenerThrows();
 			} else {
 				listeners[i] = new ListenerNoThrow();
 			}
-			observable.addSunListener(listeners[i]);
+			testObservable.addTestListener(listeners[i]);
 		}
 		try {
-			observable.fireSunRose();
+			testObservable.fireNotify();
 			if (expectedException != null) {
 				Assert.fail("expected " + expectedException.getName());
 			}
@@ -161,7 +160,7 @@ public class ListenerListTest {
 			Assert.assertEquals(expectedException, t.getClass());
 		}
 		for (int i = 0; i < listenerThrows.length; i++) {
-			Assert.assertEquals(listenerCalled[i], ((CallCheck) listeners[i]).isSunRoseCalled());
+			Assert.assertEquals(listenerCalled[i], ((CallCheck) listeners[i]).isCalled());
 		}
 	}
 }
