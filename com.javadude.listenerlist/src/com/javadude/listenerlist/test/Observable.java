@@ -19,20 +19,11 @@ public class Observable {
 	public Observable(Exceptions exceptionHandling) {
 		listeners = ListenerList.create(SunListener.class, exceptionHandling);
 	}
-	public Observable(Exceptions exceptionHandling, Class<? extends Throwable> wrapper) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling, wrapper);
-	}
 	public Observable(Exceptions exceptionHandling, Logger logger, Level level) {
 		listeners = ListenerList.create(SunListener.class, exceptionHandling, logger, level);
 	}
-	public Observable(Exceptions exceptionHandling, Class<? extends Throwable> wrapper, Logger logger, Level level) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling, wrapper, logger, level);
-	}
 	public Observable(Exceptions exceptionHandling, Logger logger) {
 		listeners = ListenerList.create(SunListener.class, exceptionHandling, logger);
-	}
-	public Observable(Exceptions exceptionHandling, Class<? extends Throwable> wrapper, Logger logger) {
-		listeners = ListenerList.create(SunListener.class, exceptionHandling, wrapper, logger);
 	}
 	public void addSunListener(SunListener listener) {
 		listeners.add(listener);
