@@ -82,6 +82,11 @@ public class ListenerList<ListenerInterface> {
 				new ListenerInvocationHandler());
 		dynamicProxy = proxy;
 	}
+	public void clear() {
+		synchronized (listeners) {
+			listeners.clear();
+		}
+	}
 	public void add(ListenerInterface listener) {
 		synchronized (listeners) {
 			listeners.add(listener);
