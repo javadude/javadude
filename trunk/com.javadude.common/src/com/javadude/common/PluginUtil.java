@@ -65,7 +65,7 @@ public class PluginUtil {
         log_.log(status);
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog.openError(null, "Error setting Hillcrest Classpath", message);
+                MessageDialog.openWarning(null, "Error: " + message, message);
             }});
     }
     /**
@@ -78,7 +78,7 @@ public class PluginUtil {
         log_.log(status);
         Display.getDefault().asyncExec(new Runnable() {
             public void run() {
-                MessageDialog.openWarning(null, "Warning setting Hillcrest Classpath", message);
+                MessageDialog.openWarning(null, "Warning: " + message, message);
             }});
     }
     /**
@@ -108,7 +108,7 @@ public class PluginUtil {
                 }
             }
             if (!readOnlyProblemFiles.isEmpty()) {
-                String message = "The following files are read-only or do not exist and their projects cannot be converted to/from Hillcrest Adapter Projects:";
+                String message = "The following files are read-only or do not exist and their projects cannot be converted:";
                 for (String readOnlyFile : readOnlyProblemFiles) {
                     message += '\n' + readOnlyFile;
                 }
