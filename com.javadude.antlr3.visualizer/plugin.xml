@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="com.javadude.antlr3.visualizer.DummyStartup">
+      </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="com.javadude.antlr3.visualizer"
+            name="ANTLR Visualization">
+      </category>
+      <view
+            category="com.javadude.antlr3.visualizer"
+            class="com.javadude.antlr3.visualizer.views.ANTLRVisualizationView"
+            icon="icons/antxr.gif"
+            id="com.javadude.antlr3.visualizer.views.ANTLRVisualizationView"
+            name="ANTLR Visualization View">
+      </view>
+   </extension>
+
+</plugin>
