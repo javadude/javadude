@@ -41,7 +41,7 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 	}
 
 	public IWorkingSet getWorkingSet() { return workingSet_; }
-	@Override public IWorkingSet getSelection() { return workingSet_; }
+	public IWorkingSet getSelection() { return workingSet_; }
 
 	// hook methods for subclasses to override
 	/**
@@ -89,7 +89,7 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 	/**
 	 * The user hit ok; update the working set with the new settings
 	 */
-	@Override public void finish() {
+	public void finish() {
 		List<IAdaptable> items = getMatchingItems();
 
 		// if this is a new working set, create it and fill in the details
@@ -136,7 +136,7 @@ public abstract class DynamicWorkingSetPage extends WizardPage implements IWorki
 	/**
 	 * Create the controls on the page
 	 */
-	@Override public void createControl(Composite parent) {
+	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);

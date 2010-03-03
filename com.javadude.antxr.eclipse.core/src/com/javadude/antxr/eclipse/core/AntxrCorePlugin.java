@@ -33,7 +33,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.osgi.framework.BundleContext;
 
 import com.javadude.antxr.eclipse.core.properties.SettingsPersister;
-import com.javadude.common.PluginUtil;
 
 /**
  * Central access point for the ANTXR Core plug-in

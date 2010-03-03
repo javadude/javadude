@@ -17,7 +17,6 @@ public class JavaDudeCleanUpFix implements ICleanUpFix {
         this.options = options;
     }
 
-    @Override
     public CompilationUnitChange createChange(IProgressMonitor progressMonitor)
             throws CoreException {
         if (options.isEnabled(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES)) {

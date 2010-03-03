@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Antxr Plug-in
 Bundle-SymbolicName: com.javadude.antxr
-Bundle-Version: 2.1.8
+Bundle-Version: 2.1.9
 Bundle-Vendor: JavaDude.com
 Export-Package: com.javadude.antxr,
  com.javadude.antxr.actions.java,
@@ -17,4 +17,4 @@ Export-Package: com.javadude.antxr,
  org.kxml2.wap.wml;x-internal:=true,
  org.kxml2.wap.wv;x-internal:=true,
  org.xmlpull.v1;x-internal:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -70,7 +70,7 @@ public class NatureWorkingSetPage extends DynamicWorkingSetPage {
 		}
 		table.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table.addCheckStateListener(new ICheckStateListener() {
-			@Override public void checkStateChanged(CheckStateChangedEvent event) {
+			public void checkStateChanged(CheckStateChangedEvent event) {
 				natureId_ = null;
 				for (Object o : table.getCheckedElements()) {
 					if (natureId_ == null) {

@@ -79,7 +79,6 @@ public class DependencyView extends ViewPart {
 		getViewSite().getPage().addSelectionListener(selectionListener_);
 	}
 	private ISelectionListener selectionListener_ = new ISelectionListener() {
-		@Override
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structuredSelection = (IStructuredSelection) selection;

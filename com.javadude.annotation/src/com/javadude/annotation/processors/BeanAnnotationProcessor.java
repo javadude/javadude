@@ -356,7 +356,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			// check if getPropertyChangeSupport or some superclass defines bound properties in @Bean
 			checkInheritedMethod(data, "getPropertyChangeSupport", "java.beans.PropertyChangeSupport", superclass, true,
 					new InheritCheck() {
-						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+						public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
 							Bean beanAnn = classDeclaration.getAnnotation(Bean.class);
 							if (beanAnn != null) {
 								Property[] properties = beanAnn.properties();
@@ -373,7 +373,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			// check if paramString inherited or some superclass has @Bean
 			checkInheritedMethod(data, "paramString", "java.lang.String", superclass, !hasProperties,
 					new InheritCheck() {
-						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+						public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
 							if (classDeclaration.getAnnotation(Bean.class) != null) {
 								d.put("paramStringInherited", true);
 								d.put("paramStringModifiers", "protected");
@@ -384,7 +384,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 			// check if createPropertyMap inherited or some superclass has @Bean with defineCreatePropertyMap
 			checkInheritedMethod(data, "createPropertyMap", "java.lang.String", superclass, !hasProperties,
 					new InheritCheck() {
-						@Override public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
+						public boolean isInherited(Thing d, ClassDeclaration classDeclaration) {
 							Bean beanAnn = classDeclaration.getAnnotation(Bean.class);
 							if (beanAnn != null && beanAnn.defineCreatePropertyMap()) {
 								d.put("createPropertyMapInherited", true);
