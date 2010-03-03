@@ -166,7 +166,6 @@ public class ReportVisibleMethodsView extends ViewPart {
 		hookDoubleClickAction();
 		contributeToActionBars();
 		getViewSite().getPage().addSelectionListener(new ISelectionListener() {
-		    @Override
 		    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		        viewer.setInput(selection);
 		    }

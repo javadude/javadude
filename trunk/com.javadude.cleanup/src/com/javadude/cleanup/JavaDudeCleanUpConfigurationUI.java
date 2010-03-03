@@ -22,7 +22,6 @@ public class JavaDudeCleanUpConfigurationUI implements
 	public JavaDudeCleanUpConfigurationUI() {
 	}
 
-	@Override
 	public Composite createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -33,10 +32,10 @@ public class JavaDudeCleanUpConfigurationUI implements
 		convertButton.setText("Convert Tabs to Spaces");
 		convertButton.setSelection(options.isEnabled(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES));
 		convertButton.addSelectionListener(new SelectionListener() {
-			@Override public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				options.setOption(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES, convertButton.getSelection() ? CleanUpOptions.TRUE : CleanUpOptions.FALSE);
 			}
-			@Override public void widgetDefaultSelected(SelectionEvent e) {
+			public void widgetDefaultSelected(SelectionEvent e) {
 				options.setOption(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES, convertButton.getSelection() ? CleanUpOptions.TRUE : CleanUpOptions.FALSE);
 			}});
 		Label label = new Label(composite, SWT.NONE);
@@ -47,29 +46,25 @@ public class JavaDudeCleanUpConfigurationUI implements
 		text.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		text.setText(options.getValue(JavaDudeCleanUpOptionsInitializer.TAB_SIZE));
 		text.addModifyListener(new ModifyListener() {
-			@Override public void modifyText(ModifyEvent e) {
+			public void modifyText(ModifyEvent e) {
 				options.setOption(JavaDudeCleanUpOptionsInitializer.TAB_SIZE, text.getText());
 			}});
 
 		return composite;
 	}
 
-	@Override
 	public int getCleanUpCount() {
 		return 1;
 	}
 
-	@Override
 	public String getPreview() {
 		return "TBD\nTBD\nTBD\nTBD\nTBD\nTBD\nTBD\nTBD\nTBD\nTBD\n";
 	}
 
-	@Override
 	public int getSelectedCleanUpCount() {
 		return options.isEnabled(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES) ? 1 : 0;
 	}
 
-	@Override
 	public void setOptions(CleanUpOptions options) {
 		this.options = options;
 	}

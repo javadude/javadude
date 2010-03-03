@@ -34,7 +34,6 @@ public class DependencyGraphView extends ViewPart {
 
 	class ViewContentProvider implements IGraphEntityContentProvider {
 		private Map<String, IJavaProject> projects = new HashMap<String, IJavaProject>();
-		@Override
 		public Object[] getConnectedTo(Object obj) {
 			IJavaProject javaProject = (IJavaProject) obj;
 			try {
@@ -53,7 +52,6 @@ public class DependencyGraphView extends ViewPart {
 			}
 		}
 
-		@Override
 		public Object[] getElements(Object arg0) {
 			try {
 				IJavaModel javaModel = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
@@ -68,8 +66,8 @@ public class DependencyGraphView extends ViewPart {
 			}
 		}
 
-		@Override public void dispose() { /* nothing */ }
-		@Override public void inputChanged(Viewer v, Object oldInput, Object newInput) { /* nothing */ }
+		public void dispose() { /* nothing */ }
+		public void inputChanged(Viewer v, Object oldInput, Object newInput) { /* nothing */ }
 	}
 	class ViewLabelProvider extends LabelProvider {
 		@Override
@@ -87,10 +85,8 @@ public class DependencyGraphView extends ViewPart {
 		viewer.setInput(getViewSite());
 		viewer.setLayoutAlgorithm(new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING));
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
-			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
 				Display.getDefault().asyncExec(new Runnable() {
-					@Override
 					public void run() {
 						viewer.refresh();
 						viewer.applyLayout();

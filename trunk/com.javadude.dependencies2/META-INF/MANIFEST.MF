@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dependencies2 Plug-in
 Bundle-SymbolicName: com.javadude.dependencies2; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: com.javadude.dependencies2.Activator
 Bundle-Vendor: JAVADUDE
 Require-Bundle: org.eclipse.ui,
@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.4.1",
  org.eclipse.zest.core;bundle-version="1.0.0",
  org.eclipse.zest.layouts;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy

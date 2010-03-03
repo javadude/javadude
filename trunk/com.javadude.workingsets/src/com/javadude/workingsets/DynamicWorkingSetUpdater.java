@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -47,14 +48,12 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 	public DynamicWorkingSetUpdater(String baseId) {
 		baseId_ = baseId;
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
-			@Override
 			public void resourceChanged(IResourceChangeEvent event) {
 				try {
 					if (event.getDelta() == null) {
 						return;
 					}
 					event.getDelta().accept(new IResourceDeltaVisitor() {
-						@Override
 						public boolean visit(IResourceDelta delta) throws CoreException {
 							IProject project = null;
 							switch (delta.getKind()) {
@@ -164,7 +163,6 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 		return id.substring(baseId_.length());
 	}
 
-	@Override
 	public void add(IWorkingSet workingSet) {
 		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
 		if (workingSets == null) {
@@ -174,7 +172,6 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 		workingSets.put(getId(workingSet), workingSet);
 	}
 
-	@Override
 	public boolean contains(IWorkingSet workingSet) {
 		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
 		if (workingSets == null) {
@@ -183,12 +180,10 @@ public abstract class DynamicWorkingSetUpdater implements IWorkingSetUpdater {
 		return workingSets.values().contains(workingSet);
 	}
 
-	@Override
 	public void dispose() {
 		workingSets_.remove(getClass());
 	}
 
-	@Override
 	public boolean remove(IWorkingSet workingSet) {
 		Map<String, IWorkingSet> workingSets = workingSets_.get(getClass());
 		if (workingSets == null) {

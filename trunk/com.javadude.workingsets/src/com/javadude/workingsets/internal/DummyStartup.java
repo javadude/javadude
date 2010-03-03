@@ -13,7 +13,6 @@ import org.eclipse.ui.IStartup;
  * @author Scott Stanchfield
  */
 public class DummyStartup implements IStartup {
-	@Override
 	public void earlyStartup() {
 		// do nothing
 	}

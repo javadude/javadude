@@ -29,8 +29,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.javadude.common.PluginUtil;
-
 /**
  * Central access point for the ANTXR UI plug-in
  * (id <code>"com.javadude.antxr.eclipse.ui"</code>).

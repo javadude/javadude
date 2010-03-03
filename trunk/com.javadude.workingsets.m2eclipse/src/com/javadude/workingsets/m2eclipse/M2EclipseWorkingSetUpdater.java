@@ -34,7 +34,7 @@ public class M2EclipseWorkingSetUpdater extends DynamicWorkingSetUpdater {
 		super("Maven: ");
 		MavenProjectManager projectManager = MavenPlugin.getDefault().getMavenProjectManager();
 		projectManager.addMavenProjectChangedListener(new IMavenProjectChangedListener() {
-			@Override public void mavenProjectChanged(MavenProjectChangedEvent[] events, IProgressMonitor arg1) {
+			public void mavenProjectChanged(MavenProjectChangedEvent[] events, IProgressMonitor arg1) {
 				for (MavenProjectChangedEvent event : events) {
 					IProject p = event.getMavenProject().getProject();
 					Set<IWorkingSet> setsContainingProject = setsContainingProject(p);

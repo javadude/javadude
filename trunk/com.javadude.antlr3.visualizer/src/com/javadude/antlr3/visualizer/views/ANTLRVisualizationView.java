@@ -104,7 +104,7 @@ public class ANTLRVisualizationView extends ViewPart {
 	}
 	private MyRemoteDebugEventSocketListener remoteListener;
 	private static class MyComparator implements Comparator<LayoutEntity> {
-		@Override public int compare(LayoutEntity o1, LayoutEntity o2) {
+		public int compare(LayoutEntity o1, LayoutEntity o2) {
 			GraphNode n1 = (GraphNode) o1.getGraphData();
 			GraphNode n2 = (GraphNode) o2.getGraphData();
 			int order1 = (Integer) n1.getData("order");
@@ -127,76 +127,76 @@ public class ANTLRVisualizationView extends ViewPart {
 
 	private class MyDebugEventListener implements DebugEventListener {
 	
-		@Override public void addChild(Object root, Object child) {
+		public void addChild(Object root, Object child) {
 			addConnection(root, child);
 		}
 	
-		@Override public void becomeRoot(Object newRoot, Object oldRoot) {
+		public void becomeRoot(Object newRoot, Object oldRoot) {
 			swapRoot(newRoot, oldRoot);
 		}
 	
-		@Override public void consumeToken(Token token) {
+		public void consumeToken(Token token) {
 			if (token.getType() != Token.EOF) {
 				set(tokens, token.getTokenIndex(), token);
 			}
 		}
 	
-		@Override public void createNode(Object node) {
+		public void createNode(Object node) {
 			addASTNode(node);
 		}
 	
-		@Override public void createNode(Object node, org.antlr.runtime.Token token) {
+		public void createNode(Object node, org.antlr.runtime.Token token) {
 			addASTNode(node, token);
 		}
 	
-		@Override public void enterRule(String grammarFileName, String ruleName) {
+		public void enterRule(String grammarFileName, String ruleName) {
 			ruleStack.push(new StackItem(ruleName));
 		}
 	
-		@Override public void enterSubRule(int decisionNumber) {
+		public void enterSubRule(int decisionNumber) {
 			ruleStack.push(new StackItem(ruleStack.peek().ruleName + "-" + decisionNumber));
 		}
 	
-		@Override public void errorNode(Object t) {
+		public void errorNode(Object t) {
 			addASTNode(t);
 		}
 	
-		@Override public void exitRule(String grammarFileName, String ruleName) {
+		public void exitRule(String grammarFileName, String ruleName) {
 			popStack();
 		}
 	
-		@Override public void exitSubRule(int decisionNumber) {
+		public void exitSubRule(int decisionNumber) {
 			popStack();
 		}
 	
-		@Override public void nilNode(Object node) {
+		public void nilNode(Object node) {
 			addNilNode(node);
 		}
 	
-		@Override public void terminate() {
+		public void terminate() {
 			clearData();
 			remoteListener.stop();
 		}
 
-		@Override public void LT(int i, org.antlr.runtime.Token t) {}
-		@Override public void LT(int i, Object t) {}
-		@Override public void beginBacktrack(int level) {}
-		@Override public void beginResync() {}
-		@Override public void commence() {}
-		@Override public void consumeHiddenToken(org.antlr.runtime.Token t) {}
-		@Override public void consumeNode(Object t) {}
-		@Override public void endBacktrack(int level, boolean successful) {}
-		@Override public void endResync() {}
-		@Override public void enterAlt(int alt) {}
-		@Override public void enterDecision(int decisionNumber) {}
-		@Override public void exitDecision(int decisionNumber) {}
-		@Override public void location(int line, int pos) {}
-		@Override public void mark(int marker) {}
-		@Override public void recognitionException(RecognitionException e) {}
-		@Override public void rewind() {}
-		@Override public void rewind(int marker) {}
-		@Override public void semanticPredicate(boolean result, String predicate) {}
-		@Override public void setTokenBoundaries(Object t, int tokenStartIndex, int tokenStopIndex) {}
+		public void LT(int i, org.antlr.runtime.Token t) {}
+		public void LT(int i, Object t) {}
+		public void beginBacktrack(int level) {}
+		public void beginResync() {}
+		public void commence() {}
+		public void consumeHiddenToken(org.antlr.runtime.Token t) {}
+		public void consumeNode(Object t) {}
+		public void endBacktrack(int level, boolean successful) {}
+		public void endResync() {}
+		public void enterAlt(int alt) {}
+		public void enterDecision(int decisionNumber) {}
+		public void exitDecision(int decisionNumber) {}
+		public void location(int line, int pos) {}
+		public void mark(int marker) {}
+		public void recognitionException(RecognitionException e) {}
+		public void rewind() {}
+		public void rewind(int marker) {}
+		public void semanticPredicate(boolean result, String predicate) {}
+		public void setTokenBoundaries(Object t, int tokenStartIndex, int tokenStopIndex) {}
 	}
 	
 	private void clearGraph() {
@@ -255,7 +255,7 @@ public class ANTLRVisualizationView extends ViewPart {
 	}
 	private void popStack() {
 		g.getDisplay().syncExec(new Runnable() {
-			@Override public void run() {
+			public void run() {
 				StackItem stackItem = ruleStack.pop();
 				// leave the top-level rule node
 				if (!ruleStack.isEmpty() && stackItem.node != null) {
@@ -265,7 +265,7 @@ public class ANTLRVisualizationView extends ViewPart {
 	}
 	private void addNode(final int index, final Object data, final String text, final boolean updateStackItem) {
 		g.getDisplay().syncExec(new Runnable() {
-			@Override public void run() {
+			public void run() {
 				GraphNode node = new GraphNode(g, ZestStyles.NODES_FISHEYE, data);
 				node.setText(text);
 				node.setFont(font);
@@ -277,7 +277,7 @@ public class ANTLRVisualizationView extends ViewPart {
 	}
 	private void swapRoot(final Object newRoot, final Object oldRoot) {
 		g.getDisplay().syncExec(new Runnable() {
-			@Override public void run() {
+			public void run() {
 				ProxyTree newRootAST = (ProxyTree) newRoot;
 				ProxyTree oldRootAST = (ProxyTree) oldRoot;
 				GraphNode newRootNode = nodes.get(newRootAST.ID);
@@ -306,7 +306,7 @@ public class ANTLRVisualizationView extends ViewPart {
 	}
 	private void addConnection(final Object root, final Object child) {
 		g.getDisplay().syncExec(new Runnable() {
-			@Override public void run() {
+			public void run() {
 				ProxyTree fromAST = (ProxyTree) root;
 				ProxyTree toAST = (ProxyTree) child;
 				String name = fromAST.ID + "->" + toAST.ID;

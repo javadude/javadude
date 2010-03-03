@@ -18,20 +18,17 @@ public class JavaDudeCleanUp implements ICleanUp {
 	public JavaDudeCleanUp() {
 	}
 
-	@Override
 	public RefactoringStatus checkPostConditions(IProgressMonitor monitor)
 			throws CoreException {
 		return new RefactoringStatus();
 	}
 
-	@Override
 	public RefactoringStatus checkPreConditions(IJavaProject project,
 			ICompilationUnit[] compilationUnits, IProgressMonitor monitor)
 			throws CoreException {
 		return new RefactoringStatus();
 	}
 
-	@Override
 	public ICleanUpFix createFix(CleanUpContext context) throws CoreException {
 		if (options.isEnabled(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES)) {
 			return new JavaDudeCleanUpFix(context.getCompilationUnit(), options);
@@ -39,12 +36,10 @@ public class JavaDudeCleanUp implements ICleanUp {
 		return null;
 	}
 
-	@Override
 	public CleanUpRequirements getRequirements() {
 		return new CleanUpRequirements(false, false, false, null);
 	}
 
-	@Override
 	public String[] getStepDescriptions() {
 		if (options.isEnabled(JavaDudeCleanUpOptionsInitializer.CONVERT_TABS_TO_SPACES)) {
 			return new String[] {"Convert tabs to spaces"};
@@ -52,7 +47,6 @@ public class JavaDudeCleanUp implements ICleanUp {
 		return new String[] {};
 	}
 
-	@Override
 	public void setOptions(CleanUpOptions options) {
 		this.options = options;
 	}
