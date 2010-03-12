@@ -3,7 +3,7 @@
    <description url="http://javadude.googlecode.com/svn/trunk/com.javadude.updatesite">
       JavaDude Eclipse Plugins
    </description>
-   <feature url="features/com.javadude.annotation.feature_3.0.5.jar" id="com.javadude.annotation.feature" version="3.0.5">
+   <feature url="features/com.javadude.annotation.feature_2.1.6.jar" id="com.javadude.annotation.feature" version="2.1.6">
       <category name="Annotations"/>
    </feature>
    <feature url="features/com.javadude.antxr.feature_2.1.9.jar" id="com.javadude.antxr.feature" version="2.1.9">
