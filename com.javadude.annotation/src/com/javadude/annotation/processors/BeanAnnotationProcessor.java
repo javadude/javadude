@@ -342,6 +342,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 		data.put("atLeastOneDouble", false);
 		data.put("atLeastOneBound", false);
 		data.put("atLeastOneObject", false);
+		data.put("atLeastOneDefault", false);
 
 		if (value == null) {
 			data.setEmpty("superclassConstructors");
@@ -886,6 +887,7 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
 			}
 		}
+		data.put("atLeastOneDefault", atLeastOneDefault);
 		if (!atLeastOneDefault) {
 			data.setEmpty("defaultMethods");
 		}
