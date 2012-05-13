@@ -234,22 +234,31 @@ public class Script {
 			private String italicize() {
 				String result = "";
 				boolean italic = false;
+				boolean inParens = false;
 				for (int i = 0; i < line.length(); i++) {
 					char c = line.charAt(i);
 					switch (c) {
 						case '_':
-							if (italic)
-								result += "</i>";
+							if (inParens)
+								if (italic)
+									result += "</i>";
+								else
+									result += "<i>";
 							else
-								result += "<i>";
+								if (italic)
+									result += "</u></i>";
+								else
+									result += "<i><u>";
 							italic = !italic;
 							break;
 						case '(':
+//							inParens = true;
 							if (italic)
 								throw err("Invalid line - '(' found inside _xxxx_ for italics)");
 							result += "(";
 							break;
 						case ')':
+//							inParens = false;
 							if (italic)
 								throw err("Invalid line - ')' found inside _xxxx_ for italics)");
 							result += ")";
