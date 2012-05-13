@@ -235,10 +235,15 @@ public class Script {
 				String result = "";
 				boolean italic = false;
 				boolean inParens = false;
+				String spacesAndPunc = null;
 				for (int i = 0; i < line.length(); i++) {
 					char c = line.charAt(i);
 					switch (c) {
 						case '_':
+							if (!italic && spacesAndPunc != null) {
+								result += spacesAndPunc;
+								spacesAndPunc = null;
+							}
 							if (inParens)
 								if (italic)
 									result += "</i>";
@@ -249,24 +254,59 @@ public class Script {
 									result += "</u></i>";
 								else
 									result += "<i><u>";
+							if (spacesAndPunc != null) {
+								result += spacesAndPunc;
+								spacesAndPunc = null;
+							}
 							italic = !italic;
 							break;
 						case '(':
-//							inParens = true;
+							inParens = true;
 							if (italic)
-								throw err("Invalid line - '(' found inside _xxxx_ for italics)");
+								throw err("Invalid line - '(' found inside _xxxx_ for italics");
+							if (spacesAndPunc != null) {
+								result += spacesAndPunc;
+								spacesAndPunc = null;
+							}
 							result += "(";
 							break;
 						case ')':
-//							inParens = false;
+							inParens = false;
 							if (italic)
-								throw err("Invalid line - ')' found inside _xxxx_ for italics)");
+								throw err("Invalid line - ')' found inside _xxxx_ for italics");
+							if (spacesAndPunc != null) {
+								result += spacesAndPunc;
+								spacesAndPunc = null;
+							}
 							result += ")";
 							break;
+						case ' ':
+						case ',':
+						case ':':
+						case '.':
+						case '/':
+						case '!':
+						case '-':
+						case ';':
+						case '"':
+						case '\'':
+						case '?':
+							if (spacesAndPunc == null)
+								spacesAndPunc = "" + c;
+							else
+								spacesAndPunc += c;
+							break;
 						default:
+							if (spacesAndPunc != null) {
+								result += spacesAndPunc;
+								spacesAndPunc = null;
+							}
 							result += c;
+							break;
 					}
 				}
+				if (spacesAndPunc != null)
+					result += spacesAndPunc;
 				if (italic)
 					throw err("Invalid line - mismatched _xxx_ for italics");
 				return result;

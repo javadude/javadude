@@ -96,9 +96,9 @@ public class LineFrame extends JFrame {
 	private Action myNextAction = new AbstractAction("My Next") {
 		@Override public void actionPerformed(ActionEvent e) {
 			script.gotoNextLine(currentRole);
-			script.gotoPreviousLine();
-			script.gotoPreviousLine();
-			script.gotoPreviousLine();
+//			script.gotoPreviousLine();
+//			script.gotoPreviousLine();
+//			script.gotoPreviousLine();
 			updateScreen();
 		}};
 	private Action gotoPageAction = new AbstractAction("Goto Page") {
