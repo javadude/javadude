@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -63,7 +63,7 @@ public class LineFrame extends JFrame {
 			{new JLabel("", JLabel.RIGHT),new JLabel("", JLabel.RIGHT),new JLabel("", JLabel.RIGHT)},
 			{new JLabel("", JLabel.RIGHT),new JLabel("", JLabel.RIGHT),new JLabel("", JLabel.RIGHT)}
 			};
-	private JTextArea[] lineText = {new JTextArea(),new JTextArea(),new JTextArea(),new JTextArea()};
+	private JTextPane[] lineText = {new JTextPane(),new JTextPane(),new JTextPane(),new JTextPane()};
 	
 	private Action toStartAction = new AbstractAction("Start") {
 		@Override public void actionPerformed(ActionEvent e) {
@@ -227,11 +227,11 @@ public class LineFrame extends JFrame {
 	private JButton toEndButton = new JButton(toEndAction);
 	private JLabel status = new JLabel();
 	private JLabel pageLabel = new JLabel("Page");
-	private Color origTextColor;
+//	private Color origTextColor;
 	private Color origLabelColor;
 	private Role currentRole;
 	private Script script;
-	private JScrollPane scroll;
+	private JScrollPane[] scroll = new JScrollPane[4];
 	private Mode currentMode = Mode.Normal;
 	private boolean showLine = false;
 	private TimingLineExposer timingLineExposer;
@@ -263,7 +263,7 @@ public class LineFrame extends JFrame {
 					final String finalLine = line;
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override public void run() {
-							lineText[3].setText(finalLine);
+							lineText[3].setText("<html><big>" + finalLine + "</big></html>");
 						}});
 				}
 			}
@@ -386,26 +386,27 @@ public class LineFrame extends JFrame {
 		buttons.add(myNextButton);
 		buttons.add(toEndButton);
 		
-		scroll = new JScrollPane(lineText[3]);
+		for (int i = 0; i < 4; i++)
+			scroll[i] = new JScrollPane(lineText[i]);
 		
 		//  component               x   y  w  h  anchor						fill							i  wx wy
 		add(roleLabels[0][0],	gbc(0,  0, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[0][1],	gbc(0,  1, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[0][2],	gbc(0,  2, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
-		add(lineText[0],		gbc(1,  0, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
+		add(scroll[0],			gbc(1,  0, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
 		add(roleLabels[1][0],	gbc(0,  3, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[1][1],	gbc(0,  4, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[1][2],	gbc(0,  5, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
-		add(lineText[1],		gbc(1,  3, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
+		add(scroll[1],			gbc(1,  3, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
 		add(roleLabels[2][0],	gbc(0,  6, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[2][1],	gbc(0,  7, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[2][2],	gbc(0,  8, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
-		add(lineText[2],		gbc(1,  6, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
+		add(scroll[2],			gbc(1,  6, 1, 3, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 0));
 		add(roleLabels[3][0],	gbc(0,  9, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[3][1],	gbc(0, 10, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(roleLabels[3][2],	gbc(0, 11, 1, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	2, 0, 0));
 		add(pageLabel,			gbc(0, 12, 1, 1, GridBagConstraints.SOUTH,	GridBagConstraints.HORIZONTAL,  2, 0, 1));
-		add(scroll,				gbc(1,  9, 1, 4, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 1));
+		add(scroll[3],			gbc(1,  9, 1, 4, GridBagConstraints.CENTER,	GridBagConstraints.BOTH,		5, 1, 1));
 		add(buttons,			gbc(0, 13, 2, 1, GridBagConstraints.CENTER,	GridBagConstraints.NONE,		5, 1, 0));
 		add(status,				gbc(0, 14, 3, 1, GridBagConstraints.CENTER,	GridBagConstraints.HORIZONTAL,	5, 1, 0));
 		
@@ -427,14 +428,17 @@ public class LineFrame extends JFrame {
 			roleLabels[3][i].setMaximumSize(preferredSize);
 			roleLabels[3][i].setMinimumSize(preferredSize);
 		}
+		for (JTextPane textPane : lineText) {
+			textPane.setContentType("text/html");
+		}
 		oldFont = lineText[3].getFont();
 		font = new Font(oldFont.getName(), Font.BOLD, oldFont.getSize()*2);
 		lineText[3].setFont(font);
-		lineText[3].setLineWrap(true);
-		lineText[3].setWrapStyleWord(true);
+//		lineText[3].setLineWrap(true);
+//		lineText[3].setWrapStyleWord(true);
 
 		origLabelColor = roleLabels[0][0].getForeground();
-		origTextColor = lineText[0].getForeground();
+//		origTextColor = lineText[0].getForeground();
 		
 		setSize(800, 600);
 		updateScreen();
@@ -457,7 +461,7 @@ public class LineFrame extends JFrame {
 					if (showLine) {
 						showLine = false;
 					} else {
-						text = "<< YOUR LINE >>";
+						text = "[[ YOUR LINE ]]";
 					}
 				} else if (currentMode == Mode.Timed) {
 					if (showLine) {
@@ -465,8 +469,8 @@ public class LineFrame extends JFrame {
 						if (timingLineExposer != null)
 							timingLineExposer.interrupt();
 					} else {
-						text = "<< YOUR LINE >>";
-						timingLineExposer = new TimingLineExposer(line.getLine());
+						text = "[[ YOUR LINE ]]";
+						timingLineExposer = new TimingLineExposer("<html><font color='blue' size='7'><b>" + line.getLine() + "</font></html>");
 						timingLineExposer.start();
 					}
 				}
@@ -474,17 +478,29 @@ public class LineFrame extends JFrame {
 				if (timingLineExposer != null)
 					timingLineExposer.interrupt();
 			}
-			lineText[i].setText(text);
+			if (line.getRoles().contains(currentRole)) {
+				if (i == 3) {
+					lineText[i].setText("<html><font color='blue' size='7'><b>" + text + "</b></font></html>");
+				} else {
+					lineText[i].setText("<html><font color='blue' size='5'>" + text + "</font></html>");
+				}
+			} else {
+				if (i == 3) {
+					lineText[i].setText("<html><font size='7'>" + text + "</font></html>");
+				} else {
+					lineText[i].setText("<html><font size='5'>" + text + "</font></html>");
+				}
+			}
 			lineText[i].setCaretPosition(0);
 			for (int j = 0; j < line.getOriginalRoleNames().size() && j < 3; j++) {
 				roleLabels[i][j].setText(line.getOriginalRoleNames().get(j));
 			}
 			if (line.getRoles().contains(currentRole)) {
-				lineText[i].setForeground(Color.blue);
+//				lineText[i].setForeground(Color.blue);
 				for(int j = 0; j < 3; j++)
 					roleLabels[i][j].setForeground(Color.blue);
 			} else {
-				lineText[i].setForeground(origTextColor);
+//				lineText[i].setForeground(origTextColor);
 				for(int j = 0; j < 3; j++)
 					roleLabels[i][j].setForeground(origLabelColor);
 			}

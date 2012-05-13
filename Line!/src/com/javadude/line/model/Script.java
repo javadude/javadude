@@ -12,6 +12,8 @@ public class Script {
 	private int numLines;
 	private String act;
 	private int page = Integer.MIN_VALUE;
+	private int maxPage = Integer.MIN_VALUE;
+	private int minPage = Integer.MAX_VALUE;
 	private String line;
 	private int lineNumber;
 	private Cast cast;
@@ -20,6 +22,14 @@ public class Script {
 	public Script(Reader reader) {
 		load(reader);
 		gotoFirstLine();
+	}
+	
+	public int getMinPage() {
+		return minPage;
+	}
+
+	public int getMaxPage() {
+		return maxPage;
 	}
 
 	public void add(String roleName, int number, String line) {
@@ -66,12 +76,15 @@ public class Script {
 			gotoFirstLine();
 	}
 	public void gotoNextLine(Role currentRole) {
-		currentLine = currentLine.getNext();
+		if (currentLine != null)
+			currentLine = currentLine.getNext();
 		if (currentLine == null)
 			gotoFirstLine();
 		while (currentLine != null && !currentLine.getRoles().contains(currentRole)) {
 			currentLine = currentLine.getNext();
 		}
+		if (currentLine == null)
+			gotoFirstLine();
 	}
 	public void gotoLine(int lineNumber) {
 		gotoFirstLine();
@@ -156,6 +169,9 @@ public class Script {
 						act = line.substring(4).trim();
 						continue;
 					}
+					if (line.startsWith("!SCENE")) {
+						continue;
+					}
 					if (line.startsWith("-")) {
 						String numString = line.substring(1).trim();
 						if (!numString.endsWith("-"))
@@ -165,6 +181,8 @@ public class Script {
 						numString = numString.substring(0, numString.length()-1).trim();
 						try {
 							page = Integer.parseInt(numString);
+							maxPage = Math.max(page, maxPage);
+							minPage = Math.min(page, minPage);
 						} catch (NumberFormatException e) {
 							throw err("Invalid page number '" + numString + "'");
 						}
@@ -175,7 +193,7 @@ public class Script {
 							throw err("Stage direction found before act specification");
 						if (page == Integer.MIN_VALUE)
 							throw err("Stage direction found before page specification");
-						add(cast.getStageDirection(), cast.getStageDirectionName(), lineNumber, line);
+						add(cast.getStageDirection(), cast.getStageDirectionName(), lineNumber, italicize());
 						continue;
 					}
 					// if the line starts with ALL UPPER followed by . it's a character's line
@@ -206,9 +224,43 @@ public class Script {
 							throw err("Dialog found before act specification");
 						if (page == Integer.MIN_VALUE)
 							throw err("Dialog found before page specification");
-						add(possibleName, lineNumber, line);
+						
+						// check proper _xxxx_ matching and convert to <i>xxxx</i>
+						add(possibleName, lineNumber, italicize());
 					}
 				}
+			}
+
+			private String italicize() {
+				String result = "";
+				boolean italic = false;
+				for (int i = 0; i < line.length(); i++) {
+					char c = line.charAt(i);
+					switch (c) {
+						case '_':
+							if (italic)
+								result += "</i>";
+							else
+								result += "<i>";
+							italic = !italic;
+							break;
+						case '(':
+							if (italic)
+								throw err("Invalid line - '(' found inside _xxxx_ for italics)");
+							result += "(";
+							break;
+						case ')':
+							if (italic)
+								throw err("Invalid line - ')' found inside _xxxx_ for italics)");
+							result += ")";
+							break;
+						default:
+							result += c;
+					}
+				}
+				if (italic)
+					throw err("Invalid line - mismatched _xxx_ for italics");
+				return result;
 			}};
 	}
 
