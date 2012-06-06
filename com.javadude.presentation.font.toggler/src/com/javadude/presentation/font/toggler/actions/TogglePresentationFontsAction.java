@@ -28,8 +28,8 @@ import com.javadude.presentation.font.toggler.Activator;
  */
 public class TogglePresentationFontsAction implements IWorkbenchWindowActionDelegate {
 //	private IWorkbenchWindow window;
-	private static final String PRESENTATION = "1|Courier New|14.25|1|WINDOWS|1|-19|0|0|0|700|0|0|0|0|3|2|1|49|Courier New";
-	private static final String PROGRAMMING = "1|Courier New|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Courier New";
+	private static final String PRESENTATION = "1|Consolas|15.75|1|WINDOWS|1|-21|0|0|0|700|0|0|0|0|3|2|1|49|Consolas";
+	private static final String PROGRAMMING = "1|Consolas|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Consolas";
 
 	/**
 	 * The action has been activated. The argument of the
