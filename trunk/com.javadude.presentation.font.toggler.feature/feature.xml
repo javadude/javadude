@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.presentation.font.toggler.feature"
       label="Presentation Font Toggler Feature"
-      version="1.0.2"
+      version="1.0.3"
       provider-name="JavaDude.com">
 
    <description url="http://www.example.com/description">

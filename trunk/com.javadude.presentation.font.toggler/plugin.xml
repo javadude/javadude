@@ -9,13 +9,23 @@
             label="Presentation Mode Action Set"
             visible="true">
          <action
-               class="com.javadude.presentation.font.toggler.actions.TogglePresentationFontsAction"
-               icon="icons/17438_thread_and_monitor_view.png"
-               id="com.javadude.presentation.font.toggler.togglePresentationFontAction"
-               label="&amp;Toggle Presentation Fonts"
+               class="com.javadude.presentation.font.toggler.actions.SCP10Action"
+               id="com.javadude.presentation.font.toggler.scp10Action"
+               label="SCP10"
                toolbarPath="togglePresentationFontGroup"
-               tooltip="Toggle Presentation Fonts">
-         </action>
+               tooltip="Source Code Pro 10 regular"/>
+         <action
+               class="com.javadude.presentation.font.toggler.actions.Consolas10Action"
+               id="com.javadude.presentation.font.toggler.consolas10Action"
+               label="Consolas10"
+               toolbarPath="togglePresentationFontGroup"
+               tooltip="Consolas 10 regular"/>
+         <action
+               class="com.javadude.presentation.font.toggler.actions.Consolas16Action"
+               id="com.javadude.presentation.font.toggler.consolas16Action"
+               label="Consolas16"
+               toolbarPath="togglePresentationFontGroup"
+               tooltip="Consolas 16 bold"/>
       </actionSet>
    </extension>
 

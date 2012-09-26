@@ -24,7 +24,7 @@
    <feature url="features/com.javadude.derived.warning.cleaner.feature_1.0.1.jar" id="com.javadude.derived.warning.cleaner.feature" version="1.0.1">
       <category name="Miscellaneous"/>
    </feature>
-   <feature url="features/com.javadude.presentation.font.toggler.feature_1.0.2.jar" id="com.javadude.presentation.font.toggler.feature" version="1.0.2">
+   <feature url="features/com.javadude.presentation.font.toggler.feature_1.0.3.jar" id="com.javadude.presentation.font.toggler.feature" version="1.0.3">
       <category name="Miscellaneous"/>
    </feature>
    <category-def name="Annotations" label="Annotations"/>
