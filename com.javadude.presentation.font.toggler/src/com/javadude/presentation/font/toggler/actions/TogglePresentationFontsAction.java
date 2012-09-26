@@ -28,8 +28,15 @@ import com.javadude.presentation.font.toggler.Activator;
  */
 public class TogglePresentationFontsAction implements IWorkbenchWindowActionDelegate {
 //	private IWorkbenchWindow window;
-	private static final String PRESENTATION = "1|Consolas|15.75|1|WINDOWS|1|-21|0|0|0|700|0|0|0|0|3|2|1|49|Consolas";
-	private static final String PROGRAMMING = "1|Consolas|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Consolas";
+	public static final String SCP_10 = "1|Source Code Pro|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Source Code Pro;";
+	public static final String CONSOLAS_16 = "1|Consolas|15.75|1|WINDOWS|1|-21|0|0|0|700|0|0|0|0|3|2|1|49|Consolas";
+	public static final String CONSOLAS_10 = "1|Consolas|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Consolas";
+
+	private String fontSetting;
+	
+	public TogglePresentationFontsAction(String fontSetting) {
+		this.fontSetting = fontSetting;
+	}
 
 	/**
 	 * The action has been activated. The argument of the
@@ -41,11 +48,11 @@ public class TogglePresentationFontsAction implements IWorkbenchWindowActionDele
 		try {
 			ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.ui.workbench");
 			String value = store.getString("org.eclipse.jface.textfont");
-			if (PRESENTATION.equals(value))
-				value = PROGRAMMING;
-			else
-				value = PRESENTATION;
-			store.setValue("org.eclipse.jface.textfont", value);
+//			if (PRESENTATION.equals(value))
+//				value = PROGRAMMING;
+//			else
+//				value = PRESENTATION;
+			store.setValue("org.eclipse.jface.textfont", fontSetting);
 			store.save();
 		} catch (Exception e) {
 			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Error switching font", e));

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Presentation Font Toggler Plug-in
 Bundle-SymbolicName: com.javadude.presentation.font.toggler;singleton:=true
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Bundle-Activator: com.javadude.presentation.font.toggler.Activator
 Bundle-Vendor: JavaDude.com
 Require-Bundle: org.eclipse.ui,
