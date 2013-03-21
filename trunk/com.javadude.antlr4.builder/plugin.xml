@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="antlr4Builder"
+         name="Antlr 4 Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.javadude.antlr4.builder.builder.Antlr4Builder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="antlr4Nature"
+         name="Antlr 4 Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.javadude.antlr4.builder.builder.Antlr4Nature">
+         </run>
+      </runtime>
+      <builder
+            id="com.javadude.antlr4.builder.antlr4Builder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="com.javadude.antlr4.builder.contribution1">
+         <action
+               label="Add/Remove ANTLR 4 Nature"
+               class="com.javadude.antlr4.builder.builder.ToggleNatureAction"
+               menubarPath="org.eclipse.ui.projectConfigure/additions"
+               enablesFor="+"
+               id="com.javadude.antlr4.builder.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+   	<extension point="org.eclipse.team.core.fileTypes">
+		<fileTypes type="text" extension="antxr" />
+	</extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.javadude.antlr4.builder.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.javadude.antlr4.builder.preferences.Antlr4PreferencePage"
+            id="com.javadude.antlr4.builder.preferences.Antlr4PreferencePage"
+            name="ANTLR 4">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/full/ovr16/antlr.gif"
+            id="com.javadude.antlr4.builder.image1"
+            natureId="com.javadude.antlr4.builder.antlr4Nature">
+      </image>
+   </extension>
+	<extension point="org.eclipse.ui.decorators">
+		<decorator
+			adaptable="true"
+			label="ANTLR 4"
+			state="true"
+			class="com.javadude.antlr4.builder.builder.Antlr4LabelDecorator"
+			id="com.javadude.antlr4.builder.decorator">
+			<description>Shows source grammar information for an ANTLR 4 generated file.</description>
+			<enablement>
+				<objectClass name="org.eclipse.core.resources.IResource" />
+			</enablement>
+		</decorator>
+	</extension>
+</plugin>
