@@ -2,10 +2,8 @@ package com.javadude.antlr4.builder.builder;
 
 import java.util.Iterator;
 
-import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
@@ -20,8 +18,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
-					.hasNext();) {
+			for (@SuppressWarnings("unchecked") Iterator<Object> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
 				if (element instanceof IProject) {
