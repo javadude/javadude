@@ -254,7 +254,6 @@ public class Antlr4Builder extends IncrementalProjectBuilder {
 			
 			// build using ANTLR to temporary directory
 	        Tool antlr = new Tool(buildInfo.getAntlrOptions().toArray(new String[buildInfo.getAntlrOptions().size()]));
-            antlr.processGrammarsOnCommandLine();
             antlr.addListener(new ANTLRToolListener() {
 				@Override public void warning(ANTLRMessage msg) {
 					addMarker(grammarFile, msg.getErrorType().msg, msg.line, IStatus.WARNING);
@@ -266,6 +265,7 @@ public class Antlr4Builder extends IncrementalProjectBuilder {
 					addMarker(grammarFile, msg.getErrorType().msg, msg.line, IStatus.ERROR);
 				}
 			});
+            antlr.processGrammarsOnCommandLine();
 
             // strip off the deepest sourcepath so we're just left with the package path structure
             IPath packagePath = grammarFile.getFullPath();
