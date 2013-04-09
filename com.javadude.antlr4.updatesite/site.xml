@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.javadude.antlr4.feature_1.0.0.a1.jar" id="com.javadude.antlr4.feature" version="1.0.0.a1"/>
+</site>
