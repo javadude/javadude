@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.javadude.antlr4.builder; singleton:=true
 Bundle-Version: 1.0.0.a1
 Bundle-Activator: com.javadude.antlr4.builder.Activator
 Bundle-Vendor: JavaDude.com
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,

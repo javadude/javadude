@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BuildInfo {
-	private List<String> antlrOptions = new ArrayList<>();
-	private List<IPath> sourcePaths = new ArrayList<>();
+	private List<String> antlrOptions = new ArrayList<String>();
+	private List<IPath> sourcePaths = new ArrayList<IPath>();
 	private IFolder generatedFolder;
 	private IProgressMonitor monitor;
 	
