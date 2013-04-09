@@ -29,6 +29,7 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.stringtemplate.v4.ST;
 
 import com.javadude.antlr4.builder.Activator;
 import com.javadude.antlr4.builder.preferences.PreferenceConstants;
@@ -38,7 +39,7 @@ public class Antlr4Builder extends IncrementalProjectBuilder {
     public static final QualifiedName SOURCE_GRAMMAR_PROPERTY = new QualifiedName(Activator.PLUGIN_ID, "antlr4.source.grammar");
     public static final QualifiedName COMMAND_LINE_OPTIONS_PROPERTY = new QualifiedName(Activator.PLUGIN_ID, "antlr4.options");
 	public static final String BUILDER_ID = "com.javadude.antlr4.builder.antlr4Builder";
-	private static final String MARKER_TYPE = "com.javadude.antlr4.builder.antlrProblem";
+	private static final String MARKER_TYPE = "com.javadude.antlr4.builder.antlr4Problem";
 
     public static void forceFullANTLR4Build(final IWorkspaceRoot workspaceRoot, String reason) {
     	Job job = new Job("Rebuild ANTLR 4 Grammars (" + reason + ")") {
@@ -91,6 +92,15 @@ public class Antlr4Builder extends IncrementalProjectBuilder {
 		}
 	}
 
+	private static String format(Tool tool, ANTLRMessage msg) {
+		ST msgST = tool.errMgr.getMessageTemplate(msg);
+		String outputMsg = msgST.render();
+		if (tool.errMgr.formatWantsSingleLineMessage()) {
+			outputMsg = outputMsg.replaceAll("\n", " ");
+		}
+		return outputMsg;
+	}
+	
 	private static class Antlr4ResourceVisitor implements IResourceVisitor {
 		private BuildInfo buildInfo;
 
@@ -253,16 +263,16 @@ public class Antlr4Builder extends IncrementalProjectBuilder {
 			// figure out which sourcepath entry contains the grammarFile
 			
 			// build using ANTLR to temporary directory
-	        Tool antlr = new Tool(buildInfo.getAntlrOptions().toArray(new String[buildInfo.getAntlrOptions().size()]));
+	        final Tool antlr = new Tool(buildInfo.getAntlrOptions().toArray(new String[buildInfo.getAntlrOptions().size()]));
             antlr.addListener(new ANTLRToolListener() {
 				@Override public void warning(ANTLRMessage msg) {
-					addMarker(grammarFile, msg.getErrorType().msg, msg.line, IStatus.WARNING);
+					addMarker(grammarFile, format(antlr, msg), msg.line, IMarker.SEVERITY_WARNING);
 				}
 				@Override public void info(String msg) {
-					addMarker(grammarFile, msg, -1, IStatus.INFO);
+					addMarker(grammarFile, msg, -1, IMarker.SEVERITY_INFO);
 				}
 				@Override public void error(ANTLRMessage msg) {
-					addMarker(grammarFile, msg.getErrorType().msg, msg.line, IStatus.ERROR);
+					addMarker(grammarFile, format(antlr, msg), msg.line, IMarker.SEVERITY_ERROR);
 				}
 			});
             antlr.processGrammarsOnCommandLine();
