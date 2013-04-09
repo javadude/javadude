@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.javadude.antlr4.feature_1.0.0.a1.jar" id="com.javadude.antlr4.feature" version="1.0.0.a1"/>
+   <feature url="features/com.javadude.antlr4.feature_1.0.0.a1.jar" id="com.javadude.antlr4.feature" version="1.0.0.a1">
+      <category name="ANTLR 4 IDE"/>
+   </feature>
+   <category-def name="ANTLR 4 IDE" label="ANTLR 4 IDE"/>
 </site>
