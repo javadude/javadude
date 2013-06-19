@@ -30,6 +30,7 @@ public class TogglePresentationFontsAction implements IWorkbenchWindowActionDele
 //	private IWorkbenchWindow window;
 	public static final String SCP_10 = "1|Source Code Pro|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Source Code Pro;";
 	public static final String CONSOLAS_16 = "1|Consolas|15.75|1|WINDOWS|1|-21|0|0|0|700|0|0|0|0|3|2|1|49|Consolas";
+	public static final String CONSOLAS_12 = "1|Consolas|12.0|0|WINDOWS|1|-16|0|0|0|400|0|0|0|0|3|2|1|49|Consolas";
 	public static final String CONSOLAS_10 = "1|Consolas|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Consolas";
 
 	private String fontSetting;
