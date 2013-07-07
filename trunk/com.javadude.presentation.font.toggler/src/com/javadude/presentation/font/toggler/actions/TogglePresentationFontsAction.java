@@ -47,8 +47,8 @@ public class TogglePresentationFontsAction implements IWorkbenchWindowActionDele
 	 */
 	public void run(IAction action) {
 		try {
-			ScopedPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.ui.workbench");
-			String value = store.getString("org.eclipse.jface.textfont");
+			ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.eclipse.ui.workbench");
+//			String value = store.getString("org.eclipse.jface.textfont");
 //			if (PRESENTATION.equals(value))
 //				value = PROGRAMMING;
 //			else
