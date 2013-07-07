@@ -66,7 +66,6 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
     }
 
     private ISelectionListener listener = new ISelectionListener() {
-        @SuppressWarnings("unchecked")
         public void selectionChanged(IWorkbenchPart part, ISelection selection) {
             if (selection instanceof IStructuredSelection) {
                 Dependency dependency = (Dependency) getModel();
@@ -79,7 +78,7 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
             		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
             		boolean isSource = false;
             		boolean isTarget = false;
-            		for (Iterator i = structuredSelection.iterator(); i.hasNext();) {
+            		for (Iterator<?> i = structuredSelection.iterator(); i.hasNext();) {
             			Object o = i.next();
             			if (o instanceof JavaProjectEditPart) {
             				EditPart editPart = (EditPart) o;
@@ -169,7 +168,7 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
     }
 
     @SuppressWarnings("unchecked")
-    public void contributeToGraph(CompoundDirectedGraph graph, Map map) {
+    public void contributeToGraph(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
         Node source = (Node)map.get(getSource());
         Node target = (Node)map.get(getTarget());
         Edge e = new Edge(this, source, target);
@@ -177,8 +176,7 @@ public class DependencyEditPart extends AbstractConnectionEditPart {
         graph.edges.add(e);
         map.put(this, e);
     }
-    @SuppressWarnings("unchecked")
-    protected void applyGraphResults(CompoundDirectedGraph graph, Map map) {
+    protected void applyGraphResults(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
         Edge e = (Edge)map.get(this);
         NodeList nodes = e.vNodes;
         PolylineConnection conn = (PolylineConnection)getConnectionFigure();

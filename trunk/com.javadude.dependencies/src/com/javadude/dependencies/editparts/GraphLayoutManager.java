@@ -33,17 +33,17 @@ class GraphLayoutManager extends AbstractLayout {
         this.editPart = editPart;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) {
         // if (state == PLAYBACK)
         // return container.getSize();
         container.validate();
-        List children = container.getChildren();
+        @SuppressWarnings("unchecked")
+		List<IFigure> children = container.getChildren();
         Rectangle result = new Rectangle().setLocation(container.getClientArea().getLocation());
 
-        for (int i = 0; i < children.size(); i++) {
-            result.union(((IFigure) children.get(i)).getBounds());
+        for (IFigure f : children) {
+            result.union(f.getBounds());
         }
 
         result.resize(container.getInsets().getWidth(), container.getInsets().getHeight());
@@ -54,16 +54,16 @@ class GraphLayoutManager extends AbstractLayout {
     @SuppressWarnings("unchecked")
     public void layout(IFigure container) {
         CompoundDirectedGraph graph = new CompoundDirectedGraph();
-        Map nodes = new HashMap();
+        Map<GraphicalEditPart,Node> nodes = new HashMap<GraphicalEditPart, Node>();
 
         Node dummyNode = new Node(null);
         graph.nodes.add(dummyNode);
 
-        List sourceConnections = new ArrayList();
-        for (Iterator i = editPart.getChildren().iterator(); i.hasNext();) {
-            Object part = i.next();
+        List<AbstractConnectionEditPart> sourceConnections = new ArrayList<AbstractConnectionEditPart>();
+        for (Iterator<GraphicalEditPart> i = editPart.getChildren().iterator(); i.hasNext();) {
+        	GraphicalEditPart part = i.next();
             Node n = new Node(part);
-            Rectangle bounds = ((GraphicalEditPart) part).getFigure().getBounds();
+            Rectangle bounds = part.getFigure().getBounds();
             n.width = bounds.width;
             n.height = bounds.height;
             nodes.put(part, n);
@@ -81,8 +81,8 @@ class GraphLayoutManager extends AbstractLayout {
             }
         }
 
-        for (Iterator i = sourceConnections.iterator(); i.hasNext();) {
-            AbstractConnectionEditPart part = (AbstractConnectionEditPart) i.next();
+        for (Iterator<AbstractConnectionEditPart> i = sourceConnections.iterator(); i.hasNext();) {
+            AbstractConnectionEditPart part = i.next();
             Node m = (Node) nodes.get(part.getSource());
             Node e = (Node) nodes.get(part.getTarget());
             graph.edges.add(new Edge(part, m, e));
@@ -92,24 +92,24 @@ class GraphLayoutManager extends AbstractLayout {
         new CompoundDirectedGraphLayout().visit(graph);
 
         int dummyY = 0;
-        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
-            Node node = (Node) i.next();
+        for (Iterator<Node> i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = i.next();
             if (node.data == null) {
                 dummyY = node.y;
             }
         }
 
         int minGap = Integer.MAX_VALUE;
-        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
-            Node node = (Node) i.next();
+        for (Iterator<Node> i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = i.next();
             if (node.data != null) {
                 minGap = Math.min(minGap, node.y - dummyY);
             }
         }
 
         // update the positions of the figures
-        for (Iterator i = graph.nodes.iterator(); i.hasNext();) {
-            Node node = (Node) i.next();
+        for (Iterator<Node> i = graph.nodes.iterator(); i.hasNext();) {
+            Node node = i.next();
 
             if (node.data == null) {
                 continue;

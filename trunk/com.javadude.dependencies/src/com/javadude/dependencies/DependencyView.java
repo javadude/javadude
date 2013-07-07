@@ -110,9 +110,8 @@ public class DependencyView extends ViewPart {
 	/**
 	 * Adapter for the dependencies view. Support for the EditDomain
 	 */
-	@SuppressWarnings("unchecked")
     @Override
-    public Object getAdapter(Class adapter) {
+    public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == CommandStack.class) {
 			return viewer.getEditDomain().getCommandStack();
 		}
