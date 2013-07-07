@@ -17,4 +17,4 @@ Export-Package: com.javadude.antxr,
  org.kxml2.wap.wml;x-internal:=true,
  org.kxml2.wap.wv;x-internal:=true,
  org.xmlpull.v1;x-internal:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
