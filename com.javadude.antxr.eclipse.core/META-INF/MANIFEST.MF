@@ -17,4 +17,4 @@ Export-Package: com.javadude.antxr,
  com.javadude.antxr.eclipse.core.parser,
  com.javadude.antxr.eclipse.core.properties,
  com.javadude.antxr.eclipse.smapinstaller
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
