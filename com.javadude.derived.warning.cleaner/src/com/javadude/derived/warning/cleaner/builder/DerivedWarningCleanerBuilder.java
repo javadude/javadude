@@ -56,8 +56,7 @@ public class DerivedWarningCleanerBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID = "com.javadude.derived.warning.cleaner.derivedWarningCleanerBuilder";
 
 	@Override
-	@SuppressWarnings("unchecked")
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 		try {
 			if (kind == FULL_BUILD) {
 				getProject().accept(new SampleResourceVisitor());
