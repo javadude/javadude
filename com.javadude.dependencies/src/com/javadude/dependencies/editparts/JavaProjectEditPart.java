@@ -58,14 +58,14 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
         ((Label) getFigure()).setText(javaProject.getElementName());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     protected List getModelSourceConnections() {
         return DependencyManager.findSourceDependencies((IJavaProject) getModel());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     protected List getModelTargetConnections() {
         return DependencyManager.findTargetDependencies((IJavaProject) getModel());
     }
@@ -90,8 +90,7 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
     public ConnectionAnchor getTargetConnectionAnchor(Request request) {
         return new ChopboxAnchor(getFigure());
     }
-    @SuppressWarnings("unchecked")
-    public void applyGraphResults(CompoundDirectedGraph graph, Map map) {
+    public void applyGraphResults(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
         Node n = (Node)map.get(this);
         getFigure().setBounds(new Rectangle(n.x, n.y, n.width, n.height));
 
@@ -101,9 +100,9 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void contributeEdgesToGraph(CompoundDirectedGraph graph, Map map) {
-        List outgoing = getSourceConnections();
+    public void contributeEdgesToGraph(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
+        @SuppressWarnings("rawtypes")
+		List outgoing = getSourceConnections();
         for (int i = 0; i < outgoing.size(); i++) {
             DependencyEditPart part = (DependencyEditPart)getSourceConnections().get(i);
             part.contributeToGraph(graph, map);
@@ -114,7 +113,7 @@ public class JavaProjectEditPart extends AbstractGraphicalEditPart implements No
         }
     }
     @SuppressWarnings("unchecked")
-    public void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, Map map) {
+    public void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, @SuppressWarnings("rawtypes") Map map) {
         Node n = new Node(this, s);
         n.outgoingOffset = getAnchorOffset();
         n.incomingOffset = getAnchorOffset();

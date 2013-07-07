@@ -41,7 +41,6 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
         JavaCore.addElementChangedListener(new IElementChangedListener() {
             public void elementChanged(final ElementChangedEvent event) {
                 Display.getDefault().asyncExec(new Runnable() {
-                    @SuppressWarnings("unchecked")
                     public void run() {
                         //get the workspace changes from the ElementChangedEvent
                         IJavaElementDelta[] changedChildren = event.getDelta().getAffectedChildren();
@@ -59,7 +58,7 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
                         refresh();
 
                         if (refreshProjects) {
-                            for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
+                            for (@SuppressWarnings("rawtypes") Iterator iter = getChildren().iterator(); iter.hasNext();) {
                                 AbstractGraphicalEditPart editPart = (AbstractGraphicalEditPart) iter.next();
                                 editPart.refresh();
                             }
@@ -86,8 +85,8 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
         super.refreshVisuals();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     protected List getModelChildren() {
         List<String> geronimoLibs = new ArrayList<String>();
 
@@ -142,7 +141,7 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
 
 
     @SuppressWarnings("unchecked")
-    public void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, Map map) {
+    public void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, @SuppressWarnings("rawtypes") Map map) {
 //        GraphAnimation.recordInitialState(getContentPane());
         Subgraph me = new Subgraph(this, s);
 //      me.rowOrder = getActivity().getSortIndex();
@@ -158,9 +157,9 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
             activity.contributeNodesToGraph(graph, me, map);
         }
     }
-    @SuppressWarnings("unchecked")
-    public void contributeEdgesToGraph(CompoundDirectedGraph graph, Map map) {
-        List outgoing = getSourceConnections();
+    public void contributeEdgesToGraph(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
+        @SuppressWarnings("rawtypes")
+		List outgoing = getSourceConnections();
         for (int i = 0; i < outgoing.size(); i++) {
             DependencyEditPart part = (DependencyEditPart)getSourceConnections().get(i);
             part.contributeToGraph(graph, map);
@@ -170,16 +169,14 @@ public class WorkspaceRootEditPart extends AbstractGraphicalEditPart implements 
             child.contributeEdgesToGraph(graph, map);
         }
     }
-    @SuppressWarnings("unchecked")
-    protected void applyChildrenResults(CompoundDirectedGraph graph, Map map) {
+    protected void applyChildrenResults(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
         for (int i = 0; i < getChildren().size(); i++) {
             GraphContributor part = (GraphContributor)getChildren().get(i);
             part.applyGraphResults(graph, map);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void applyGraphResults(CompoundDirectedGraph graph, Map map) {
+    public void applyGraphResults(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map) {
         Node n = (Node)map.get(this);
         getFigure().setBounds(new Rectangle(n.x, n.y, n.width, n.height));
 

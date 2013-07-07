@@ -13,11 +13,10 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.graph.CompoundDirectedGraph;
 import org.eclipse.draw2d.graph.Subgraph;
 
-@SuppressWarnings("unchecked")
 public interface GraphContributor {
     static final Insets PADDING = new Insets(8, 6, 8, 6);
     static final Insets INNER_PADDING = new Insets(0);
-    void contributeEdgesToGraph(CompoundDirectedGraph graph, Map map);
-    void applyGraphResults(CompoundDirectedGraph graph, Map map);
-    void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, Map map);
+    void contributeEdgesToGraph(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map);
+    void applyGraphResults(CompoundDirectedGraph graph, @SuppressWarnings("rawtypes") Map map);
+    void contributeNodesToGraph(CompoundDirectedGraph graph, Subgraph s, @SuppressWarnings("rawtypes") Map map);
 }
