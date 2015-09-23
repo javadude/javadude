@@ -137,7 +137,8 @@ public class BeanAnnotationProcessor implements AnnotationProcessor {
 
     }
 
-    public void process() {
+    @Override
+	public void process() {
     	final AnnotationTypeDeclaration beanAnn = (AnnotationTypeDeclaration) env_.getTypeDeclaration(Bean.class.getName());
     	for (Declaration declaration : env_.getDeclarationsAnnotatedWith(beanAnn)) {
             try {

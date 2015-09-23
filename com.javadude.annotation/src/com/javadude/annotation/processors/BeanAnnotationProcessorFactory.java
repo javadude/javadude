@@ -26,7 +26,8 @@ public class BeanAnnotationProcessorFactory extends BaseAnnotationProcessorFacto
 	public BeanAnnotationProcessorFactory() {
 		super(Bean.class, Delegate.class, Default.class, Observer.class, NullObject.class, Property.class);
     }
-    public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
+    @Override
+	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
         return new BeanAnnotationProcessor(env);
     }
 }
