@@ -2,6 +2,7 @@ package com.javadude.java8;
 
 public class Trees1 {
 	private static class Wrapper {
+		@SuppressWarnings("unused")
 		public int sum = 0;
 	}
 	public static void main(String[] args) {
@@ -15,6 +16,7 @@ public class Trees1 {
 		root.add(64);
 		root.add(40);
 		int[] sum = {0};
+		@SuppressWarnings("unused")
 		Wrapper wrapper = new Wrapper();
 		root.inorder(n -> sum[0] += n.getData());
 		System.out.println(sum[0]);

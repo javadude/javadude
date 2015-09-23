@@ -47,7 +47,9 @@ public class Streams1 {
 		};
 		
 		List<Person> people = list(peopleArray);
+		@SuppressWarnings("unused")
 		Stream<Person> stream1 = people.stream();
+		@SuppressWarnings("unused")
 		Stream<Person> stream2 = Stream.of(peopleArray);
 		
 		
@@ -97,9 +99,11 @@ public class Streams1 {
 		System.out.println("Min age: " + summaryStatistics.getMin());
 		System.out.println("Sum age: " + summaryStatistics.getSum());
 
+		@SuppressWarnings("unused")
 		List<Person> firstThree = people.stream().limit(3).collect(Collectors.toList());
 		Map<String, Person> peopleByName1 = people.stream().collect(Collectors.toMap(p -> p.getName(), p -> p));
 		peopleByName1.entrySet().stream().forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
+		@SuppressWarnings("unused")
 		Map<String, Person> peopleByName2 = people.stream().collect(Collectors.toMap(Person::getName, Function.identity()));
 		
 		Map<Sex, List<Person>> peopleBySex = people.stream().collect(Collectors.groupingBy(Person::getSex));

@@ -187,7 +187,6 @@ public class XSample {
     Integer _reduce_1 = IterableExtensions.<Integer>reduce(_map_1, _function_16);
     String _plus_5 = ("Oldest age: " + _reduce_1);
     InputOutput.<String>println(_plus_5);
-    final List<Person> firstThree = people.subList(0, 2);
     InputOutput.<String>println("--------------------");
     final Function1<Person, String> _function_17 = (Person it) -> {
       return it.getName();

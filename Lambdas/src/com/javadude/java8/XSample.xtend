@@ -77,7 +77,7 @@ class XSample {
 		println("Third: " + people.tail.tail.tail.head.name)
 		println("Oldest age: " + people.map[age].reduce[i,j | if (i > j) i else j])
 
-		val firstThree = people.subList(0,2)
+//		val firstThree = people.subList(0,2)
 		println("--------------------")
 		val peopleByName1 = people.toMap[name]
 		peopleByName1.entrySet.forEach[println(key + ": " + value)]
