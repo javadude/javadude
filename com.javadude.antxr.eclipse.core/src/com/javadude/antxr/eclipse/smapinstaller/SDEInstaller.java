@@ -94,6 +94,7 @@ public class SDEInstaller {
         int len = (int)input.length();
         byte[] bytes = new byte[len];
         if (inStream.read(bytes, 0, len) != len) {
+        	inStream.close();
             throw new IOException("expected size: " + len);
         }
         inStream.close();

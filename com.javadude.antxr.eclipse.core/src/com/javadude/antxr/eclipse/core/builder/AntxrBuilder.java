@@ -581,7 +581,7 @@ public class AntxrBuilder extends IncrementalProjectBuilder implements IStreamLi
                 IResource file = folder.getFile(new Path(fileName));
                 file.refreshLocal(IResource.DEPTH_ZERO, aMonitor);
                 // SASSAS check if file is being edited - if so, refresh
-                file.setDerived(true);
+                file.setDerived(true, null);
                 String cleanWarnings = SettingsPersister.get(map, grammarFile, SettingsPersister.CLEAN_WARNINGS);
                 String installSmap = SettingsPersister.get(map, grammarFile, SettingsPersister.SMAP_PROPERTY);
                 file.setPersistentProperty(AntxrBuilder.CLEAN_WARNINGS, cleanWarnings);
