@@ -15,5 +15,6 @@ import com.sun.mirror.apt.AnnotationProcessorEnvironment;
 
 public class HushProcessor implements AnnotationProcessor {
     public HushProcessor(AnnotationProcessorEnvironment env) {}
-    public void process() {}
+    @Override
+	public void process() {}
 }

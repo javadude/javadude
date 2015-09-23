@@ -42,18 +42,18 @@ public class Utils {
     public static String getTypeName(TypeMirror type) {
         final StringBuffer typeName = new StringBuffer();
         TypeVisitor v = new TypeVisitor() {
-            public void visitWildcardType(WildcardType t) { typeName.append(t); }
-            public void visitVoidType(VoidType t) { typeName.append(t); }
-            public void visitTypeVariable(TypeVariable t) { typeName.append(t); }
-            public void visitTypeMirror(TypeMirror t) { typeName.append(t); }
-            public void visitReferenceType(ReferenceType t) { typeName.append(t); }
-            public void visitPrimitiveType(PrimitiveType t) { typeName.append(t); }
-            public void visitInterfaceType(InterfaceType t) { typeName.append(t); }
-            public void visitEnumType(EnumType t) { typeName.append(t); }
-            public void visitDeclaredType(DeclaredType t) { typeName.append(t); }
-            public void visitClassType(ClassType t) { typeName.append(t); }
-            public void visitArrayType(ArrayType t) { typeName.append(t); }
-            public void visitAnnotationType(AnnotationType t) { typeName.append(t); }
+            @Override public void visitWildcardType(WildcardType t) { typeName.append(t); }
+            @Override public void visitVoidType(VoidType t) { typeName.append(t); }
+            @Override public void visitTypeVariable(TypeVariable t) { typeName.append(t); }
+            @Override public void visitTypeMirror(TypeMirror t) { typeName.append(t); }
+            @Override public void visitReferenceType(ReferenceType t) { typeName.append(t); }
+            @Override public void visitPrimitiveType(PrimitiveType t) { typeName.append(t); }
+            @Override public void visitInterfaceType(InterfaceType t) { typeName.append(t); }
+            @Override public void visitEnumType(EnumType t) { typeName.append(t); }
+            @Override public void visitDeclaredType(DeclaredType t) { typeName.append(t); }
+            @Override public void visitClassType(ClassType t) { typeName.append(t); }
+            @Override public void visitArrayType(ArrayType t) { typeName.append(t); }
+            @Override public void visitAnnotationType(AnnotationType t) { typeName.append(t); }
         };
         type.accept(v);
         return typeName.toString();

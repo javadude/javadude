@@ -17,14 +17,17 @@ public final class ChangeReportingIterator<E> implements Iterator<E> {
 		this.pcs = pcs;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return baseIterator.hasNext();
 	}
 
+	@Override
 	public E next() {
 		return baseIterator.next();
 	}
 
+	@Override
 	public void remove() {
 		baseIterator.remove();
 		pcs.firePropertyChange(propertyName, null, null);

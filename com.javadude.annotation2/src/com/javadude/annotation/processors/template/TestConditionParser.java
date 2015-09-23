@@ -1,7 +1,6 @@
 package com.javadude.annotation.processors.template;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TestConditionParser {
