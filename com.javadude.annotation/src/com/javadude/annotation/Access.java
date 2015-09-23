@@ -34,6 +34,14 @@ package com.javadude.annotation;
  * @see Property
  */
 public enum Access {
+	/** Indicates that an access level has not been specified.
+	 *  <p>It is the default value for readers and writers in the {@link Property} annotations.</p>
+	 *  <p>If unchanged, the readers and writers will be assigned the values specified in
+	 *    the {@link Bean} annotation.</p>
+	 *  <p><b><i>YOU SHOULD NEVER USE THIS VALUE WHEN SPECIFYING YOUR ANNOTATIONS.</i></b></p>
+     */
+    NOT_SPECIFIED,
+
     /** <p>Indicates that you do not want a getter or setter. For example:</p>
      *     <pre>@{@link Property}(name="name", writer = Access.NONE)</pre>
      *  <p>would create a read-only property called "name"; it would have a getName() method, but not a setName(String name) method.</p>
@@ -65,8 +73,18 @@ public enum Access {
                 return "public ";
             case PROTECTED:
                 return "protected ";
-            default:
+            case PACKAGE:
                 return "";
+            default:
+            	throw new IllegalArgumentException("Cannot ask for the modifier for Access." + this);
         }
+    }
+
+    /**
+     * A convenience method to check if a modifier was specified.
+     * @return true if PUBLIC, PROTECTED, PACKAGE; false otherwise.
+     */
+    public boolean exists() {
+        return this != NONE && this != NOT_SPECIFIED;
     }
 }

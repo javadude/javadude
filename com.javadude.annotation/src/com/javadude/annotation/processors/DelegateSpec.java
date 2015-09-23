@@ -10,16 +10,17 @@
  *******************************************************************************/
 package com.javadude.annotation.processors;
 
+import com.javadude.annotation.Bean;
+import com.javadude.annotation.Property;
 
-//@Bean(overrideParamString=true,
-//	  superclass=Type.class,
-//	  createPropertyMap=true,
-//	  createPropertyMapCallsSuper=true,
-//	  properties = {
-//		@Property(name="accessor"),
-//		@Property(name="instantiateType"),
-//		@Property(name="needToDefine", type=boolean.class)
-//})
-public class DelegateSpec extends DelegateSpecGen implements Pushable {
+
+@Bean(overrideParamString=true,
+	  superclass=Listener.class,
+	  properties = {
+		@Property(name="accessor"),
+		@Property(name="instantiateType"),
+		@Property(name="needToDefine", type=boolean.class)
+})
+public class DelegateSpec extends DelegateSpecGen {
 	// nothing to add
 }

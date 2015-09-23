@@ -30,13 +30,11 @@ public abstract class BaseAnnotationProcessorFactory implements AnnotationProces
    			annotations_.add(annotation.getName());
    		}
    	}
-    @Override
-	public Collection<String> supportedAnnotationTypes() {
+    public Collection<String> supportedAnnotationTypes() {
         return annotations_;
     }
 
-    @Override
-	public Collection<String> supportedOptions() {
+    public Collection<String> supportedOptions() {
         return Collections.emptyList();
     }
 }

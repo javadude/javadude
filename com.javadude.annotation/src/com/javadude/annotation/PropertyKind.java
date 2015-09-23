@@ -70,6 +70,28 @@ package com.javadude.annotation;
  */
 public enum PropertyKind {
     SIMPLE, LIST, /* TODO: INDEXED, */ UNMODIFIABLE_LIST, SET, UNMODIFIABLE_SET, MAP, UNMODIFIABLE_MAP;
+    public String getPrefix() {
+        switch (this) {
+            case UNMODIFIABLE_SET:
+                return "java.util.Collections.unmodifiableSet(";
+            case UNMODIFIABLE_LIST:
+            	return "java.util.Collections.unmodifiableList(";
+            case UNMODIFIABLE_MAP:
+                return "java.util.Collections.unmodifiableMap(";
+            default:
+                return "";
+        }
+    }
+    public String getSuffix() {
+        switch (this) {
+            case UNMODIFIABLE_SET:
+            case UNMODIFIABLE_LIST:
+            case UNMODIFIABLE_MAP:
+                return ")";
+            default:
+                return "";
+        }
+    }
     public boolean isUnmodifiable() {
         return this == UNMODIFIABLE_LIST || this == UNMODIFIABLE_MAP || this == UNMODIFIABLE_SET;
     }

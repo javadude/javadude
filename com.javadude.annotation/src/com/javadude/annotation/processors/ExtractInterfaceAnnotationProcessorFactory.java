@@ -23,8 +23,7 @@ public class ExtractInterfaceAnnotationProcessorFactory extends BaseAnnotationPr
 		super(ExtractInterface.class, Expose.class);
     }
 
-    @Override
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
+    public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
         return new ExtractInterfaceAnnotationProcessor(env);
     }
 }

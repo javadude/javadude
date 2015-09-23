@@ -10,13 +10,10 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
-
 /**
  * <p>Defines a property for a JavaBean.</p>
  */
 public @interface Property {
-	public static final String DEFAULTS = "#DEFAULTS";
-
 	/**
 	 * The name of the property. This will be used as the basis for the generated field name,
 	 *   and accessor methods.
@@ -64,12 +61,12 @@ public @interface Property {
     /**
      * The access level of the generated reader methods. If set to Access.NONE, the property will not be readable.
      */
-    Access reader() default Access.PUBLIC;
+    Access reader() default Access.NOT_SPECIFIED;
 
     /**
      * The access level of the generated writer methods. If set to Access.NONE, the property will not be writeable.
      */
-    Access writer() default Access.PUBLIC;
+    Access writer() default Access.NOT_SPECIFIED;
 
     /**
      * Set to true if the property should be bound. Bound properties will fire events to registered
@@ -94,7 +91,7 @@ public @interface Property {
     PropertyKind kind() default PropertyKind.SIMPLE;
 
     /**
-     * If true, this property's value will not be included in the generated toString() method. This is useful
+     * If true, this property will not be included in the generated toString() method. This is useful
      *   to avoid cyclic toString() definitions.
      */
     boolean omitFromToString() default false;

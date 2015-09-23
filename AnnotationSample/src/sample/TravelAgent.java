@@ -16,5 +16,5 @@ import com.javadude.annotation.Delegate;
 	}
 )
 public class TravelAgent extends TravelAgentGen {
-	// everything is done in @Bean above
+
 }

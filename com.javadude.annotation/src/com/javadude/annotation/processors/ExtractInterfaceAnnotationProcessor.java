@@ -36,8 +36,7 @@ public class ExtractInterfaceAnnotationProcessor implements AnnotationProcessor 
         env_ = env;
     }
 
-    @Override
-	public void process() {
+    public void process() {
         AnnotationTypeDeclaration extractInterfaceAnnotationDeclaration = (AnnotationTypeDeclaration) env_.getTypeDeclaration(ExtractInterface.class.getName());
         for (Declaration extractInterfaceDeclaration : env_.getDeclarationsAnnotatedWith(extractInterfaceAnnotationDeclaration)) {
             try {

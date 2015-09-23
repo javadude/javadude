@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
-
 /**
  * <p>Defines a type (interface or class) for which you want to generate delegation methods.</p>
  * <p>Delegation methods for all public methods in the target type will be created.</p>
@@ -66,10 +65,15 @@ package com.javadude.annotation;
  * releases.</p>
  */
 public @interface Delegate {
+	/**
+	 * The name of the property that contains the delegation target.
+	 */
+    String property() default "";
+
     /**
      * An accessor expression that retrieves the delegation target.
      */
-    String accessor();
+    String accessor() default "";
 
     /**
      * The target interface type of the delegation.
@@ -82,4 +86,21 @@ public @interface Delegate {
      * Exactly one of type or typeString must be specified.
      */
     String typeString() default "";
+
+    /**
+     * The class to use as the delegation target. This will be used in a "new" expression.
+     * Exactly one of instantiateAs or instantiateAsString must be specified.
+     */
+    Class<?> instantiateAs() default Void.class;
+
+    /**
+     * An expression to use as the delegation target. This will be used in a "new" expression.
+     * Exactly one of instantiateAs or instantiateAsString must be specified.
+     */
+    String instantiateAsString() default "";
+
+    /**
+     * If true, @Override will be added to each generated method.
+     */
+    boolean addOverrides() default false;
 }

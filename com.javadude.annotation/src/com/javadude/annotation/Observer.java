@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.javadude.annotation;
 
-
 /**
  * <p>Defines an event set to generate code for.</p>
  *
@@ -56,4 +55,9 @@ public @interface Observer {
      * Exactly one of type or typeString must be specified.
      */
     String typeString() default "";
+
+    /**
+     * If true, @Override will be added to the generated methods.
+     */
+    boolean addOverrides() default false;
 }

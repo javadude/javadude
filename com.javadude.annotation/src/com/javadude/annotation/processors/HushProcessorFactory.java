@@ -34,8 +34,7 @@ public class HushProcessorFactory extends BaseAnnotationProcessorFactory {
 			add(annotationClass);
 		}
     }
-    @Override
-	public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
+    public AnnotationProcessor getProcessorFor(Set<AnnotationTypeDeclaration> atds, AnnotationProcessorEnvironment env) {
         return new HushProcessor(env);
     }
 }
