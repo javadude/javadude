@@ -1,0 +1,6 @@
+// $ANTXR : antlrSettings.antxr -> AntxrSettingsParserTokenTypes.txt$
+AntxrSettingsParser    // output token vocab name
+"<settings>"=4
+XML_END_TAG=5
+"<resource>"=6
+"<property>"=7

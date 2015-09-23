@@ -19,6 +19,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.text.FindReplaceDocumentAdapterContentProposalProvider;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ArtifactKey;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.m2e.core.project.IMavenProjectRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -29,10 +33,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.maven.ide.eclipse.MavenPlugin;
-import org.maven.ide.eclipse.embedder.ArtifactKey;
-import org.maven.ide.eclipse.project.IMavenProjectFacade;
-import org.maven.ide.eclipse.project.MavenProjectManager;
 
 import com.javadude.workingsets.DynamicWorkingSetPage;
 
@@ -142,8 +142,8 @@ public class M2EclipseWorkingSetPage extends DynamicWorkingSetPage {
 				} catch (CoreException e) {
 					throw new RuntimeException(e);
 				}
-				MavenProjectManager projectManager = MavenPlugin.getDefault().getMavenProjectManager();
-				IMavenProjectFacade facade = projectManager.create(project, null);
+				IMavenProjectRegistry mavenProjectRegistry = MavenPlugin.getMavenProjectRegistry();
+				IMavenProjectFacade facade = mavenProjectRegistry.create(project, null);
 				if (facade!=null) {
 					ArtifactKey artifactKey = facade.getArtifactKey();
 					if (groupPattern != null && !groupPattern.matcher(artifactKey.getGroupId()).matches()) {

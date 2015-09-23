@@ -14,13 +14,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.embedder.ArtifactKey;
+import org.eclipse.m2e.core.project.IMavenProjectChangedListener;
+import org.eclipse.m2e.core.project.IMavenProjectFacade;
+import org.eclipse.m2e.core.project.IMavenProjectRegistry;
+import org.eclipse.m2e.core.project.MavenProjectChangedEvent;
 import org.eclipse.ui.IWorkingSet;
-import org.maven.ide.eclipse.MavenPlugin;
-import org.maven.ide.eclipse.embedder.ArtifactKey;
-import org.maven.ide.eclipse.project.IMavenProjectChangedListener;
-import org.maven.ide.eclipse.project.IMavenProjectFacade;
-import org.maven.ide.eclipse.project.MavenProjectChangedEvent;
-import org.maven.ide.eclipse.project.MavenProjectManager;
 
 import com.javadude.workingsets.DynamicWorkingSetUpdater;
 
@@ -32,8 +32,8 @@ import com.javadude.workingsets.DynamicWorkingSetUpdater;
 public class M2EclipseWorkingSetUpdater extends DynamicWorkingSetUpdater {
 	public M2EclipseWorkingSetUpdater() {
 		super("Maven: ");
-		MavenProjectManager projectManager = MavenPlugin.getDefault().getMavenProjectManager();
-		projectManager.addMavenProjectChangedListener(new IMavenProjectChangedListener() {
+		IMavenProjectRegistry mavenProjectRegistry = MavenPlugin.getMavenProjectRegistry();
+		mavenProjectRegistry.addMavenProjectChangedListener(new IMavenProjectChangedListener() {
 			public void mavenProjectChanged(MavenProjectChangedEvent[] events, IProgressMonitor arg1) {
 				for (MavenProjectChangedEvent event : events) {
 					IProject p = event.getMavenProject().getProject();
@@ -70,8 +70,8 @@ public class M2EclipseWorkingSetUpdater extends DynamicWorkingSetUpdater {
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}
-		MavenProjectManager projectManager = MavenPlugin.getDefault().getMavenProjectManager();
-		IMavenProjectFacade facade = projectManager.create(project, null);
+		IMavenProjectRegistry mavenProjectRegistry = MavenPlugin.getMavenProjectRegistry();
+		IMavenProjectFacade facade = mavenProjectRegistry.create(project, null);
 		if (facade!=null) {
 			ArtifactKey artifactKey = facade.getArtifactKey();
 			if (groupPattern != null && !groupPattern.matcher(artifactKey.getGroupId()).matches()) {

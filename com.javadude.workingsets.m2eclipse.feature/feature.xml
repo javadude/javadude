@@ -2,7 +2,7 @@
 <feature
       id="com.javadude.workingsets.m2eclipse.feature"
       label="JavaDude Dynamic Maven Working Set Feature"
-      version="1.0.2"
+      version="1.1.0"
       provider-name="JavaDude.com">
 
    <description url="http://javadude.com/tools/workingsets">

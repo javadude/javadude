@@ -386,7 +386,7 @@ class $PARENT_name$ {																				//#DUMMY
 		return $nullBody$;																						//? returns
 	}
 	//#END foreach methods
-	//#END foreach observers
+	//#END foreach nullObjects
 	//#FOREACH observers
 	private java.util.List<$name$> $NOPACKAGE_LOWER_name$s_ = new java.util.ArrayList<$name$>();
 	/** Register a $NOPACKAGE_name$ to listener for notifications from this class.
@@ -478,7 +478,7 @@ class $PARENT_name$ {																				//#DUMMY
 		//#END properties
 		return result;
 	}
-	//#END defineSimpleEqualsAndHashCode
+	//#END defineEqualsAndHashCode
 	public java.lang.String toString() {
 		return getClass().getName() + '[' + paramString() + ']';
 	}

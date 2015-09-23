@@ -1,0 +1,10 @@
+// $ANTXR : Calc.antxr -> CalcParserTokenTypes.txt$
+CalcParser    // output token vocab name
+PLUS=4
+MINUS=5
+TIMES=6
+DIVIDE=7
+INT=8
+LPAREN=9
+RPAREN=10
+WS=11

@@ -1,0 +1,39 @@
+header {
+	package a.b.c;
+}
+
+class CalcParser extends Parser;
+
+expression returns [int value=0]
+{int other;}
+	:	value=mult
+		(	PLUS other=mult {value += other;}
+		|	MINUS other=mult {value -= other;}
+		)*
+		EOF
+	;
+	
+mult returns [int value=0]
+{int other;}
+	:	value=term
+		(	TIMES other=term {value *= other;}
+		|	DIVIDE other=term {value /= other;}
+		)*
+	;
+	
+term returns [int value=0]
+	:	i:INT {value = Integer.parseInt(i.getText());}
+	|	LPAREN value=expression RPAREN
+	;
+
+class CalcLexer extends Lexer;
+
+INT :	'0'..'9';
+PLUS : '+' ;
+MINUS : '-' ;
+TIMES : '*' ;
+DIVIDE : '/' ;
+LPAREN : '(' ;
+RPAREN : ')' ;
+WS : (' ' | '\t')+ {$setType(Token.SKIP);} ;
+	

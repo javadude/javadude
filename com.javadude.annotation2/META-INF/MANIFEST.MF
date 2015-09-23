@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaDude Annotation Plugin
+Bundle-SymbolicName: com.javadude.annotation;singleton:=true
+Bundle-Version: 3.0.5
+Export-Package: com.javadude.annotation;uses:="com.sun.mirror.apt",
+ com.javadude.annotation.processors
+Bundle-ClassPath: .
+Require-Bundle: org.eclipse.jdt.apt.core,
+ org.eclipse.core.runtime,
+ org.junit4
+Bundle-Vendor: JavaDude.com
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

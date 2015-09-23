@@ -1,0 +1,54 @@
+@Bean (class)
+    Class<?> superclass() default Void.class;
+    boolean cloneable() default false;
+    boolean definePropertyNameConstants() default false;
+    int spacesForLeadingTabs() default 0;
+    boolean defineEqualsAndHashCode() default false;
+    boolean equalsAndHashCodeCallSuper() default false;
+    boolean defineCreatePropertyMap() default false;
+    Property[] properties() default { };
+    Observer[] observers() default { };
+    Delegate[] delegates() default { };
+    NullObject[] nullObjects() default { };
+
+@Default (parameter)
+	String value();
+
+@Delegate (in @Bean)
+    String accessor();
+    Class<?> type() default Void.class;
+    String typeString() default "";
+
+@Expose (method)   [exposes method in generated interface]
+
+@ExtractInterface (class)
+    String name();
+    String[] superinterfaces() default {};
+    boolean nonPublic() default false;
+    boolean exposeAllPublicMethods() default false;
+
+@NullObject (in @Bean)
+    Class<?> type() default Void.class;
+    String typeString() default "";
+
+@Observer (in @Bean)
+    Class<?> type() default Void.class;
+    String typeString() default "";
+
+@Property (in @Bean)
+	public static final String DEFAULTS = "#DEFAULTS";
+    String name();
+    String plural() default "";
+    Class<?> type() default Void.class;
+    String typeString() default "";
+    Class<?> keyType() default Void.class;
+    String keyTypeString() default "";
+    Access reader() default Access.PUBLIC;
+    Access writer() default Access.PUBLIC;
+    boolean bound() default false;
+    PropertyKind kind() default PropertyKind.SIMPLE;
+    boolean omitFromToString() default false;
+    boolean notNull() default false;
+    boolean isStatic() default false;
+    boolean isSynchronized() default false;
+

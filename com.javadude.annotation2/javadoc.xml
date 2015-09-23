@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" additionalparam=" -bottom '&lt;a href=&quot;{@docRoot}/copyright.html&quot;&gt;Copyright &amp;copy; 2008 Scott Stanchfield&lt;/a&gt;'" author="true" classpath="lib/velocity-dep-1.5.jar" destdir="doc" doctitle="JavaDude Annotations" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.javadude.annotation" source="1.6" sourcepath="src;.apt_generated" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
