@@ -89,9 +89,9 @@ public abstract class AbstractBreakpointRulerAction extends Action implements IU
 	 */
 	protected IResource getResource() {
 		IEditorInput input= fTextEditor.getEditorInput();
-		IResource resource= (IResource) input.getAdapter(IFile.class);
+		IResource resource= input.getAdapter(IFile.class);
 		if (resource == null) {
-			resource= (IResource) input.getAdapter(IResource.class);
+			resource= input.getAdapter(IResource.class);
 		}
 		return resource;
 	}

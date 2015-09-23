@@ -143,6 +143,7 @@ public class AntxrMultiPageEditor extends MultiPageEditorPart
 	/**
 	 * Returns ANTXR content outline page from ANTXR editor page if request.
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class aClass) {
 	    Object adapter;
 		if (aClass.equals(IContentOutlinePage.class)) {

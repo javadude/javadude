@@ -22,6 +22,7 @@ import org.eclipse.ui.IEditorPart;
 public class BreakpointAdapterFactory implements IAdapterFactory {
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		IEditorPart editorPart = AntxrLineBreakpointAdapter.getEditorPart(adaptableObject);
 		if (editorPart != null) {
@@ -31,6 +32,7 @@ public class BreakpointAdapterFactory implements IAdapterFactory {
 	}
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		return new Class[]{IToggleBreakpointsTarget.class};
 	}

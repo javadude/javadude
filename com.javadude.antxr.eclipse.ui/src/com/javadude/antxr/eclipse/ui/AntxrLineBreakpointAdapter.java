@@ -32,7 +32,7 @@ public class AntxrLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
 		IEditorPart editorPart = AntxrLineBreakpointAdapter.getEditorPart(part);
 		if (editorPart != null) {
-			IResource resource = (IResource)editorPart.getEditorInput().getAdapter(IResource.class);
+			IResource resource = editorPart.getEditorInput().getAdapter(IResource.class);
 			ITextSelection textSelection = (ITextSelection)selection;
 			int lineNumber = textSelection.getStartLine();
 			IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints();
@@ -67,7 +67,7 @@ public class AntxrLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	public static IEditorPart getEditorPart(Object adaptableObject) {
 		if (adaptableObject instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart)adaptableObject;
-			IResource resource = (IResource)editorPart.getEditorInput().getAdapter(IResource.class);
+			IResource resource = editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource != null) {
 				String extension = resource.getFileExtension();
 				if (extension != null && extension.equals("g")) {

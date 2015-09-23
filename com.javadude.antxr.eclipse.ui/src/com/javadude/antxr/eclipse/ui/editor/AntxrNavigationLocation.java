@@ -38,7 +38,7 @@ public class AntxrNavigationLocation extends TextSelectionNavigationLocation {
 	protected IEditorPart getEditorPart() {
 		IEditorPart editor = super.getEditorPart();
 		if (editor != null) {
-			editor = (ITextEditor)editor.getAdapter(ITextEditor.class);
+			editor = editor.getAdapter(ITextEditor.class);
 		}
 		return editor;
 	}
